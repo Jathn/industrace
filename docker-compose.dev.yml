@@ -22,7 +22,7 @@ services:
       - ./uploads:/app/uploads
       - ./logs:/app/logs
     environment:
-      - DATABASE_URL=postgresql://industrace_user:secure_password_123@db:5432/industrace
+      - DATABASE_URL=postgresql+psycopg2://industrace_user:secure_password_123@db:5432/industrace
       - SECRET_KEY=your-secret-key-change-in-production
       - ACCESS_TOKEN_EXPIRE_MINUTES=30
       - CORS_ORIGINS=http://localhost:5173,http://localhost:3000

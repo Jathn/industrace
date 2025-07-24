@@ -55,5 +55,5 @@ class Contact(ContactBase):
         return [a.id if hasattr(a, "id") else a for a in assets]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
         from_attributes = True

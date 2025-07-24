@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 DATABASE_URL = os.getenv(
-    "DATABASE_URL", "postgresql://cmdb_user:secure_password_123@localhost:5432/cmdb_ics"
+    "DATABASE_URL", "postgresql+psycopg2://cmdb_user:secure_password_123@localhost:5432/cmdb_ics"
 )
 
 engine = create_engine(DATABASE_URL)

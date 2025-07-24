@@ -24,5 +24,13 @@
   "connectionFrom": "Connection from",
   "connectionTo": "Connection to",
   "connectionDate": "Connection Date",
-  "connectionNotes": "Connection Notes"
+  "connectionNotes": "Connection Notes",
+  "assetA": "Asset A",
+  "assetB": "Asset B",
+  "interfaceA": "Interface A",
+  "interfaceB": "Interface B",
+  "logicalPortA": "Logical Port A",
+  "logicalPortB": "Logical Port B",
+  "physicalPlugLabelA": "Physical Plug Label A",
+  "physicalPlugLabelB": "Physical Plug Label B"
 } 

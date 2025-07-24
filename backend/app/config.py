@@ -10,7 +10,7 @@ class Settings(BaseSettings):
 
     # Database
     DATABASE_URL: str = os.getenv(
-        "DATABASE_URL", "postgresql://user:password@localhost/cmdb"
+        "DATABASE_URL", "postgresql+psycopg://user:password@localhost/cmdb"
     )
 
     # JWT

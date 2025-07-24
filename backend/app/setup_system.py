@@ -8,9 +8,9 @@ from app.init_manufacturers import seed_manufacturers
 from app.init_asset_statuses import setup_asset_statuses
 from app.init_asset_types import setup_asset_types
 
-ADMIN_EMAIL = "admin@demo.com"
-EDITOR_EMAIL = "editor@demo.com"
-VIEWER_EMAIL = "viewer@demo.com"
+ADMIN_EMAIL = "admin@example.com"
+EDITOR_EMAIL = "editor@example.com"
+VIEWER_EMAIL = "viewer@example.com"
 ADMIN_PASSWORD = "admin123"
 EDITOR_PASSWORD = "editor123"
 VIEWER_PASSWORD = "viewer123"
@@ -97,6 +97,8 @@ def setup_system():
             seed_demo_data()
         except Exception as e:
             print(f"⚠️  Demo data seeding failed: {e}")
+            import traceback
+            traceback.print_exc()
 
     db.close()
     # print("\nSetup system completed!\nExample credentials:")

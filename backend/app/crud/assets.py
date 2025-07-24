@@ -154,9 +154,18 @@ def get_asset_by_ip(
     db: Session, tenant_id: uuid.UUID, ip_address: str
 ) -> Optional[Asset]:
     """Retrieve an asset by IP address"""
+    from app.models.asset_interface import AssetInterface
+    
     return (
         db.query(Asset)
-        .filter(and_(Asset.tenant_id == tenant_id, Asset.ip_address == ip_address))
+        .join(AssetInterface, Asset.id == AssetInterface.asset_id)
+        .filter(
+            and_(
+                Asset.tenant_id == tenant_id, 
+                AssetInterface.ip_address == ip_address,
+                AssetInterface.tenant_id == tenant_id
+            )
+        )
         .first()
     )
 

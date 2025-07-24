@@ -1,6 +1,6 @@
 from pydantic import BaseModel, EmailStr, validator
 from typing import Optional
-from app.errors.validation_errors import InvalidTenantSlugError, InvalidPasswordError
+from app.schemas.validators import *
 
 
 class SetupStatus(BaseModel):
@@ -22,17 +22,9 @@ class SetupRequest(BaseModel):
     admin_password: str
     language: str = "en"
     
-    @validator('tenant_slug')
-    def validate_tenant_slug(cls, v):
-        if not v.replace('-', '').replace('_', '').isalnum():
-            raise InvalidTenantSlugError('tenant_slug')
-        return v.lower()
-    
-    @validator('admin_password')
-    def validate_password(cls, v):
-        if len(v) < 8:
-            raise InvalidPasswordError('admin_password')
-        return v
+    # Validators
+    _validate_tenant_slug = validator('tenant_slug', allow_reuse=True)(validate_tenant_slug)
+    _validate_admin_password = validator('admin_password', allow_reuse=True)(validate_password)
 
 
 class SetupResponse(BaseModel):

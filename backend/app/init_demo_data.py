@@ -3,7 +3,8 @@ from sqlalchemy.orm import Session
 from app.database import SessionLocal
 from app.models import (
     User, Role, Tenant, Asset, Location, Site, Area, 
-    Supplier, Manufacturer, Contact, AssetType, AssetStatus
+    Supplier, Manufacturer, Contact, AssetType, AssetStatus,
+    AssetInterface, AssetConnection
 )
 from app.services.auth import get_password_hash
 from datetime import datetime, timedelta
@@ -12,9 +13,13 @@ import random
 
 def seed_demo_data():
     """Populate database with realistic demo data in English"""
+    print("🌱 Seeding demo data using Python...")
+    seed_demo_data_python()
+
+
+def seed_demo_data_python():
+    """Populate database with realistic demo data using Python"""
     db: Session = SessionLocal()
-    
-    print("🌱 Seeding demo data...")
     
     # Get or create tenant
     tenant = db.query(Tenant).first()
@@ -43,24 +48,21 @@ def seed_demo_data():
     sites_data = [
         {
             "name": "Main Production Plant",
+            "code": "MPP",
             "description": "Primary manufacturing facility for automotive components",
-            "address": "123 Industrial Blvd, Detroit, MI 48201",
-            "contact_email": "plant.manager@industrialsolutions.com",
-            "contact_phone": "+1-313-555-0100"
+            "address": "123 Industrial Blvd, Detroit, MI 48201"
         },
         {
             "name": "Research & Development Center",
+            "code": "RDC",
             "description": "Innovation hub for new product development",
-            "address": "456 Tech Park Dr, Austin, TX 78701",
-            "contact_email": "rd.director@industrialsolutions.com",
-            "contact_phone": "+1-512-555-0200"
+            "address": "456 Tech Park Dr, Austin, TX 78701"
         },
         {
             "name": "Distribution Warehouse",
+            "code": "DW",
             "description": "Central logistics and distribution facility",
-            "address": "789 Logistics Way, Chicago, IL 60601",
-            "contact_email": "warehouse.manager@industrialsolutions.com",
-            "contact_phone": "+1-312-555-0300"
+            "address": "789 Logistics Way, Chicago, IL 60601"
         }
     ]
     
@@ -72,10 +74,9 @@ def seed_demo_data():
                 id=uuid.uuid4(),
                 tenant_id=tenant.id,
                 name=site_data["name"],
+                code=site_data["code"],
                 description=site_data["description"],
-                address=site_data["address"],
-                contact_email=site_data["contact_email"],
-                contact_phone=site_data["contact_phone"]
+                address=site_data["address"]
             )
             db.add(site)
             sites.append(site)
@@ -88,130 +89,185 @@ def seed_demo_data():
     # Create demo areas for each site
     areas_data = [
         # Main Production Plant areas
-        {"name": "Assembly Line A", "description": "Primary assembly line for engine components"},
-        {"name": "Assembly Line B", "description": "Secondary assembly line for transmission parts"},
-        {"name": "Quality Control Lab", "description": "Testing and quality assurance facility"},
-        {"name": "Maintenance Bay", "description": "Equipment maintenance and repair area"},
-        {"name": "Control Room", "description": "Central monitoring and control center"},
+        {"name": "Assembly Line A", "code": "ALA", "notes": "Primary assembly line for engine components"},
+        {"name": "Assembly Line B", "code": "ALB", "notes": "Secondary assembly line for transmission parts"},
+        {"name": "Quality Control Lab", "code": "QCL", "notes": "Testing and quality assurance facility"},
+        {"name": "Maintenance Bay", "code": "MB", "notes": "Equipment maintenance and repair area"},
+        {"name": "Control Room", "code": "CR", "notes": "Central monitoring and control center"},
         
         # R&D Center areas
-        {"name": "Prototype Lab", "description": "New product prototyping and testing"},
-        {"name": "Materials Lab", "description": "Material science research and testing"},
-        {"name": "Software Development", "description": "Control system software development"},
-        {"name": "Testing Chamber", "description": "Environmental and stress testing"},
+        {"name": "Prototype Lab", "code": "PL", "notes": "New product prototyping and testing"},
+        {"name": "Materials Lab", "code": "ML", "notes": "Material science research and testing"},
+        {"name": "Software Development", "code": "SD", "notes": "Control system software development"},
+        {"name": "Testing Chamber", "code": "TC", "notes": "Environmental and stress testing"},
         
-        # Warehouse areas
-        {"name": "Receiving Dock", "description": "Incoming goods receiving area"},
-        {"name": "Storage Zone A", "description": "High-value component storage"},
-        {"name": "Storage Zone B", "description": "Bulk material storage"},
-        {"name": "Shipping Dock", "description": "Outgoing shipments area"}
+        # Distribution Warehouse areas
+        {"name": "Receiving/Shipping Docks", "code": "RSD", "notes": "Incoming and outgoing logistics"},
+        {"name": "Storage Zone A", "code": "SZA", "notes": "High-value component storage"},
+        {"name": "Storage Zone B", "code": "SZB", "notes": "Bulk material storage"}
     ]
     
     areas = []
-    for i, area_data in enumerate(areas_data):
-        site_index = i // 5  # Distribute areas across sites
-        site = sites[site_index] if site_index < len(sites) else sites[0]
-        
-        existing_area = db.query(Area).filter_by(name=area_data["name"], site_id=site.id).first()
+    for area_data in areas_data:
+        existing_area = db.query(Area).filter_by(name=area_data["name"], tenant_id=tenant.id).first()
         if not existing_area:
+            # Assign area to appropriate site
+            if "Assembly" in area_data["name"] or "Quality" in area_data["name"] or "Maintenance" in area_data["name"] or "Control" in area_data["name"]:
+                site = next((s for s in sites if "Production Plant" in s.name), sites[0])
+            elif "Prototype" in area_data["name"] or "Materials" in area_data["name"] or "Software" in area_data["name"] or "Testing" in area_data["name"]:
+                site = next((s for s in sites if "Research" in s.name), sites[0])
+            else:
+                site = next((s for s in sites if "Distribution" in s.name), sites[0])
+            
             area = Area(
                 id=uuid.uuid4(),
                 tenant_id=tenant.id,
-                site_id=site.id,
                 name=area_data["name"],
-                description=area_data["description"]
+                site_id=site.id,
+                code=area_data["code"],
+                notes=area_data["notes"]
             )
             db.add(area)
             areas.append(area)
-            print(f"✅ Created area: {area.name} in {site.name}")
+            print(f"✅ Created area: {area.name}")
         else:
             areas.append(existing_area)
     
     db.commit()
     
+    # Create demo locations
+    locations_data = [
+        # Production Plant locations
+        {"name": "Control Panel A1", "code": "CPA1", "description": "Main control panel for Assembly Line A", "area": "Assembly Line A"},
+        {"name": "Control Panel A2", "code": "CPA2", "description": "Secondary control panel for Assembly Line A", "area": "Assembly Line A"},
+        {"name": "Control Panel B1", "code": "CPB1", "description": "Main control panel for Assembly Line B", "area": "Assembly Line B"},
+        {"name": "Quality Station 1", "code": "QS1", "description": "Primary quality control station", "area": "Quality Control Lab"},
+        {"name": "Quality Station 2", "code": "QS2", "description": "Secondary quality control station", "area": "Quality Control Lab"},
+        {"name": "Maintenance Bay 1", "code": "MB1", "description": "Primary maintenance work area", "area": "Maintenance Bay"},
+        {"name": "Maintenance Bay 2", "code": "MB2", "description": "Secondary maintenance work area", "area": "Maintenance Bay"},
+        {"name": "Control Room Console", "code": "CRC", "description": "Main control room console", "area": "Control Room"},
+        {"name": "Control Room Display", "code": "CRD", "description": "Control room display wall", "area": "Control Room"},
+        
+        # R&D Center locations
+        {"name": "Prototype Station 1", "code": "PS1", "description": "Primary prototype development station", "area": "Prototype Lab"},
+        {"name": "Prototype Station 2", "code": "PS2", "description": "Secondary prototype development station", "area": "Prototype Lab"},
+        {"name": "Materials Testing Station", "code": "MTS", "description": "Materials testing and analysis station", "area": "Materials Lab"},
+        {"name": "Software Development Station", "code": "SDS", "description": "Software development and testing station", "area": "Software Development"},
+        {"name": "Testing Chamber 1", "code": "TC1", "description": "Primary environmental testing chamber", "area": "Testing Chamber"},
+        
+        # Warehouse locations
+        {"name": "Receiving Dock 1", "code": "RD1", "description": "Primary receiving dock", "area": "Receiving/Shipping Docks"},
+        {"name": "Shipping Dock 1", "code": "SD1", "description": "Primary shipping dock", "area": "Receiving/Shipping Docks"},
+        {"name": "Storage Rack A1", "code": "SRA1", "description": "High-value component storage rack", "area": "Storage Zone A"},
+        {"name": "Storage Rack A2", "code": "SRA2", "description": "Secondary high-value storage rack", "area": "Storage Zone A"},
+        {"name": "Bulk Storage Area 1", "code": "BSA1", "description": "Primary bulk material storage area", "area": "Storage Zone B"}
+    ]
+    
+    locations = []
+    for location_data in locations_data:
+        existing_location = db.query(Location).filter_by(name=location_data["name"], tenant_id=tenant.id).first()
+        if not existing_location:
+            # Find the area for this location
+            area = next((a for a in areas if a.name == location_data["area"]), None)
+            if area:
+                location = Location(
+                    id=uuid.uuid4(),
+                    tenant_id=tenant.id,
+                    site_id=area.site_id,
+                    area_id=area.id,
+                    name=location_data["name"],
+                    code=location_data["code"],
+                    description=location_data["description"]
+                )
+                db.add(location)
+                locations.append(location)
+                print(f"✅ Created location: {location.name}")
+        else:
+            locations.append(existing_location)
+    
+    db.commit()
+    
+    # Create demo manufacturers
+    manufacturers_data = [
+        {"name": "Siemens", "description": "Industrial automation and control systems"},
+        {"name": "Rockwell Automation", "description": "Industrial automation and information solutions"},
+        {"name": "Schneider Electric", "description": "Energy management and automation"},
+        {"name": "ABB", "description": "Power and automation technologies"}
+    ]
+    
+    manufacturers = []
+    for mfg_data in manufacturers_data:
+        existing_mfg = db.query(Manufacturer).filter_by(name=mfg_data["name"], tenant_id=tenant.id).first()
+        if not existing_mfg:
+            manufacturer = Manufacturer(
+                id=uuid.uuid4(),
+                tenant_id=tenant.id,
+                name=mfg_data["name"],
+                description=mfg_data["description"]
+            )
+            db.add(manufacturer)
+            manufacturers.append(manufacturer)
+            print(f"✅ Created manufacturer: {manufacturer.name}")
+        else:
+            manufacturers.append(existing_mfg)
+    
+    db.commit()
+    
     # Create demo suppliers
     suppliers_data = [
-        {
-            "name": "Siemens Industrial Automation",
-            "description": "Leading provider of industrial automation and control systems",
-            "website": "https://www.siemens.com/industrial-automation",
-            "email": "sales@siemens-automation.com",
-            "phone": "+1-800-333-7421",
-            "address": "1000 Deerfield Parkway, Buffalo Grove, IL 60089"
-        },
-        {
-            "name": "Rockwell Automation",
-            "description": "Global provider of industrial automation and information solutions",
-            "website": "https://www.rockwellautomation.com",
-            "email": "info@rockwellautomation.com",
-            "phone": "+1-414-382-2000",
-            "address": "1201 South Second Street, Milwaukee, WI 53204"
-        },
-        {
-            "name": "Schneider Electric",
-            "description": "Energy management and automation solutions provider",
-            "website": "https://www.se.com",
-            "email": "contact@schneider-electric.com",
-            "phone": "+1-888-778-2733",
-            "address": "800 Federal Street, Andover, MA 01810"
-        },
-        {
-            "name": "ABB Robotics",
-            "description": "Robotics and automation technology solutions",
-            "website": "https://www.abb.com/robotics",
-            "email": "robotics@abb.com",
-            "phone": "+1-248-391-9000",
-            "address": "1250 Brown Road, Auburn Hills, MI 48326"
-        }
+        {"name": "Siemens Industrial Automation", "description": "PLC and HMI systems supplier"},
+        {"name": "Rockwell Automation Solutions", "description": "Allen-Bradley products and services"},
+        {"name": "Schneider Electric Systems", "description": "Modicon and Telemecanique products"},
+        {"name": "ABB Industrial Solutions", "description": "AC500 and 800xA systems"}
     ]
     
     suppliers = []
-    for supplier_data in suppliers_data:
-        existing_supplier = db.query(Supplier).filter_by(name=supplier_data["name"], tenant_id=tenant.id).first()
-        if not existing_supplier:
+    for sup_data in suppliers_data:
+        existing_sup = db.query(Supplier).filter_by(name=sup_data["name"], tenant_id=tenant.id).first()
+        if not existing_sup:
             supplier = Supplier(
                 id=uuid.uuid4(),
                 tenant_id=tenant.id,
-                name=supplier_data["name"],
-                description=supplier_data["description"],
-                website=supplier_data["website"],
-                email=supplier_data["email"],
-                phone=supplier_data["phone"],
-                address=supplier_data["address"]
+                name=sup_data["name"],
+                description=sup_data["description"]
             )
             db.add(supplier)
             suppliers.append(supplier)
             print(f"✅ Created supplier: {supplier.name}")
         else:
-            suppliers.append(existing_supplier)
+            suppliers.append(existing_sup)
     
     db.commit()
     
     # Create demo contacts
     contacts_data = [
-        {"name": "John Smith", "email": "john.smith@siemens-automation.com", "phone": "+1-555-0101", "role": "Sales Manager"},
-        {"name": "Sarah Johnson", "email": "sarah.johnson@rockwellautomation.com", "phone": "+1-555-0102", "role": "Technical Support"},
-        {"name": "Mike Davis", "email": "mike.davis@schneider-electric.com", "phone": "+1-555-0103", "role": "Account Manager"},
-        {"name": "Lisa Wilson", "email": "lisa.wilson@abb.com", "phone": "+1-555-0104", "role": "Project Engineer"},
-        {"name": "David Brown", "email": "david.brown@industrialsolutions.com", "phone": "+1-555-0105", "role": "Plant Manager"},
-        {"name": "Emily Taylor", "email": "emily.taylor@industrialsolutions.com", "phone": "+1-555-0106", "role": "Maintenance Supervisor"}
+        {"first_name": "John", "last_name": "Smith", "email": "john.smith@siemens-automation.com", "phone1": "+1-555-0101", "type": "Sales Manager", "supplier": "Siemens Industrial Automation"},
+        {"first_name": "Sarah", "last_name": "Johnson", "email": "sarah.johnson@rockwell.com", "phone1": "+1-555-0102", "type": "Technical Support", "supplier": "Rockwell Automation Solutions"},
+        {"first_name": "Mike", "last_name": "Davis", "email": "mike.davis@schneider-electric.com", "phone1": "+1-555-0103", "type": "Account Manager", "supplier": "Schneider Electric Systems"},
+        {"first_name": "Lisa", "last_name": "Wilson", "email": "lisa.wilson@abb.com", "phone1": "+1-555-0104", "type": "Product Specialist", "supplier": "ABB Industrial Solutions"},
+        {"first_name": "David", "last_name": "Brown", "email": "david.brown@siemens-automation.com", "phone1": "+1-555-0105", "type": "Service Engineer", "supplier": "Siemens Industrial Automation"},
+        {"first_name": "Emily", "last_name": "Taylor", "email": "emily.taylor@rockwell.com", "phone1": "+1-555-0106", "type": "Sales Representative", "supplier": "Rockwell Automation Solutions"}
     ]
     
     contacts = []
     for contact_data in contacts_data:
         existing_contact = db.query(Contact).filter_by(email=contact_data["email"], tenant_id=tenant.id).first()
         if not existing_contact:
+            # Find the supplier for this contact
+            supplier = next((s for s in suppliers if s.name == contact_data["supplier"]), None)
+            
             contact = Contact(
                 id=uuid.uuid4(),
                 tenant_id=tenant.id,
-                name=contact_data["name"],
+                first_name=contact_data["first_name"],
+                last_name=contact_data["last_name"],
                 email=contact_data["email"],
-                phone=contact_data["phone"],
-                role=contact_data["role"]
+                phone1=contact_data["phone1"],
+                type=contact_data["type"]
             )
             db.add(contact)
             contacts.append(contact)
-            print(f"✅ Created contact: {contact.name}")
+            print(f"✅ Created contact: {contact.first_name} {contact.last_name}")
         else:
             contacts.append(existing_contact)
     
@@ -220,155 +276,257 @@ def seed_demo_data():
     # Create demo assets
     assets_data = [
         {
-            "name": "PLC Controller S7-1500",
-            "description": "Siemens S7-1500 Programmable Logic Controller for assembly line control",
-            "serial_number": "S7-1500-2024-001",
-            "model": "S7-1515-2 PN",
+            "name": "PLC Controller A1",
+            "tag": "PLC-A1",
+            "description": "Siemens S7-1500 PLC for Assembly Line A",
+            "asset_type": "PLC",
             "manufacturer": "Siemens",
-            "location": "Assembly Line A",
-            "status": "Operational",
-            "criticality": "High",
-            "installation_date": datetime.now() - timedelta(days=365),
-            "last_maintenance": datetime.now() - timedelta(days=30)
+            "model": "S7-1500",
+            "serial_number": "SN-PLC-A1-001",
+            "location": "Control Panel A1",
+            "risk_score": 7.5,
+            "business_criticality": "high",
+            "remote_access_type": "attended",
+            "physical_access_ease": "internal"
         },
         {
-            "name": "HMI Panel KTP900",
-            "description": "Siemens KTP900 Basic HMI panel for operator interface",
-            "serial_number": "KTP900-2024-002",
-            "model": "KTP900 Basic PN",
+            "name": "HMI Display A1",
+            "tag": "HMI-A1",
+            "description": "Siemens KTP900 HMI for Assembly Line A",
+            "asset_type": "HMI",
             "manufacturer": "Siemens",
-            "location": "Control Room",
-            "status": "Operational",
-            "criticality": "Medium",
-            "installation_date": datetime.now() - timedelta(days=300),
-            "last_maintenance": datetime.now() - timedelta(days=15)
+            "model": "KTP900",
+            "serial_number": "SN-HMI-A1-001",
+            "location": "Control Panel A1",
+            "risk_score": 6.0,
+            "business_criticality": "medium",
+            "remote_access_type": "attended",
+            "physical_access_ease": "internal"
         },
         {
-            "name": "Variable Frequency Drive",
-            "description": "Rockwell PowerFlex 755 AC drive for motor control",
-            "serial_number": "PF755-2024-003",
-            "model": "PowerFlex 755",
+            "name": "PLC Controller B1",
+            "tag": "PLC-B1",
+            "description": "Rockwell ControlLogix PLC for Assembly Line B",
+            "asset_type": "PLC",
             "manufacturer": "Rockwell Automation",
-            "location": "Assembly Line B",
-            "status": "Operational",
-            "criticality": "High",
-            "installation_date": datetime.now() - timedelta(days=250),
-            "last_maintenance": datetime.now() - timedelta(days=45)
+            "model": "ControlLogix 5580",
+            "serial_number": "SN-PLC-B1-001",
+            "location": "Control Panel B1",
+            "risk_score": 7.0,
+            "business_criticality": "high",
+            "remote_access_type": "attended",
+            "physical_access_ease": "internal"
         },
         {
-            "name": "Safety Relay Module",
-            "description": "Schneider Electric safety relay for emergency stop systems",
-            "serial_number": "SR-2024-004",
-            "model": "XPSMC",
-            "manufacturer": "Schneider Electric",
-            "location": "Assembly Line A",
-            "status": "Operational",
-            "criticality": "Critical",
-            "installation_date": datetime.now() - timedelta(days=400),
-            "last_maintenance": datetime.now() - timedelta(days=60)
-        },
-        {
-            "name": "Industrial Robot IRB 2600",
-            "description": "ABB IRB 2600 industrial robot for material handling",
-            "serial_number": "IRB2600-2024-005",
-            "model": "IRB 2600-20/1.65",
+            "name": "Quality Control Robot",
+            "tag": "ROBOT-QC1",
+            "description": "ABB IRB 1200 robot for quality inspection",
+            "asset_type": "Robot",
             "manufacturer": "ABB",
-            "location": "Assembly Line B",
-            "status": "Maintenance",
-            "criticality": "High",
-            "installation_date": datetime.now() - timedelta(days=200),
-            "last_maintenance": datetime.now() - timedelta(days=5)
+            "model": "IRB 1200",
+            "serial_number": "SN-ROBOT-QC1-001",
+            "location": "Quality Station 1",
+            "risk_score": 8.0,
+            "business_criticality": "high",
+            "remote_access_type": "unattended",
+            "physical_access_ease": "internal"
         },
         {
-            "name": "Network Switch",
-            "description": "Industrial Ethernet switch for network connectivity",
-            "serial_number": "SW-2024-006",
-            "model": "Scalance X208",
-            "manufacturer": "Siemens",
+            "name": "Network Switch A",
+            "tag": "SW-A1",
+            "description": "Cisco Catalyst switch for production network",
+            "asset_type": "Network Device",
+            "manufacturer": "Cisco",
+            "model": "Catalyst 2960",
+            "serial_number": "SN-SW-A1-001",
             "location": "Control Room",
-            "status": "Operational",
-            "criticality": "Medium",
-            "installation_date": datetime.now() - timedelta(days=180),
-            "last_maintenance": datetime.now() - timedelta(days=20)
+            "risk_score": 5.5,
+            "business_criticality": "medium",
+            "remote_access_type": "attended",
+            "physical_access_ease": "internal"
         },
         {
-            "name": "Temperature Sensor",
-            "description": "RTD temperature sensor for process monitoring",
-            "serial_number": "TS-2024-007",
-            "model": "PT100",
-            "manufacturer": "Rockwell Automation",
-            "location": "Quality Control Lab",
-            "status": "Operational",
-            "criticality": "Low",
-            "installation_date": datetime.now() - timedelta(days=150),
-            "last_maintenance": datetime.now() - timedelta(days=10)
+            "name": "Temperature Sensor Array",
+            "tag": "SENSOR-TEMP1",
+            "description": "Temperature monitoring sensors for Assembly Line A",
+            "asset_type": "Sensor",
+            "manufacturer": "Honeywell",
+            "model": "T775",
+            "serial_number": "SN-SENSOR-TEMP1-001",
+            "location": "Assembly Line A",
+            "risk_score": 3.0,
+            "business_criticality": "low",
+            "remote_access_type": "none",
+            "physical_access_ease": "internal"
         },
         {
-            "name": "Pressure Transmitter",
-            "description": "Smart pressure transmitter for hydraulic system monitoring",
-            "serial_number": "PT-2024-008",
-            "model": "3051S",
-            "manufacturer": "Rockwell Automation",
-            "location": "Maintenance Bay",
-            "status": "Operational",
-            "criticality": "Medium",
-            "installation_date": datetime.now() - timedelta(days=120),
-            "last_maintenance": datetime.now() - timedelta(days=25)
+            "name": "Production Server",
+            "tag": "SRV-PROD1",
+            "description": "Production data collection and analysis server",
+            "asset_type": "Server",
+            "manufacturer": "Dell",
+            "model": "PowerEdge R740",
+            "serial_number": "SN-SRV-PROD1-001",
+            "location": "Control Room",
+            "risk_score": 9.0,
+            "business_criticality": "critical",
+            "remote_access_type": "unattended",
+            "physical_access_ease": "internal"
+        },
+        {
+            "name": "Safety System Controller",
+            "tag": "SAFETY-CTRL1",
+            "description": "Emergency stop and safety monitoring system",
+            "asset_type": "Safety System",
+            "manufacturer": "Schneider Electric",
+            "model": "Modicon M580",
+            "serial_number": "SN-SAFETY-CTRL1-001",
+            "location": "Control Room",
+            "risk_score": 9.5,
+            "business_criticality": "critical",
+            "remote_access_type": "none",
+            "physical_access_ease": "internal"
         }
     ]
     
+    assets = []
     for asset_data in assets_data:
-        # Find area by name
-        area = db.query(Area).filter_by(name=asset_data["location"], tenant_id=tenant.id).first()
-        if not area:
-            area = areas[0]  # Default to first area if not found
-        
-        # Find asset type and status
-        asset_type = random.choice(asset_types) if asset_types else None
-        asset_status = db.query(AssetStatus).filter_by(name=asset_data["status"]).first()
-        
-        # Find supplier by manufacturer name
-        supplier = db.query(Supplier).filter(
-            Supplier.name.contains(asset_data["manufacturer"]),
-            Supplier.tenant_id == tenant.id
-        ).first()
-        
-        existing_asset = db.query(Asset).filter_by(serial_number=asset_data["serial_number"], tenant_id=tenant.id).first()
+        existing_asset = db.query(Asset).filter_by(tag=asset_data["tag"], tenant_id=tenant.id).first()
         if not existing_asset:
+            # Find the asset type
+            asset_type = next((at for at in asset_types if at.name.lower() == asset_data["asset_type"].lower()), asset_types[0] if asset_types else None)
+            
+            # Find the manufacturer
+            manufacturer = next((m for m in manufacturers if m.name.lower() in asset_data["manufacturer"].lower()), manufacturers[0] if manufacturers else None)
+            
+            # Find the location
+            location = next((l for l in locations if l.name == asset_data["location"]), locations[0] if locations else None)
+            
+            # Get a random asset status
+            asset_status = random.choice(asset_statuses) if asset_statuses else None
+            
             asset = Asset(
                 id=uuid.uuid4(),
                 tenant_id=tenant.id,
-                area_id=area.id,
                 name=asset_data["name"],
+                tag=asset_data["tag"],
                 description=asset_data["description"],
-                serial_number=asset_data["serial_number"],
-                model=asset_data["model"],
-                manufacturer_name=asset_data["manufacturer"],
-                supplier_id=supplier.id if supplier else None,
                 asset_type_id=asset_type.id if asset_type else None,
-                asset_status_id=asset_status.id if asset_status else None,
-                business_criticality=asset_data["criticality"],
-                installation_date=asset_data["installation_date"],
-                last_maintenance_date=asset_data["last_maintenance"],
-                is_active=True
+                manufacturer_id=manufacturer.id if manufacturer else None,
+                location_id=location.id if location else None,
+                site_id=location.site_id if location else None,
+                area_id=location.area_id if location else None,
+                model=asset_data["model"],
+                serial_number=asset_data["serial_number"],
+                status_id=asset_status.id if asset_status else None,
+                risk_score=asset_data["risk_score"],
+                business_criticality=asset_data["business_criticality"],
+                remote_access_type=asset_data["remote_access_type"],
+                physical_access_ease=asset_data["physical_access_ease"],
+                installation_date=datetime.now() - timedelta(days=random.randint(30, 365))
             )
             db.add(asset)
+            assets.append(asset)
             print(f"✅ Created asset: {asset.name}")
+        else:
+            assets.append(existing_asset)
     
     db.commit()
-    db.close()
     
-    print("🎉 Demo data seeding completed successfully!")
-    print("\n📊 Demo Data Summary:")
-    print(f"   • Sites: {len(sites)}")
-    print(f"   • Areas: {len(areas)}")
-    print(f"   • Suppliers: {len(suppliers)}")
-    print(f"   • Contacts: {len(contacts)}")
-    print(f"   • Assets: {len(assets_data)}")
-    print("\n🔑 Login with demo credentials:")
-    print("   • Admin: admin@demo.com / admin123")
-    print("   • Editor: editor@demo.com / editor123")
-    print("   • Viewer: viewer@demo.com / viewer123")
+    # Create demo interfaces for assets
+    interfaces_data = [
+        {"asset": "PLC Controller A1", "name": "Ethernet Port 1", "ip_address": "192.168.1.10", "mac_address": "00:1B:44:11:3A:B7", "type": "Ethernet", "protocols": ["Ethernet/IP"]},
+        {"asset": "PLC Controller A1", "name": "Serial Port 1", "ip_address": None, "mac_address": None, "type": "Serial", "protocols": ["Modbus RTU"]},
+        {"asset": "HMI Display A1", "name": "Ethernet Port 1", "ip_address": "192.168.1.11", "mac_address": "00:1B:44:11:3A:B8", "type": "Ethernet", "protocols": ["Ethernet/IP"]},
+        {"asset": "PLC Controller B1", "name": "Ethernet Port 1", "ip_address": "192.168.1.12", "mac_address": "00:1B:44:11:3A:B9", "type": "Ethernet", "protocols": ["Ethernet/IP"]},
+        {"asset": "Quality Control Robot", "name": "Ethernet Port 1", "ip_address": "192.168.1.13", "mac_address": "00:1B:44:11:3A:BA", "type": "Ethernet", "protocols": ["Ethernet/IP"]},
+        {"asset": "Network Switch A", "name": "Port 1", "ip_address": "192.168.1.1", "mac_address": "00:1B:44:11:3A:BB", "type": "Ethernet", "protocols": ["Ethernet"]},
+        {"asset": "Network Switch A", "name": "Port 2", "ip_address": "192.168.1.1", "mac_address": "00:1B:44:11:3A:BC", "type": "Ethernet", "protocols": ["Ethernet"]},
+        {"asset": "Temperature Sensor Array", "name": "Analog Output", "ip_address": None, "mac_address": None, "type": "Analog", "protocols": ["4-20mA"]},
+        {"asset": "Production Server", "name": "Ethernet Port 1", "ip_address": "192.168.1.100", "mac_address": "00:1B:44:11:3A:BD", "type": "Ethernet", "protocols": ["Ethernet"]},
+        {"asset": "Safety System Controller", "name": "Safety Network", "ip_address": "192.168.2.10", "mac_address": "00:1B:44:11:3A:BE", "type": "Safety", "protocols": ["SafetyNet"]}
+    ]
+    
+    interfaces = []
+    for interface_data in interfaces_data:
+        # Find the asset for this interface
+        asset = next((a for a in assets if a.name == interface_data["asset"]), None)
+        if asset:
+            existing_interface = db.query(AssetInterface).filter_by(
+                name=interface_data["name"], 
+                asset_id=asset.id
+            ).first()
+            
+            if not existing_interface:
+                interface = AssetInterface(
+                    id=uuid.uuid4(),
+                    tenant_id=tenant.id,
+                    asset_id=asset.id,
+                    name=interface_data["name"],
+                    ip_address=interface_data["ip_address"],
+                    mac_address=interface_data["mac_address"],
+                    type=interface_data["type"],
+                    protocols=interface_data["protocols"]
+                )
+                db.add(interface)
+                interfaces.append(interface)
+                print(f"✅ Created interface: {interface.name} for {asset.name}")
+            else:
+                interfaces.append(existing_interface)
+    
+    db.commit()
+    
+    # Create demo connections between assets
+    connections_data = [
+        {"parent": "PLC Controller A1", "child": "HMI Display A1", "connection_type": "Ethernet/IP", "description": "Control communication"},
+        {"parent": "PLC Controller A1", "child": "Network Switch A", "connection_type": "Ethernet", "description": "Network connectivity"},
+        {"parent": "Quality Control Robot", "child": "PLC Controller A1", "connection_type": "Ethernet/IP", "description": "Robot control"},
+        {"parent": "Production Server", "child": "Network Switch A", "connection_type": "Ethernet", "description": "Data collection"},
+        {"parent": "Safety System Controller", "child": "PLC Controller A1", "connection_type": "SafetyNet", "description": "Safety monitoring"}
+    ]
+    
+    connections = []
+    for connection_data in connections_data:
+        # Find the parent and child assets
+        parent_asset = next((a for a in assets if a.name == connection_data["parent"]), None)
+        child_asset = next((a for a in assets if a.name == connection_data["child"]), None)
+        
+        if parent_asset and child_asset:
+            existing_connection = db.query(AssetConnection).filter_by(
+                parent_asset_id=parent_asset.id,
+                child_asset_id=child_asset.id
+            ).first()
+            
+            if not existing_connection:
+                connection = AssetConnection(
+                    id=uuid.uuid4(),
+                    tenant_id=tenant.id,
+                    parent_asset_id=parent_asset.id,
+                    child_asset_id=child_asset.id,
+                    connection_type=connection_data["connection_type"],
+                    description=connection_data["description"]
+                )
+                db.add(connection)
+                connections.append(connection)
+                print(f"✅ Created connection: {parent_asset.name} → {child_asset.name}")
+            else:
+                connections.append(existing_connection)
+    
+    db.commit()
+    
+    print(f"\n🎉 Demo data seeding completed successfully!")
+    print(f"📊 Created/Found:")
+    print(f"   • {len(sites)} Sites")
+    print(f"   • {len(areas)} Areas")
+    print(f"   • {len(locations)} Locations")
+    print(f"   • {len(manufacturers)} Manufacturers")
+    print(f"   • {len(suppliers)} Suppliers")
+    print(f"   • {len(contacts)} Contacts")
+    print(f"   • {len(assets)} Assets")
+    print(f"   • {len(interfaces)} Interfaces")
+    print(f"   • {len(connections)} Connections")
+    
+    db.close()
 
 
 if __name__ == "__main__":

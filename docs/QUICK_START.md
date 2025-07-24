@@ -64,18 +64,18 @@ sed -i 's/yourdomain.com/your-actual-domain.com/g' docker-compose.prod.yml
 
 **For local development (recommended for first time):**
 ```bash
-docker-compose -f docker-compose.dev.yml up -d
+make init
 ```
 
 **For production deployment:**
 ```bash
-docker-compose -f docker-compose.prod.yml up -d
+make prod
 ```
 
 ### Configuration Differences
 
-- **Development** (`docker-compose.dev.yml`): Direct port access, no SSL, hot reload
-- **Production** (`docker-compose.prod.yml`): Traefik reverse proxy, SSL certificates, optimized builds
+- **Development** (`make init`): Direct port access, no SSL, hot reload, automatic demo data
+- **Production** (`make prod`): Traefik reverse proxy, SSL certificates, optimized builds
 
 ### 5. Verify Installation
 
@@ -87,21 +87,24 @@ Open your browser and go to:
 ## First Access
 
 1. **Login**: Use the default credentials (for development):
-   - Email: `admin@demo.com`
+   - Email: `admin@example.com`
    - Password: `admin123`
 
    **Alternative users:**
-   - Editor: `editor@demo.com` / `editor123`
-   - Viewer: `viewer@demo.com` / `viewer123`
+   - Editor: `editor@example.com` / `editor123`
+   - Viewer: `viewer@example.com` / `viewer123`
 
 2. **Demo Data**: The system automatically populates with realistic demo data including:
    - 3 Sites (Production Plant, R&D Center, Distribution Warehouse)
    - 12 Areas (Assembly Lines, Labs, Control Rooms, etc.)
+   - 19 Locations (Control Panels, Quality Stations, etc.)
+   - 8 Assets (PLCs, HMIs, Robots, Sensors, etc.)
+   - 10 Interfaces (Network interfaces with IP addresses)
+   - 5 Connections (Network topology)
    - 4 Suppliers (Siemens, Rockwell, Schneider, ABB)
    - 6 Contacts (Sales, Support, Management)
-   - 8 Assets (PLCs, HMIs, Robots, Sensors, etc.)
 
-2. **Initial Setup**: The system will automatically guide you through the first tenant configuration
+3. **Initial Setup**: The system will automatically guide you through the first tenant configuration
 
 ## Main File Structure
 
@@ -109,6 +112,7 @@ Open your browser and go to:
 industrace/
 ├── .env                    # ← MODIFY HERE (copy from production.env.example)
 ├── docker-compose.prod.yml # ← DON'T TOUCH
+├── Makefile               # ← NEW: Simplified commands
 ├── backend/                # ← DON'T TOUCH
 └── frontend/               # ← DON'T TOUCH
 ```
@@ -117,32 +121,68 @@ industrace/
 
 ### Development Commands
 ```bash
-# Start development environment
-docker-compose -f docker-compose.dev.yml up -d
+# Initialize system with demo data (recommended)
+make init
 
-# Stop development environment
-docker-compose -f docker-compose.dev.yml down
+# Start development environment
+make dev
+
+# Stop all services
+make stop
 
 # View logs
-docker-compose -f docker-compose.dev.yml logs -f
+make logs
 
-# Restart development environment
-docker-compose -f docker-compose.dev.yml restart
+# Restart services
+make restart
+
+# Clean system completely
+make clean
+
+# Show system status
+make status
 ```
 
 ### Production Commands
 ```bash
 # Start production system
-docker-compose -f docker-compose.prod.yml up -d
+make prod
 
 # Stop production system
-docker-compose -f docker-compose.prod.yml down
+make stop
 
 # View production logs
-docker-compose -f docker-compose.prod.yml logs -f
+make logs
 
 # Restart production system
-docker-compose -f docker-compose.prod.yml restart
+make restart
+
+# Build containers
+make build
+
+# Rebuild containers
+make rebuild
+```
+
+### Additional Commands
+```bash
+# Add demo data to existing system
+make demo
+
+# Run tests
+make test
+
+# Open backend shell
+make shell
+
+# Run database migrations
+make migrate
+
+# Reset database
+make reset-db
+
+# Show all available commands
+make help
 ```
 
 ## Troubleshooting
@@ -165,11 +205,21 @@ sudo chown -R $USER:$USER .
 ### System won't start
 ```bash
 # Check logs
-docker-compose -f docker-compose.prod.yml logs
+make logs
 
-# Recreate containers
-docker-compose -f docker-compose.prod.yml down
-docker-compose -f docker-compose.prod.yml up -d --force-recreate
+# Clean and restart
+make clean
+make init
+```
+
+### Demo data not loading
+```bash
+# Force demo data seeding
+make demo
+
+# Or clean and reinitialize
+make clean
+make init
 ```
 
 ## Advanced Configuration (Optional)
@@ -187,9 +237,18 @@ Then access via `http://localhost:8080`
 ### Database Backup
 ```bash
 # Backup
-docker-compose -f docker-compose.prod.yml exec db pg_dump -U industrace industrace > backup.sql
+make backup
 
 # Restore
+make restore
+```
+
+### Manual Database Operations
+```bash
+# Backup (manual)
+docker-compose -f docker-compose.prod.yml exec db pg_dump -U industrace industrace > backup.sql
+
+# Restore (manual)
 docker-compose -f docker-compose.prod.yml exec -T db psql -U industrace industrace < backup.sql
 ```
 

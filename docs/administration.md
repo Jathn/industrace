@@ -35,21 +35,24 @@ This administration guide provides comprehensive instructions for managing and m
    ```
 
 2. **Environment Configuration**
-   - Review `production.env` settings
+   - Review `.env` settings (copied from `production.env.example`)
    - Configure database connections
    - Set up SMTP for notifications
    - Configure backup settings
 
 3. **First Boot Configuration**
    ```bash
-   # Start the system
-   docker-compose up -d
+   # Initialize system with demo data
+   make init
+   
+   # Or for production deployment
+   make prod
    
    # Check service status
-   docker-compose ps
+   make status
    
-   # Verify database migrations
-   docker-compose logs backend | grep "migration"
+   # View logs
+   make logs
    ```
 
 ### System Health Monitoring
@@ -57,12 +60,15 @@ This administration guide provides comprehensive instructions for managing and m
 1. **Service Status Check**
    ```bash
    # Check all services
-   docker-compose ps
+   make status
+   
+   # View logs
+   make logs
    
    # Check specific service logs
-   docker-compose logs backend
-   docker-compose logs frontend
-   docker-compose logs postgres
+   docker-compose -f docker-compose.dev.yml logs backend
+   docker-compose -f docker-compose.dev.yml logs frontend
+   docker-compose -f docker-compose.dev.yml logs db
    ```
 
 2. **Health Endpoints**
@@ -82,6 +88,37 @@ This administration guide provides comprehensive instructions for managing and m
    - Memory consumption tracking
    - Disk space monitoring
    - Network traffic analysis
+
+### Available Make Commands
+
+#### Basic System Commands
+```bash
+make init      # Initialize system with demo data
+make dev       # Start development environment
+make prod      # Start production environment
+make stop      # Stop all services
+make status    # Show service status
+make logs      # View logs
+make restart   # Restart services
+```
+
+#### Development and Maintenance
+```bash
+make demo      # Add demo data to existing system
+make clean     # Clean system completely
+make test      # Run tests
+make shell     # Open backend shell
+make migrate   # Run database migrations
+make reset-db  # Reset database
+```
+
+#### Build and Deployment
+```bash
+make build     # Build containers
+make rebuild   # Rebuild containers
+make info      # Show system information
+make help      # Show all available commands
+```
 
 ## User and Role Management
 
@@ -211,9 +248,9 @@ This administration guide provides comprehensive instructions for managing and m
    # Update system packages
    apt update && apt upgrade
    
-   # Update Docker images
-   docker-compose pull
-   docker-compose up -d
+   # Update Docker images and restart
+   make rebuild
+   make restart
    ```
 
 2. **Security Scanning**
@@ -235,7 +272,11 @@ This administration guide provides comprehensive instructions for managing and m
 1. **PostgreSQL Management**
    ```bash
    # Connect to database
-   docker-compose exec postgres psql -U industrace
+   make shell
+   # Then run: psql -U industrace industrace
+   
+   # Or direct connection
+   docker-compose -f docker-compose.dev.yml exec db psql -U industrace industrace
    
    # Check database size
    SELECT pg_size_pretty(pg_database_size('industrace'));
@@ -268,13 +309,13 @@ This administration guide provides comprehensive instructions for managing and m
 1. **Alembic Migrations**
    ```bash
    # Check migration status
-   docker-compose exec backend alembic current
+   make migrate
    
    # Apply pending migrations
-   docker-compose exec backend alembic upgrade head
+   make migrate
    
-   # Create new migration
-   docker-compose exec backend alembic revision --autogenerate -m "Description"
+   # Create new migration (manual)
+   docker-compose -f docker-compose.dev.yml exec backend alembic revision --autogenerate -m "Description"
    ```
 
 2. **Migration Best Practices**
@@ -289,13 +330,16 @@ This administration guide provides comprehensive instructions for managing and m
 
 1. **Database Backup**
    ```bash
-   # Create database backup
-   docker-compose exec postgres pg_dump -U industrace industrace > backup.sql
+   # Create database backup using make
+   make backup
+   
+   # Or manual backup
+   docker-compose -f docker-compose.dev.yml exec db pg_dump -U industrace industrace > backup.sql
    
    # Automated backup script
    #!/bin/bash
    DATE=$(date +%Y%m%d_%H%M%S)
-   docker-compose exec postgres pg_dump -U industrace industrace > backup_$DATE.sql
+   docker-compose -f docker-compose.dev.yml exec db pg_dump -U industrace industrace > backup_$DATE.sql
    ```
 
 2. **File Backup**

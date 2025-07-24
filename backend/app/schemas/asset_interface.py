@@ -2,9 +2,7 @@ from pydantic import BaseModel, Field, ConfigDict, validator
 from typing import Optional, Dict, List
 from datetime import datetime
 from uuid import UUID
-import re
-import ipaddress
-from app.errors.validation_errors import InvalidIPAddressError, InvalidMACAddressError, InvalidVLANError
+from app.schemas.validators import *
 
 
 class AssetInterfaceBase(BaseModel):
@@ -21,55 +19,10 @@ class AssetInterfaceBase(BaseModel):
     other: Optional[str] = Field(None, max_length=255, description="Other information")
     protocols: Optional[List[str]] = Field(default_factory=list, description="Industrial protocols supported by this interface")
 
-    @validator('ip_address')
-    def validate_ip_address(cls, v):
-        if v is None or v == "":
-            return v
-        try:
-            ipaddress.IPv4Address(v)
-            return v
-        except ipaddress.AddressValueError:
-            raise InvalidIPAddressError('ip_address')
-
-    @validator('subnet_mask')
-    def validate_subnet_mask(cls, v):
-        if v is None or v == "":
-            return v
-        try:
-            ipaddress.IPv4Address(v)
-            return v
-        except ipaddress.AddressValueError:
-            raise InvalidIPAddressError('subnet_mask')
-
-    @validator('default_gateway')
-    def validate_default_gateway(cls, v):
-        if v is None or v == "":
-            return v
-        try:
-            ipaddress.IPv4Address(v)
-            return v
-        except ipaddress.AddressValueError:
-            raise InvalidIPAddressError('default_gateway')
-
-    @validator('mac_address')
-    def validate_mac_address(cls, v):
-        if v is None or v == "":
-            return v
-        # Pattern per MAC address (xx:xx:xx:xx:xx:xx o xx-xx-xx-xx-xx-xx)
-        mac_pattern = re.compile(r'^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$')
-        if not mac_pattern.match(v):
-            raise InvalidMACAddressError('mac_address')
-        return v
-
-    @validator('vlan')
-    def validate_vlan(cls, v):
-        if v is None or v == "":
-            return v
-        # Pattern per VLAN (1-4094)
-        vlan_pattern = re.compile(r'^([1-9]|[1-9]\d{1,2}|[1-3]\d{3}|40[0-9][0-4])$')
-        if not vlan_pattern.match(v):
-            raise InvalidVLANError('vlan')
-        return v
+    # Validators
+    _validate_ip_address = validator('ip_address', allow_reuse=True)(validate_ip_address)
+    _validate_mac_address = validator('mac_address', allow_reuse=True)(validate_mac_address)
+    _validate_vlan = validator('vlan', allow_reuse=True)(validate_vlan)
 
 
 class AssetInterfaceCreate(AssetInterfaceBase):

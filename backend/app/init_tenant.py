@@ -40,7 +40,7 @@ if __name__ == "__main__":
     create_tenant_with_admin(
         tenant_name="New Tenant",
         tenant_slug="new-tenant",
-        admin_email="admin@demo.com",
+        admin_email="admin@example.com",
         admin_password="admin123",
         admin_name="Super Admin",
     )

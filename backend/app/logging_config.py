@@ -3,9 +3,35 @@ import logging.config
 import os
 from datetime import datetime
 from app.config import settings
+import sys
+from typing import Dict, Any
 
 def setup_logging():
     """Setup centralized logging configuration"""
+    
+    # Suppress specific warnings
+    logging.getLogger("passlib.handlers.bcrypt").setLevel(logging.ERROR)
+    
+    # Configure root logger
+    logging.basicConfig(
+        level=logging.INFO,
+        format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+        handlers=[
+            logging.StreamHandler(sys.stdout)
+        ]
+    )
+    
+    # Set specific log levels
+    logging.getLogger("uvicorn").setLevel(logging.INFO)
+    logging.getLogger("uvicorn.error").setLevel(logging.INFO)
+    logging.getLogger("uvicorn.access").setLevel(logging.WARNING)
+    logging.getLogger("fastapi").setLevel(logging.INFO)
+    logging.getLogger("sqlalchemy.engine").setLevel(logging.WARNING)
+    logging.getLogger("alembic").setLevel(logging.WARNING)
+    
+    # Suppress noisy libraries
+    logging.getLogger("passlib").setLevel(logging.ERROR)
+    logging.getLogger("bcrypt").setLevel(logging.ERROR)
     
     # Create logs directory if it doesn't exist
     log_dir = "logs"

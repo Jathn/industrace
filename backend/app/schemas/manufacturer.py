@@ -4,8 +4,7 @@ from pydantic import BaseModel, Field, validator
 from typing import Optional
 from datetime import datetime
 import uuid
-import re
-from app.errors.validation_errors import InvalidURLError, InvalidPhoneError, InvalidEmailError
+from app.schemas.validators import *
 
 
 class ManufacturerBase(BaseModel):
@@ -15,32 +14,10 @@ class ManufacturerBase(BaseModel):
     email: Optional[str] = Field(None, max_length=255, description="Email address")
     phone: Optional[str] = Field(None, max_length=50, description="Phone number")
 
-    @validator('phone')
-    def validate_phone(cls, v):
-        if v is None or v == "":
-            return v
-        # Verifica formato numero di telefono
-        if not re.match(r'^\+?[\d\s\-\(\)]{7,20}$', v):
-            raise InvalidPhoneError('phone')
-        return v
-
-    @validator('website')
-    def validate_website(cls, v):
-        if v is None or v == "":
-            return v
-        # Verifica formato URL base
-        if not re.match(r'^https?://[^\s/$.?#].[^\s]*$', v):
-            raise InvalidURLError('website')
-        return v
-
-    @validator('email')
-    def validate_email(cls, v):
-        if v is None or v == "":
-            return v
-        # Verifica formato email base
-        if not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', v):
-            raise InvalidEmailError('email')
-        return v.lower()
+    # Validators
+    _validate_phone = validator('phone', allow_reuse=True)(validate_phone)
+    _validate_website = validator('website', allow_reuse=True)(validate_website)
+    _validate_email = validator('email', allow_reuse=True)(validate_email)
 
 
 class ManufacturerCreate(ManufacturerBase):
@@ -54,32 +31,10 @@ class ManufacturerUpdate(BaseModel):
     email: Optional[str] = None
     phone: Optional[str] = None
 
-    @validator('phone')
-    def validate_phone(cls, v):
-        if v is None or v == "":
-            return v
-        # Verifica formato numero di telefono
-        if not re.match(r'^\+?[\d\s\-\(\)]{7,20}$', v):
-            raise InvalidPhoneError('phone')
-        return v
-
-    @validator('website')
-    def validate_website(cls, v):
-        if v is None or v == "":
-            return v
-        # Verifica formato URL base
-        if not re.match(r'^https?://[^\s/$.?#].[^\s]*$', v):
-            raise InvalidURLError('website')
-        return v
-
-    @validator('email')
-    def validate_email(cls, v):
-        if v is None or v == "":
-            return v
-        # Verifica formato email base
-        if not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', v):
-            raise InvalidEmailError('email')
-        return v.lower()
+    # Validators
+    _validate_phone = validator('phone', allow_reuse=True)(validate_phone)
+    _validate_website = validator('website', allow_reuse=True)(validate_website)
+    _validate_email = validator('email', allow_reuse=True)(validate_email)
 
 
 class Manufacturer(BaseModel):

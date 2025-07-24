@@ -1299,7 +1299,7 @@ class PDFGenerator:
                         ["Sito", asset.site.name if asset.site else "N/A"],
                         ["Area", asset.location.area.name if asset.location and asset.location.area else "N/A"],
                         ["Location", asset.location.name if asset.location else "N/A"],
-                        ["IP", asset.ip_address or "N/A"],
+                        ["IP", asset.interfaces[0].ip_address if asset.interfaces else "N/A"],
                         ["Produttore", asset.manufacturer.name if asset.manufacturer else "N/A"],
                         ["Serial Number", asset.serial_number or "N/A"],
                         ["Note", asset.description or "N/A"]

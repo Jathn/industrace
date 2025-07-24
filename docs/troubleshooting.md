@@ -2,12 +2,36 @@
 
 This guide provides solutions for common issues encountered when using Industrace.
 
+## Quick Commands Reference
+
+### Using Make Commands (Recommended)
+```bash
+make status    # Check service status
+make logs      # View all logs
+make restart   # Restart all services
+make clean     # Clean system completely
+make init      # Reinitialize system
+make demo      # Add demo data
+make shell     # Open backend shell
+make migrate   # Run database migrations
+make reset-db  # Reset database
+```
+
+### Manual Docker Commands (Alternative)
+```bash
+docker-compose -f docker-compose.dev.yml ps
+docker-compose -f docker-compose.dev.yml logs
+docker-compose -f docker-compose.dev.yml restart
+docker-compose -f docker-compose.dev.yml down
+docker-compose -f docker-compose.dev.yml up -d
+```
+
 ## Quick Diagnostics
 
 ### System Health Check
 ```bash
 # Check if all services are running
-docker-compose ps
+make status
 
 # Check system health
 curl http://localhost:8000/health
@@ -19,15 +43,15 @@ curl http://localhost:8000/setup/status
 ### Log Analysis
 ```bash
 # View all logs
-docker-compose logs
+make logs
 
 # View specific service logs
-docker-compose logs backend
-docker-compose logs frontend
-docker-compose logs db
+docker-compose -f docker-compose.dev.yml logs backend
+docker-compose -f docker-compose.dev.yml logs frontend
+docker-compose -f docker-compose.dev.yml logs db
 
 # Follow logs in real-time
-docker-compose logs -f backend
+docker-compose -f docker-compose.dev.yml logs -f backend
 ```
 
 ## Common Issues
@@ -88,16 +112,16 @@ sudo chown -R $USER:$USER /var/run/docker.sock
 **Solution**:
 ```bash
 # Check database container
-docker-compose ps db
+make status
 
 # Check database logs
-docker-compose logs db
+make logs
 
 # Restart database
-docker-compose restart db
+make restart
 
 # Check database connection
-docker-compose exec db pg_isready -U postgres
+docker-compose -f docker-compose.dev.yml exec db pg_isready -U postgres
 ```
 
 #### Database Migration Issues

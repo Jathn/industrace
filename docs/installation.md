@@ -23,39 +23,39 @@ This guide provides step-by-step instructions for installing Industrace on your 
 
 ## Installation Methods
 
-### Method 1: Docker Compose (Recommended)
+### Method 1: Docker Compose with Make (Recommended)
 
 #### Step 1: Clone the Repository
 ```bash
-git clone <repository-url>
+git clone https://github.com/industrace/industrace.git
 cd industrace
 ```
 
 #### Step 2: Configure Environment
 ```bash
 # Copy environment template
-cp production.env.example production.env
+cp production.env.example .env
 
 # Edit configuration (optional)
-nano production.env
+nano .env
 ```
 
-#### Step 3: Start the Application
+#### Step 3: Initialize the System
 ```bash
-# Start all services
-docker-compose up -d
+# Initialize system with demo data (recommended for first time)
+make init
 
-# Verify services are running
-docker-compose ps
+# Or for production deployment
+make prod
 ```
 
-#### Step 4: Initialize the System
+#### Step 4: Verify Installation
 ```bash
 # Check system status
-curl http://localhost:8000/setup/status
+make status
 
-# If not initialized, run initialization
-curl -X POST http://localhost:8000/setup/initialize
+# View logs if needed
+make logs
 ```
 
 #### Step 5: Access the Application
@@ -101,132 +101,193 @@ After installation, you can log in with:
 - **Email**: admin@example.com
 - **Password**: admin123
 
-### First Steps
-1. **Change Default Password**: Update the admin password immediately
-2. **Configure SMTP**: Set up email notifications
-3. **Create Tenant**: Set up your organization
-4. **Add Users**: Create user accounts for your team
-5. **Configure Asset Types**: Define your asset categories
+### Demo Data
+The system automatically populates with comprehensive demo data:
+- 3 Sites (Production Plant, R&D Center, Distribution Warehouse)
+- 12 Areas (Assembly Lines, Labs, Control Rooms, etc.)
+- 19 Locations (Control Panels, Quality Stations, etc.)
+- 8 Assets (PLCs, HMIs, Robots, Sensors, etc.)
+- 10 Interfaces (Network interfaces with IP addresses)
+- 5 Connections (Network topology)
+- 4 Suppliers (Siemens, Rockwell, Schneider, ABB)
+- 6 Contacts (Sales, Support, Management)
 
-### Environment Configuration
+## Available Make Commands
 
-Key environment variables:
-
+### Basic Commands
 ```bash
-# Database
-DATABASE_URL=postgresql://user:password@localhost/industrace
-
-# Security
-SECRET_KEY=your-secret-key-here
-JWT_ISSUER=industrace-api
-JWT_AUDIENCE=industrace-client
-
-# Email
-SMTP_HOST=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USER=your-email@gmail.com
-SMTP_PASSWORD=your-app-password
-
-# File Uploads
-UPLOAD_DIR=uploads
-MAX_FILE_SIZE=10485760  # 10MB
-
-# API Settings
-EXTERNAL_API_ENABLED=true
-EXTERNAL_API_DOCS_ENABLED=true
+make init      # Initialize system with demo data
+make dev       # Start development environment
+make prod      # Start production environment
+make stop      # Stop all services
+make status    # Show service status
+make logs      # View logs
 ```
 
-## Verification
-
-### Health Check
+### Development Commands
 ```bash
-curl http://localhost:8000/health
+make demo      # Add demo data to existing system
+make clean     # Clean system completely
+make test      # Run tests
+make shell     # Open backend shell
+make migrate   # Run database migrations
+make reset-db  # Reset database
 ```
 
-Expected response:
-```json
-{
-  "status": "healthy",
-  "timestamp": "2024-01-15T10:00:00",
-  "version": "1.0.0",
-  "environment": "production"
-}
-```
-
-### System Status
+### Build Commands
 ```bash
-curl http://localhost:8000/setup/status
+make build     # Build containers
+make rebuild   # Rebuild containers
+make restart   # Restart services
 ```
 
-Expected response:
-```json
-{
-  "is_configured": true,
-  "tenant_count": 1,
-  "user_count": 3,
-  "role_count": 3,
-  "database_connected": true,
-  "error": null
-}
+### Utility Commands
+```bash
+make help      # Show all available commands
+make info      # Show system information
+```
+
+## Manual Docker Commands (Alternative)
+
+If you prefer to use Docker commands directly:
+
+### Development Environment
+```bash
+# Start development environment
+docker-compose -f docker-compose.dev.yml up -d
+
+# Stop development environment
+docker-compose -f docker-compose.dev.yml down
+
+# View logs
+docker-compose -f docker-compose.dev.yml logs -f
+
+# Restart services
+docker-compose -f docker-compose.dev.yml restart
+```
+
+### Production Environment
+```bash
+# Start production system
+docker-compose -f docker-compose.prod.yml up -d
+
+# Stop production system
+docker-compose -f docker-compose.prod.yml down
+
+# View production logs
+docker-compose -f docker-compose.prod.yml logs -f
+
+# Restart production system
+docker-compose -f docker-compose.prod.yml restart
 ```
 
 ## Troubleshooting
 
 ### Common Issues
 
-#### Port Already in Use
+#### System won't start
 ```bash
-# Check what's using the port
-lsof -i :8000
-lsof -i :5173
+# Check logs
+make logs
 
-# Stop conflicting services or change ports in docker-compose.yml
+# Clean and restart
+make clean
+make init
 ```
 
-#### Database Connection Issues
+#### Demo data not loading
 ```bash
-# Check database container
-docker-compose logs db
+# Force demo data seeding
+make demo
 
-# Restart database
-docker-compose restart db
+# Or clean and reinitialize
+make clean
+make init
 ```
 
-#### Permission Issues
+#### Port conflicts
 ```bash
-# Fix upload directory permissions
-sudo chown -R 1000:1000 uploads/
+# Check what's using the ports
+sudo lsof -i :5173
+sudo lsof -i :8000
+sudo lsof -i :5432
+
+# Stop conflicting services
+sudo systemctl stop nginx  # if using port 80
 ```
 
-### Logs
+#### Permission issues
 ```bash
-# View all logs
-docker-compose logs
+# Set correct permissions
+sudo chown -R $USER:$USER .
 
-# View specific service logs
-docker-compose logs backend
-docker-compose logs frontend
-docker-compose logs db
-
-# Follow logs in real-time
-docker-compose logs -f backend
+# Or run with sudo (not recommended for production)
+sudo make init
 ```
+
+### Database Issues
+
+#### Reset database
+```bash
+# Complete reset
+make clean
+make init
+
+# Or just reset database
+make reset-db
+```
+
+#### Backup and restore
+```bash
+# Backup
+make backup
+
+# Restore
+make restore
+```
+
+## Configuration Files
+
+### Environment Variables
+The main configuration file is `.env` (copied from `production.env.example`):
+
+```bash
+# Database Configuration
+DB_PASSWORD=your_secure_password_here
+
+# JWT Configuration
+SECRET_KEY=your-super-secure-secret-key-change-this-in-production
+
+# Domain Configuration
+DOMAIN=yourdomain.com
+
+# Admin Configuration
+ADMIN_EMAIL=admin@yourdomain.com
+```
+
+### Docker Compose Files
+- `docker-compose.dev.yml` - Development environment
+- `docker-compose.prod.yml` - Production environment
+- `docker-compose.yml` - Default environment
 
 ## Next Steps
 
 After successful installation:
 
-1. **Read the User Manual**: Learn how to use Industrace
-2. **Configure Security**: Set up proper authentication and authorization
-3. **Import Data**: Import your existing asset data
-4. **Set Up Monitoring**: Configure health checks and monitoring
-5. **Backup Strategy**: Implement regular backups
+1. **Access the application**: http://localhost:5173
+2. **Login with default credentials**: admin@example.com / admin123
+3. **Explore demo data**: Navigate through sites, areas, assets, and connections
+4. **Configure your environment**: Update settings in the admin panel
+5. **Add your own data**: Start adding your industrial assets
 
 ## Support
 
-If you encounter issues during installation:
+- **Documentation**: [docs/](docs/)
+- **Quick Start**: [QUICK_START.md](QUICK_START.md)
+- **Troubleshooting**: [troubleshooting.md](troubleshooting.md)
+- **Website**: https://besafe.it/industrace
+- **Email**: industrace@besafe.it
 
-1. Check the troubleshooting guide
-2. Review the logs for error messages
-3. Verify system requirements are met
-4. Check the GitHub issues page for known problems 
+---
+
+**Author**: Maurizio Bertaboni - BeSafe S.r.l. (https://besafe.it) 

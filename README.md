@@ -1,26 +1,33 @@
-# Industrace
-
-**Configuration Management Database for Industrial Control Systems**
+# Industrace - Industrial Asset Management System
 
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL%203.0-blue.svg)](https://opensource.org/licenses/AGPL-3.0)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
-[![Python](https://img.shields.io/badge/Python-3.9+-green.svg)](https://www.python.org/)
-[![Vue](https://img.shields.io/badge/Vue-3.0+-green.svg)](https://vuejs.org/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.104.1-green.svg)](https://fastapi.tiangolo.com/)
+[![Vue.js](https://img.shields.io/badge/Vue.js-3.0-green.svg)](https://vuejs.org/)
 
-## About
+**Industrace** is a comprehensive Industrial Asset Management System designed for managing and monitoring industrial equipment, networks, and infrastructure. Built with FastAPI backend and Vue.js frontend, it provides a modern, scalable solution for industrial environments.
 
-Industrace is an open-source Configuration Management Database (CMDB) specifically designed for Industrial Control Systems. It provides comprehensive asset management, network analysis, risk assessment, and reporting capabilities for industrial environments.
+## 🌟 Key Features
 
-### Features
+- **Asset Management**: Complete lifecycle management of industrial assets
+- **Network Mapping**: Visual representation of asset connections and communications
+- **Risk Assessment**: Built-in risk scoring and vulnerability assessment
+- **Multi-tenant Architecture**: Support for multiple organizations
+- **Role-based Access Control**: Granular permissions system
+- **Real-time Monitoring**: Live asset status and health monitoring
+- **Document Management**: Asset documentation and photo management
+- **Audit Trail**: Complete activity logging and change tracking
+- **API-First Design**: RESTful API for integration with other systems
+- **Modern UI**: Responsive Vue.js frontend with intuitive interface
 
-- **Multi-tenant Architecture**: Complete isolation between organizations
-- **Asset Management**: Comprehensive industrial asset tracking
-- **Network Analysis**: Connection mapping and protocol analysis
-- **Risk Assessment**: Automated risk scoring and monitoring
-- **Document Management**: File uploads and document tracking
-- **Reporting**: Customizable reports and dashboards
-- **API Integration**: REST APIs for external integrations
-- **Security**: Role-based access control and audit logging
+## 🏗️ Architecture
+
+- **Backend**: FastAPI with SQLAlchemy ORM
+- **Database**: PostgreSQL 15+
+- **Frontend**: Vue.js 3 with Vite
+- **Authentication**: JWT-based with role-based access control
+- **Containerization**: Docker and Docker Compose
+- **API Documentation**: Auto-generated with OpenAPI/Swagger
 
 ## 🚀 Quick Start
 
@@ -32,6 +39,21 @@ Industrace is an open-source Configuration Management Database (CMDB) specifical
 - 20GB disk space minimum
 
 ### Installation
+
+#### Option 1: Automatic Initialization (Recommended)
+```bash
+# Clone the repository
+git clone https://github.com/industrace/industrace.git
+cd industrace
+
+# Initialize system with demo data
+make init
+
+# Access the application
+open http://localhost:5173
+```
+
+#### Option 2: Manual Setup
 ```bash
 # Clone the repository
 git clone https://github.com/industrace/industrace.git
@@ -44,42 +66,116 @@ docker-compose up -d
 open http://localhost:5173
 ```
 
+### Development Environment
+```bash
+# Start development environment
+make dev
+
+# Add demo data to existing system
+make demo
+
+# Clean system completely
+make clean
+
+# Show available commands
+make help
+```
+
 ### Default Credentials
 - **URL**: http://localhost:5173
 - **Email**: admin@example.com
 - **Password**: admin123
 
+**Note**: Demo data is automatically populated in development environment. The system includes sample sites, areas, locations, manufacturers, suppliers, contacts, assets with interfaces, and network connections for testing purposes.
+
+## 📊 Demo Data Included
+
+The system comes pre-populated with comprehensive demo data:
+
+- **3 Sites**: Main Production Plant, Research & Development Center, Distribution Warehouse
+- **12 Areas**: Assembly Lines, Quality Control Lab, Control Room, Maintenance Bay, etc.
+- **19 Locations**: Control Panels, Quality Stations, Maintenance Bays, etc.
+- **8 Assets**: PLCs, HMIs, Robots, Switches, Sensors, Servers with realistic specifications
+- **10 Interfaces**: Network interfaces with IP addresses, MAC addresses, and protocols
+- **5 Connections**: Network topology showing asset communications
+- **4 Manufacturers**: Siemens, Rockwell Automation, Schneider Electric, ABB
+- **4 Suppliers** and **6 Contacts**: Complete supply chain information
+
 ## Documentation
 
 Complete documentation is available in the [docs](docs/) directory:
 
-- [Installation Guide](docs/installation.md)
-- [API Documentation](docs/api-documentation.md)
-- [Docker Deployment](docs/docker-deployment.md)
-- [Configuration Guide](docs/configuration.md)
-- [Troubleshooting](docs/troubleshooting.md)
+- [Quick Start Guide](docs/QUICK_START.md) - Get up and running in 5 minutes
+- [Installation Guide](docs/installation.md) - Detailed installation instructions
+- [User Manual](docs/user-manual.md) - How to use the application
+- [API Documentation](docs/api-documentation.md) - Complete API reference
+- [Development Guide](docs/development.md) - Development setup and guidelines
+- [Administration Guide](docs/administration.md) - System administration
+- [Security Guide](docs/security.md) - Security best practices
+- [Troubleshooting](docs/troubleshooting.md) - Common issues and solutions
 
-## API
+## 🔧 Development
 
-Industrace provides a comprehensive REST API with OpenAPI documentation:
+### Prerequisites
+- Python 3.8+
+- Node.js 16+
+- Docker and Docker Compose
 
-- **API Documentation**: http://localhost:8000/docs
-- **API Reference**: http://localhost:8000/redoc
-- **OpenAPI JSON**: http://localhost:8000/openapi.json
+### Setup Development Environment
+```bash
+# Clone and setup
+git clone https://github.com/industrace/industrace.git
+cd industrace
 
-## Architecture
+# Start development environment
+make dev
 
-- **Backend**: FastAPI + PostgreSQL
-- **Frontend**: Vue 3 + PrimeVue
-- **Database**: PostgreSQL 15+
-- **Containerization**: Docker + Docker Compose
-- **Authentication**: JWT with role-based access control
+# Run tests
+make test
 
-## License
+# View logs
+make logs
+```
+
+### Available Make Commands
+```bash
+make init      # Initialize system with demo data
+make dev       # Start development environment
+make prod      # Start production environment
+make demo      # Add demo data to existing system
+make clean     # Clean system completely
+make test      # Run tests
+make logs      # View logs
+make stop      # Stop all services
+make build     # Build containers
+make rebuild   # Rebuild containers
+make status    # Show service status
+make shell     # Open backend shell
+make migrate   # Run database migrations
+make reset-db  # Reset database
+make restart   # Restart services
+make info      # Show system information
+```
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+## 📄 License
 
 This project is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**. This means you are free to use, modify, and distribute the software, but any modifications must also be released under the same license.
 
 See the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+- **Documentation**: [docs/](docs/)
+- **Issues**: [GitHub Issues](https://github.com/industrace/industrace/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/industrace/industrace/discussions)
+
+## 🗺️ Roadmap
+
+See our [Roadmap](docs/roadmap.md) for planned features and improvements.
 
 ## Author and Support
 
@@ -89,22 +185,6 @@ See the [LICENSE](LICENSE) file for details.
 - **Industrace Site**: https://besafe.it/industrace
 - **Contact**: industrace@besafe.it
 
-## Contributing
-
-Industrace is open source and welcomes contributions! Please see our contributing guidelines for more information on how to get involved.
-
-## Support
-
-For support and questions:
-1. Check the [troubleshooting guide](docs/troubleshooting.md)
-2. Review the [API documentation](docs/api-documentation.md)
-3. Check system logs: `docker-compose logs backend`
-4. Verify system health: `curl http://localhost:8000/health`
-5. Contact: industrace@besafe.it
-
 ---
 
-**Industrace** - Configuration Management Database for Industrial Control Systems  
-**Author**: Maurizio Bertaboni (BeSafe S.r.l.)  
-**Website**: https://besafe.it/industrace  
-**Contact**: industrace@besafe.it 
+**Industrace** - Industrial Asset Management Made Simple 

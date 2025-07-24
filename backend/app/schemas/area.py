@@ -34,7 +34,7 @@ class AreaRead(AreaBase):
     site: Optional[Site] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class AreaList(BaseModel):
@@ -48,4 +48,4 @@ class AreaList(BaseModel):
     updated_at: datetime
 
     class Config:
-        orm_mode = True 
+        from_attributes = True 

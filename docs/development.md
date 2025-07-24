@@ -34,6 +34,39 @@ This development guide provides comprehensive information for developers working
    - pgAdmin or DBeaver
    - Git client
 
+### Available Make Commands
+
+The project includes a comprehensive Makefile for simplified development workflow:
+
+#### Basic Commands
+```bash
+make init      # Initialize system with demo data
+make dev       # Start development environment
+make prod      # Start production environment
+make stop      # Stop all services
+make status    # Show service status
+make logs      # View logs
+make restart   # Restart services
+```
+
+#### Development Commands
+```bash
+make demo      # Add demo data to existing system
+make clean     # Clean system completely
+make test      # Run tests
+make shell     # Open backend shell
+make migrate   # Run database migrations
+make reset-db  # Reset database
+```
+
+#### Build Commands
+```bash
+make build     # Build containers
+make rebuild   # Rebuild containers
+make info      # Show system information
+make help      # Show all available commands
+```
+
 ### Setup Instructions
 
 1. **Clone Repository**
@@ -53,25 +86,31 @@ This development guide provides comprehensive information for developers working
 
 3. **Start Development Environment**
    ```bash
-   # Start all services
-   docker-compose -f docker-compose.yml up -d
+   # Initialize system with demo data (recommended)
+   make init
+   
+   # Or start development environment only
+   make dev
    
    # Check service status
-   docker-compose ps
+   make status
    
    # View logs
-   docker-compose logs -f backend
+   make logs
    ```
 
 4. **Database Setup**
    ```bash
    # Run migrations
-   docker-compose exec backend alembic upgrade head
+   make migrate
    
-   # Seed initial data
-   docker-compose exec backend python -m app.init_tenant
-   docker-compose exec backend python -m app.init_roles
-   docker-compose exec backend python -m app.init_test_users
+   # Seed initial data (automatic with make init)
+   # Or manually:
+   make shell
+   # Then run:
+   # python -m app.init_tenant
+   # python -m app.init_roles
+   # python -m app.init_test_users
    ```
 
 ### Development Workflow
@@ -829,13 +868,13 @@ frontend/
 1. **Local Development**
    ```bash
    # Start development environment
-   docker-compose up -d
+   make dev
    
    # Watch logs
-   docker-compose logs -f
+   make logs
    
    # Stop services
-   docker-compose down
+   make stop
    ```
 
 2. **Hot Reload**
@@ -859,10 +898,10 @@ frontend/
 1. **Build Process**
    ```bash
    # Build production images
-   docker-compose -f docker-compose.prod.yml build
+   make build
    
    # Deploy to production
-   docker-compose -f docker-compose.prod.yml up -d
+   make prod
    ```
 
 2. **Environment Configuration**

@@ -4,11 +4,7 @@ from pydantic import BaseModel, Field, validator
 from typing import List, Optional, Dict, Any
 from datetime import datetime, date
 import uuid
-from app.errors.validation_errors import (
-    InvalidImpactValueError, InvalidPurdueLevelError, InvalidRiskScoreError,
-    InvalidBusinessCriticalityError, InvalidRemoteAccessTypeError, InvalidPhysicalAccessEaseError
-)
-    
+from app.schemas.validators import *
 
 from .site import Site
 from .asset_type import AssetType
@@ -30,7 +26,7 @@ class AssetSummary(BaseModel):
     name: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class AssetBase(BaseModel):
@@ -72,56 +68,14 @@ class AssetBase(BaseModel):
     update_status: Optional[str] = Field(None, max_length=50, description="Update status")
     risk_score: Optional[float] = 0.0
 
-    @validator('impact_value')
-    def validate_impact_value(cls, v):
-        if v is None:
-            return v
-        if v < 1 or v > 5:
-            raise InvalidImpactValueError('impact_value')
-        return v
+    # Validators
+    _validate_impact_value = validator('impact_value', allow_reuse=True)(validate_impact_value)
+    _validate_purdue_level = validator('purdue_level', allow_reuse=True)(validate_purdue_level)
+    _validate_risk_score = validator('risk_score', allow_reuse=True)(validate_risk_score)
+    _validate_business_criticality = validator('business_criticality', allow_reuse=True)(validate_business_criticality)
+    _validate_remote_access_type = validator('remote_access_type', allow_reuse=True)(validate_remote_access_type)
+    _validate_physical_access_ease = validator('physical_access_ease', allow_reuse=True)(validate_physical_access_ease)
 
-    @validator('purdue_level')
-    def validate_purdue_level(cls, v):
-        if v is None:
-            return v
-        if v < 0.0 or v > 5.0:
-            raise InvalidPurdueLevelError('purdue_level')
-        return v
-
-    @validator('risk_score')
-    def validate_risk_score(cls, v):
-        if v is None:
-            return v
-        if v < 0.0 or v > 10.0:
-            raise InvalidRiskScoreError('risk_score')
-        return v
-
-    @validator('business_criticality')
-    def validate_business_criticality(cls, v):
-        if v is None:
-            return v
-        allowed_values = ['low', 'medium', 'high', 'critical']
-        if v.lower() not in allowed_values:
-            raise InvalidBusinessCriticalityError('business_criticality')
-        return v.lower()
-
-    @validator('remote_access_type')
-    def validate_remote_access_type(cls, v):
-        if v is None:
-            return v
-        allowed_values = ['none', 'attended', 'unattended']
-        if v.lower() not in allowed_values:
-            raise InvalidRemoteAccessTypeError('remote_access_type')
-        return v.lower()
-
-    @validator('physical_access_ease')
-    def validate_physical_access_ease(cls, v):
-        if v is None:
-            return v
-        allowed_values = ['internal', 'dmz', 'external']
-        if v.lower() not in allowed_values:
-            raise InvalidPhysicalAccessEaseError('physical_access_ease')
-        return v.lower()
     last_risk_assessment: Optional[datetime] = None
     remote_access: Optional[bool] = False
     remote_access_type: Optional[str] = Field(None, max_length=20, description="Remote access type")
@@ -131,57 +85,6 @@ class AssetBase(BaseModel):
     documents: List[AssetDocument] = []
     photos: List[AssetPhoto] = []
     contacts: List[Contact] = []
-
-    @validator('impact_value')
-    def validate_impact_value(cls, v):
-        if v is None:
-            return v
-        if v < 1 or v > 5:
-            raise InvalidImpactValueError('impact_value')
-        return v
-
-    @validator('purdue_level')
-    def validate_purdue_level(cls, v):
-        if v is None:
-            return v
-        if v < 0.0 or v > 5.0:
-            raise InvalidPurdueLevelError('purdue_level')
-        return v
-
-    @validator('risk_score')
-    def validate_risk_score(cls, v):
-        if v is None:
-            return v
-        if v < 0.0 or v > 10.0:
-            raise InvalidRiskScoreError('risk_score')
-        return v
-
-    @validator('business_criticality')
-    def validate_business_criticality(cls, v):
-        if v is None:
-            return v
-        allowed_values = ['low', 'medium', 'high', 'critical']
-        if v.lower() not in allowed_values:
-            raise InvalidBusinessCriticalityError('business_criticality')
-        return v.lower()
-
-    @validator('remote_access_type')
-    def validate_remote_access_type(cls, v):
-        if v is None:
-            return v
-        allowed_values = ['none', 'attended', 'unattended']
-        if v.lower() not in allowed_values:
-            raise InvalidRemoteAccessTypeError('remote_access_type')
-        return v.lower()
-
-    @validator('physical_access_ease')
-    def validate_physical_access_ease(cls, v):
-        if v is None:
-            return v
-        allowed_values = ['internal', 'dmz', 'external']
-        if v.lower() not in allowed_values:
-            raise InvalidPhysicalAccessEaseError('physical_access_ease')
-        return v.lower()
 
     class Config:
         from_attributes = True
@@ -220,56 +123,13 @@ class AssetUpdate(BaseModel):
     update_status: Optional[str] = Field(None, max_length=50, description="Update status")
     risk_score: Optional[float] = None
 
-    @validator('impact_value')
-    def validate_impact_value(cls, v):
-        if v is None:
-            return v
-        if v < 1 or v > 5:
-            raise InvalidImpactValueError('impact_value')
-        return v
-
-    @validator('purdue_level')
-    def validate_purdue_level(cls, v):
-        if v is None:
-            return v
-        if v < 0.0 or v > 5.0:
-            raise InvalidPurdueLevelError('purdue_level')
-        return v
-
-    @validator('risk_score')
-    def validate_risk_score(cls, v):
-        if v is None:
-            return v
-        if v < 0.0 or v > 10.0:
-            raise InvalidRiskScoreError('risk_score')
-        return v
-
-    @validator('business_criticality')
-    def validate_business_criticality(cls, v):
-        if v is None:
-            return v
-        allowed_values = ['low', 'medium', 'high', 'critical']
-        if v.lower() not in allowed_values:
-            raise InvalidBusinessCriticalityError('business_criticality')
-        return v.lower()
-
-    @validator('remote_access_type')
-    def validate_remote_access_type(cls, v):
-        if v is None:
-            return v
-        allowed_values = ['none', 'attended', 'unattended']
-        if v.lower() not in allowed_values:
-            raise InvalidRemoteAccessTypeError('remote_access_type')
-        return v.lower()
-
-    @validator('physical_access_ease')
-    def validate_physical_access_ease(cls, v):
-        if v is None:
-            return v
-        allowed_values = ['internal', 'dmz', 'external']
-        if v.lower() not in allowed_values:
-            raise InvalidPhysicalAccessEaseError('physical_access_ease')
-        return v.lower()
+    # Validators
+    _validate_impact_value = validator('impact_value', allow_reuse=True)(validate_impact_value)
+    _validate_purdue_level = validator('purdue_level', allow_reuse=True)(validate_purdue_level)
+    _validate_risk_score = validator('risk_score', allow_reuse=True)(validate_risk_score)
+    _validate_business_criticality = validator('business_criticality', allow_reuse=True)(validate_business_criticality)
+    _validate_remote_access_type = validator('remote_access_type', allow_reuse=True)(validate_remote_access_type)
+    _validate_physical_access_ease = validator('physical_access_ease', allow_reuse=True)(validate_physical_access_ease)
 
 
 class AssetCreate(BaseModel):
@@ -302,6 +162,15 @@ class AssetCreate(BaseModel):
     purdue_level: Optional[float] = 0.0
     exposure_level: Optional[str] = Field(None, max_length=50, description="Exposure level")
     update_status: Optional[str] = Field(None, max_length=50, description="Update status")
+    risk_score: Optional[float] = 0.0
+
+    # Validators
+    _validate_impact_value = validator('impact_value', allow_reuse=True)(validate_impact_value)
+    _validate_purdue_level = validator('purdue_level', allow_reuse=True)(validate_purdue_level)
+    _validate_risk_score = validator('risk_score', allow_reuse=True)(validate_risk_score)
+    _validate_business_criticality = validator('business_criticality', allow_reuse=True)(validate_business_criticality)
+    _validate_remote_access_type = validator('remote_access_type', allow_reuse=True)(validate_remote_access_type)
+    _validate_physical_access_ease = validator('physical_access_ease', allow_reuse=True)(validate_physical_access_ease)
 
 
 class AssetRead(AssetBase):
@@ -310,7 +179,7 @@ class AssetRead(AssetBase):
     protocols: Optional[List[str]] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class AssetBulkUpdateRequest(BaseModel):
@@ -322,7 +191,6 @@ class AssetBulkSoftDeleteRequest(BaseModel):
     ids: List[uuid.UUID]
 
 
-# Risk Scoring schemas
 class RiskScoreRequest(BaseModel):
     asset_id: uuid.UUID
 

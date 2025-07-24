@@ -124,17 +124,36 @@ app.include_router(setup.router, tags=["setup"])
 async def startup_event():
     """Initializes the database if empty"""
     try:
-        # Prima applica le migrazioni Alembic
+        # Check and apply database migrations only if needed
         import subprocess
         import os
         
-        print("Applying database migrations...")
+        print("Checking database migrations...")
         try:
-            subprocess.run(["alembic", "upgrade", "head"], check=True, capture_output=True)
-            print("Database migrations applied successfully!")
+            # Check current revision
+            result = subprocess.run(["alembic", "current"], check=True, capture_output=True, text=True)
+            current_revision = result.stdout.strip().split()[0] if result.stdout.strip() else "None"
+            
+            # Check if we're at the latest revision
+            result = subprocess.run(["alembic", "heads"], check=True, capture_output=True, text=True)
+            latest_revision = result.stdout.strip().split()[0] if result.stdout.strip() else "None"
+            
+            if current_revision == latest_revision:
+                print(f"Database is up to date (revision: {current_revision})")
+            else:
+                print(f"Applying migrations from {current_revision} to {latest_revision}...")
+                subprocess.run(["alembic", "upgrade", "head"], check=True, capture_output=True)
+                print("Database migrations applied successfully!")
         except subprocess.CalledProcessError as e:
-            print(f"Error applying database migrations: {e}")
-            # Continue anyway, it might be that the migrations are already applied
+            print(f"Error checking/applying database migrations: {e}")
+            # Try to apply migrations anyway as fallback
+            try:
+                print("Attempting to apply migrations as fallback...")
+                subprocess.run(["alembic", "upgrade", "head"], check=True, capture_output=True)
+                print("Database migrations applied successfully!")
+            except subprocess.CalledProcessError as e2:
+                print(f"Fallback migration failed: {e2}")
+                # Continue anyway, it might be that the migrations are already applied
         
         db = SessionLocal()
         # Controlla se esistono tenant, utenti e ruoli
@@ -147,19 +166,36 @@ async def startup_event():
             setup_system()
             print("Database initialized successfully!")
             print("Default credentials:")
-            print("  Admin: admin@demo.com / admin123")
-            print("  Editor: editor@demo.com / editor123")
-            print("  Viewer: viewer@demo.com / viewer123")
+            print("  Admin: admin@example.com / admin123")
+            print("  Editor: editor@example.com / editor123")
+            print("  Viewer: viewer@example.com / viewer123")
         elif user_count == 0 or role_count == 0:
             print("Partially configured database. Completing initialization...")
             setup_system()
             print("Initialization completed!")
             print("Default credentials:")
-            print("  Admin: admin@demo.com / admin123")
-            print("  Editor: editor@demo.com / editor123")
-            print("  Viewer: viewer@demo.com / viewer123")
+            print("  Admin: admin@example.com / admin123")
+            print("  Editor: editor@example.com / editor123")
+            print("  Viewer: viewer@example.com / viewer123")
         else:
             print(f"Database already configured (tenant: {tenant_count}, users: {user_count}, roles: {role_count})")
+            # Check if demo data exists and seed only if needed in development environment
+            from app.config import settings
+            if settings.ENVIRONMENT == "development":
+                from app.models import Asset
+                asset_count = db.query(Asset).count()
+                if asset_count == 0:
+                    try:
+                        from app.init_demo_data import seed_demo_data
+                        print("🌱 Seeding demo data using Python...")
+                        seed_demo_data()
+                        print("🎉 Demo data seeding completed successfully!")
+                    except Exception as e:
+                        print(f"⚠️  Demo data seeding failed: {e}")
+                        import traceback
+                        traceback.print_exc()
+                else:
+                    print(f"📊 Demo data already exists ({asset_count} assets found)")
         
         db.close()
     except Exception as e:
@@ -303,14 +339,34 @@ def read_root():
 
 @app.get("/api/health")
 def health_check():
-    """Health check endpoint for monitoring"""
+    """Health check endpoint"""
     from datetime import datetime
     return {
         "status": "healthy",
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now().isoformat(),
         "version": "1.0.0",
         "environment": settings.ENVIRONMENT
     }
+
+
+@app.post("/api/admin/seed-demo-data")
+def seed_demo_data_endpoint(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Force seed demo data (development only)"""
+    if settings.ENVIRONMENT != "development":
+        raise HTTPException(status_code=403, detail="Demo data seeding only available in development")
+    
+    if current_user.role.name != "admin":
+        raise HTTPException(status_code=403, detail="Only admins can seed demo data")
+    
+    try:
+        from app.init_demo_data import seed_demo_data
+        seed_demo_data()
+        return {"message": "Demo data seeded successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Demo data seeding failed: {str(e)}")
 
 
 # Auth endpoints

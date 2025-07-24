@@ -1,11 +1,10 @@
 # backend/schemas/supplier.py
 
-from pydantic import BaseModel, EmailStr, Field, validator
-from typing import List, Optional
+from pydantic import BaseModel, Field, validator
+from typing import Optional, List
 from datetime import datetime
 import uuid
-import re
-from app.errors.validation_errors import InvalidURLError, InvalidVATNumberError, InvalidTaxCodeError, InvalidPhoneError, InvalidEmailError
+from app.schemas.validators import *
 
 
 class SupplierBase(BaseModel):
@@ -23,52 +22,12 @@ class SupplierBase(BaseModel):
     website: Optional[str] = Field(None, max_length=255, description="Website URL")
     notes: Optional[str] = Field(None, max_length=10000, description="Notes")
 
-    @validator('phone')
-    def validate_phone(cls, v):
-        if v is None or v == "":
-            return v
-        # Rimuovi spazi e caratteri speciali per la validazione
-        phone_clean = re.sub(r'[\s\-\(\)\+]', '', v)
-        # Verifica che contenga solo numeri e sia di lunghezza ragionevole
-        if not re.match(r'^\+?[\d\s\-\(\)]{7,20}$', v):
-            raise InvalidPhoneError('phone')
-        return v
-
-    @validator('website')
-    def validate_website(cls, v):
-        if v is None or v == "":
-            return v
-        # Verifica formato URL base
-        if not re.match(r'^https?://[^\s/$.?#].[^\s]*$', v):
-            raise InvalidURLError('website')
-        return v
-
-    @validator('vat_number')
-    def validate_vat_number(cls, v):
-        if v is None or v == "":
-            return v
-        # Verifica formato base per P.IVA italiana (11 cifre)
-        if not re.match(r'^[A-Z]{2}\d{11}$', v.upper()):
-            raise InvalidVATNumberError('vat_number')
-        return v.upper()
-
-    @validator('tax_code')
-    def validate_tax_code(cls, v):
-        if v is None or v == "":
-            return v
-        # Verifica formato codice fiscale italiano (16 caratteri alfanumerici)
-        if not re.match(r'^[A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z]$', v.upper()):
-            raise InvalidTaxCodeError('tax_code')
-        return v.upper()
-
-    @validator('email')
-    def validate_email(cls, v):
-        if v is None or v == "":
-            return v
-        # Verifica formato email base
-        if not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', v):
-            raise InvalidEmailError('email')
-        return v.lower()
+    # Validators
+    _validate_phone = validator('phone', allow_reuse=True)(validate_phone)
+    _validate_website = validator('website', allow_reuse=True)(validate_website)
+    _validate_vat_number = validator('vat_number', allow_reuse=True)(validate_vat_number)
+    _validate_tax_code = validator('tax_code', allow_reuse=True)(validate_tax_code)
+    _validate_email = validator('email', allow_reuse=True)(validate_email)
 
 
 class SupplierCreate(SupplierBase):
@@ -90,47 +49,12 @@ class SupplierUpdate(BaseModel):
     website: Optional[str] = Field(None, max_length=255, description="Website URL")
     notes: Optional[str] = Field(None, max_length=10000, description="Notes")
 
-    @validator('phone')
-    def validate_phone(cls, v):
-        if v is None or v == "":
-            return v
-        phone_clean = re.sub(r'[\s\-\(\)\+]', '', v)
-        if not re.match(r'^\+?[\d\s\-\(\)]{7,20}$', v):
-            raise InvalidPhoneError('phone')
-        return v
-
-    @validator('website')
-    def validate_website(cls, v):
-        if v is None or v == "":
-            return v
-        if not re.match(r'^https?://[^\s/$.?#].[^\s]*$', v):
-            raise InvalidURLError('website')
-        return v
-
-    @validator('vat_number')
-    def validate_vat_number(cls, v):
-        if v is None or v == "":
-            return v
-        if not re.match(r'^[A-Z]{2}\d{11}$', v.upper()):
-            raise InvalidVATNumberError('vat_number')
-        return v.upper()
-
-    @validator('tax_code')
-    def validate_tax_code(cls, v):
-        if v is None or v == "":
-            return v
-        if not re.match(r'^[A-Z]{6}\d{2}[A-Z]\d{2}[A-Z]\d{3}[A-Z]$', v.upper()):
-            raise InvalidTaxCodeError('tax_code')
-        return v.upper()
-
-    @validator('email')
-    def validate_email(cls, v):
-        if v is None or v == "":
-            return v
-        # Verifica formato email base
-        if not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', v):
-            raise InvalidEmailError('email')
-        return v.lower()
+    # Validators
+    _validate_phone = validator('phone', allow_reuse=True)(validate_phone)
+    _validate_website = validator('website', allow_reuse=True)(validate_website)
+    _validate_vat_number = validator('vat_number', allow_reuse=True)(validate_vat_number)
+    _validate_tax_code = validator('tax_code', allow_reuse=True)(validate_tax_code)
+    _validate_email = validator('email', allow_reuse=True)(validate_email)
 
 
 class SupplierDocumentBase(BaseModel):
@@ -148,7 +72,7 @@ class SupplierDocument(SupplierDocumentBase):
     uploaded_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class Supplier(SupplierBase):
@@ -159,9 +83,4 @@ class Supplier(SupplierBase):
     documents: List[SupplierDocument] = []
 
     class Config:
-        orm_mode = True
-
-
-# Update forward references
-Supplier.update_forward_refs()
-SupplierDocument.update_forward_refs()
+        from_attributes = True
