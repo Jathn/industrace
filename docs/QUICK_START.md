@@ -62,15 +62,27 @@ sed -i 's/yourdomain.com/your-actual-domain.com/g' docker-compose.prod.yml
 
 ### 4. Start the System
 
+**For local development (recommended for first time):**
+```bash
+docker-compose -f docker-compose.dev.yml up -d
+```
+
+**For production deployment:**
 ```bash
 docker-compose -f docker-compose.prod.yml up -d
 ```
 
+### Configuration Differences
+
+- **Development** (`docker-compose.dev.yml`): Direct port access, no SSL, hot reload
+- **Production** (`docker-compose.prod.yml`): Traefik reverse proxy, SSL certificates, optimized builds
+
 ### 5. Verify Installation
 
 Open your browser and go to:
-- **http://yourdomain.com** (if you configured a domain)
-- **http://localhost** (if you used localhost)
+- **http://localhost:5173** (for local development - Frontend)
+- **http://localhost:8000/docs** (for local development - API Documentation)
+- **http://yourdomain.com** (for production deployment)
 
 ## First Access
 
@@ -92,17 +104,33 @@ industrace/
 
 ## Useful Commands
 
+### Development Commands
 ```bash
-# Start the system
-docker-compose -f docker-compose.prod.yml up -d
+# Start development environment
+docker-compose -f docker-compose.dev.yml up -d
 
-# Stop the system
-docker-compose -f docker-compose.prod.yml down
+# Stop development environment
+docker-compose -f docker-compose.dev.yml down
 
 # View logs
+docker-compose -f docker-compose.dev.yml logs -f
+
+# Restart development environment
+docker-compose -f docker-compose.dev.yml restart
+```
+
+### Production Commands
+```bash
+# Start production system
+docker-compose -f docker-compose.prod.yml up -d
+
+# Stop production system
+docker-compose -f docker-compose.prod.yml down
+
+# View production logs
 docker-compose -f docker-compose.prod.yml logs -f
 
-# Restart everything
+# Restart production system
 docker-compose -f docker-compose.prod.yml restart
 ```
 
