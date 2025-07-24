@@ -34,7 +34,7 @@ Industrace is an open-source Configuration Management Database (CMDB) specifical
 ### Installation
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/industrace/industrace.git
 cd industrace
 
 # Start the application

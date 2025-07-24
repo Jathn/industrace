@@ -13,7 +13,7 @@
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/besafe-it/industrace.git
+git clone https://github.com/industrace/industrace.git
 cd industrace
 ```
 
@@ -159,7 +159,7 @@ docker-compose -f docker-compose.prod.yml exec -T db psql -U industrace industra
 - **Documentation**: [docs/](docs/)
 - **Website**: https://besafe.it/industrace
 - **Email**: industrace@besafe.it
-- **GitHub**: https://github.com/besafe-it/industrace
+- **GitHub**: https://github.com/industrace/industrace
 
 ## License
 
