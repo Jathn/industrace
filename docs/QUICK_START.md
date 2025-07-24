@@ -86,9 +86,13 @@ Open your browser and go to:
 
 ## First Access
 
-1. **Login**: Use the credentials configured in `.env`
-   - Email: `admin@yourdomain.com`
-   - Password: The system will prompt you to set a password during first access
+1. **Login**: Use the default credentials (for development):
+   - Email: `admin@demo.com`
+   - Password: `admin123`
+
+   **Alternative users:**
+   - Editor: `editor@demo.com` / `editor123`
+   - Viewer: `viewer@demo.com` / `viewer123`
 
 2. **Initial Setup**: The system will automatically guide you through the first tenant configuration
 

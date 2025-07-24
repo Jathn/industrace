@@ -251,7 +251,7 @@ def read_root():
     return {"message": "Industrace API", "version": "1.0.0"}
 
 
-@app.get("/health")
+@app.get("/api/health")
 def health_check():
     """Health check endpoint for monitoring"""
     from datetime import datetime

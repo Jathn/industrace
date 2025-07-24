@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y \
     tshark \
     gcc \
     postgresql-client \
+    netcat \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
@@ -19,8 +20,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
 COPY . .
-
-
 
 # Create non-root user
 RUN useradd -m -u 1000 appuser && chown -R appuser:appuser /app
