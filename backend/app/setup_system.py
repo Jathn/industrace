@@ -14,8 +14,8 @@ VIEWER_EMAIL = "viewer@demo.com"
 ADMIN_PASSWORD = "admin123"
 EDITOR_PASSWORD = "editor123"
 VIEWER_PASSWORD = "viewer123"
-TENANT_NAME = "Demo Tenant"
-TENANT_SLUG = "demo-tenant"
+TENANT_NAME = "Default Tenant"
+TENANT_SLUG = "default-tenant"
 
 
 def setup_system():
@@ -36,8 +36,8 @@ def setup_system():
     tenant_id = tenant.id
 
     # 2. Roles
-    seed_roles()
-    roles = {r.name: r for r in db.query(Role).all()}
+    seed_roles(tenant_id=tenant_id)
+    roles = {r.name: r for r in db.query(Role).filter_by(tenant_id=tenant_id).all()}
 
     # 3. Base users
     users = [

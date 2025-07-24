@@ -4,7 +4,7 @@ from app.database import SessionLocal
 from app.models import Role
 
 
-def seed_roles():
+def seed_roles(tenant_id=None):
     db: Session = SessionLocal()
     base_roles = [
         {
@@ -72,10 +72,11 @@ def seed_roles():
         },
     ]
     for role_data in base_roles:
-        role = db.query(Role).filter_by(name=role_data["name"]).first()
+        role = db.query(Role).filter_by(name=role_data["name"], tenant_id=tenant_id).first()
         if not role:
             new_role = Role(
                 id=uuid.uuid4(),
+                tenant_id=tenant_id,
                 name=role_data["name"],
                 permissions=role_data["permissions"],
             )

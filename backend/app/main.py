@@ -147,9 +147,17 @@ async def startup_event():
             setup_system()
             print("Database initialized successfully!")
             print("Default credentials:")
-            print("  Admin: admin@example.com / admin123")
-            print("  Editor: editor@example.com / editor123")
-            print("  Viewer: viewer@example.com / viewer123")
+            print("  Admin: admin@demo.com / admin123")
+            print("  Editor: editor@demo.com / editor123")
+            print("  Viewer: viewer@demo.com / viewer123")
+        elif user_count == 0 or role_count == 0:
+            print("Partially configured database. Completing initialization...")
+            setup_system()
+            print("Initialization completed!")
+            print("Default credentials:")
+            print("  Admin: admin@demo.com / admin123")
+            print("  Editor: editor@demo.com / editor123")
+            print("  Viewer: viewer@demo.com / viewer123")
         else:
             print(f"Database already configured (tenant: {tenant_count}, users: {user_count}, roles: {role_count})")
         
