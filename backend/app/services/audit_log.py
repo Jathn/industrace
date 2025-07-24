@@ -7,17 +7,34 @@ import uuid
 import datetime
 
 
-def clean_dict(obj: dict) -> dict:
+def clean_dict(obj: Any) -> dict:
     if not obj:
         return {}
+    
     result = {}
-    for k, v in obj.items():
-        if k.startswith("_"):
-            continue
-        # Escludi valori tipo funzioni, metodi, classi, ecc.
-        if callable(v):
-            continue
-        result[k] = v
+    
+    # Se è un oggetto SQLAlchemy, usa __table__.columns per ottenere i campi
+    if hasattr(obj, '_sa_instance_state'):
+        for column in obj.__table__.columns:
+            key = column.name
+            value = getattr(obj, key, None)
+            if not key.startswith("_"):
+                # Escludi valori tipo funzioni, metodi, classi, ecc.
+                if not callable(value):
+                    result[key] = value
+    # Se è un dizionario, usa il metodo originale
+    elif hasattr(obj, 'items'):
+        for k, v in obj.items():
+            if k.startswith("_"):
+                continue
+            # Escludi valori tipo funzioni, metodi, classi, ecc.
+            if callable(v):
+                continue
+            result[k] = v
+    else:
+        # Fallback: prova a convertire in stringa
+        result = {"value": str(obj)}
+    
     return result
 
 

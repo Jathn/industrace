@@ -57,10 +57,25 @@ def audit_log_action(action: str, entity: str, model_class=None):
             # Recupera dati nuovi da result, se action create o update
             new_data = None
             if action in ("create", "update") and result:
-                if hasattr(result, "__dict__"):
+                # Gestisci oggetti SQLAlchemy
+                if hasattr(result, '_sa_instance_state'):
+                    # Per oggetti SQLAlchemy, usa clean_dict direttamente
+                    new_data = clean_dict(result)
+                elif hasattr(result, "__dict__"):
                     new_data = clean_dict(result.__dict__)
                 elif isinstance(result, dict):
                     new_data = clean_dict(result)
+                else:
+                    # Prova a convertire in dict se possibile
+                    try:
+                        if hasattr(result, 'model_dump'):
+                            new_data = clean_dict(result.model_dump())
+                        elif hasattr(result, 'dict'):
+                            new_data = clean_dict(result.dict())
+                        else:
+                            new_data = clean_dict(str(result))
+                    except Exception as e:
+                        new_data = clean_dict(str(result))
 
             # Usa id da result se entity_id non era definito
             if not entity_id and result and hasattr(result, "id"):

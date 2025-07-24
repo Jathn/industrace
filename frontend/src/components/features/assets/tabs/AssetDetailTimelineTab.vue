@@ -132,6 +132,10 @@
                         </template>
                       </span>
                     </div>
+                    <!-- Messaggio se non ci sono modifiche -->
+                    <div v-if="Object.keys(getChangedFields(log.old_data, log.new_data)).length === 0" class="no-changes-indicator">
+                      <span class="text-sm text-gray-500">{{ t('assetTimeline.noChangesDetected') }}</span>
+                    </div>
                   </div>
                 </div>
                 
@@ -148,6 +152,10 @@
                           {{ change.new }}
                         </template>
                       </span>
+                    </div>
+                    <!-- Messaggio se non ci sono modifiche -->
+                    <div v-if="Object.keys(getChangedFields(log.old_data, log.new_data)).length === 0" class="no-changes-indicator">
+                      <span class="text-sm text-gray-500">{{ t('assetTimeline.noChangesDetected') }}</span>
                     </div>
                   </div>
                 </div>
@@ -401,19 +409,37 @@ function getChangedFields(oldData, newData) {
   const newParsed = parseJsonSafely(newData)
   
   const changed = {}
+  
+  // Confronta tutti i campi rilevanti da entrambi gli oggetti
   const allKeys = new Set([
     ...Object.keys(oldParsed || {}),
     ...Object.keys(newParsed || {})
   ])
   
   for (const key of allKeys) {
+    // Ignora i campi di sistema e metadati
+    if (key.startsWith('_') || key === 'id' || key === 'tenant_id' || key === 'created_at' || key === 'updated_at') {
+      continue
+    }
+    
     const oldVal = oldParsed ? oldParsed[key] : undefined
     const newVal = newParsed ? newParsed[key] : undefined
     
-    // Confronta i valori dopo averli normalizzati
-    const oldStr = JSON.stringify(oldVal)
-    const newStr = JSON.stringify(newVal)
+    // Normalizza i valori per il confronto
+    const normalizeValue = (val) => {
+      if (val === null || val === undefined || val === '') return null
+      if (typeof val === 'string') return val.trim()
+      return val
+    }
     
+    const normalizedOld = normalizeValue(oldVal)
+    const normalizedNew = normalizeValue(newVal)
+    
+    // Confronta i valori normalizzati
+    const oldStr = JSON.stringify(normalizedOld)
+    const newStr = JSON.stringify(normalizedNew)
+    
+    // Mostra solo se c'è una differenza reale
     if (oldStr !== newStr) {
       // Se array o oggetto complesso, mostra solo badge "modificato"
       if (Array.isArray(oldVal) || Array.isArray(newVal) || 
@@ -730,6 +756,21 @@ async function exportTimeline() {
 .new-value {
   color: #28a745;
   font-weight: 500;
+}
+
+.no-changes-message {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  padding: 1rem;
+}
+
+.no-changes-indicator {
+  text-align: center;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 4px;
+  border: 1px dashed #dee2e6;
 }
 
 .timeline-details {

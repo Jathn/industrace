@@ -838,6 +838,7 @@ def get_asset(
 def update_asset(
     asset_id: uuid.UUID,
     asset_update: AssetUpdate,
+    request: Request,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):

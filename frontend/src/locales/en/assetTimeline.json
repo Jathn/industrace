@@ -69,5 +69,7 @@
   "fieldImpactValue": "Impact Value",
   "fieldAccessEase": "Access Ease",
   "fieldExposureLevel": "Exposure Level",
-  "fieldUpdateStatus": "Update Status"
+  "fieldUpdateStatus": "Update Status",
+  "noEffectiveChanges": "No effective changes detected",
+  "noChangesDetected": "No changes detected"
 } 
