@@ -57,7 +57,7 @@ from app.routers import audit_logs
 from app.routers import roles
 from app.routers import smtp_config
 from app.routers import search
-from app.routers import print
+from app.routers import print as print_router
 from app.routers import api_keys
 from app.routers import external_api
 from app.routers import setup
@@ -114,7 +114,7 @@ app.include_router(audit_logs.router)
 app.include_router(roles.router, tags=["roles"])
 app.include_router(smtp_config.router, tags=["smtp-config"])
 app.include_router(search.router, tags=["search"])
-app.include_router(print.router, tags=["print"])
+app.include_router(print_router.router, tags=["print"])
 app.include_router(api_keys.router, tags=["api-keys"])
 app.include_router(external_api.router, tags=["external-api"])
 app.include_router(setup.router, tags=["setup"])
@@ -122,19 +122,19 @@ app.include_router(setup.router, tags=["setup"])
 
 @app.on_event("startup")
 async def startup_event():
-    """Inizializza il database se vuoto"""
+    """Initializes the database if empty"""
     try:
         # Prima applica le migrazioni Alembic
         import subprocess
         import os
         
-        print("Applicazione migrazioni database...")
+        print("Applying database migrations...")
         try:
             subprocess.run(["alembic", "upgrade", "head"], check=True, capture_output=True)
-            print("Migrazioni applicate con successo!")
+            print("Database migrations applied successfully!")
         except subprocess.CalledProcessError as e:
-            print(f"Errore nell'applicazione delle migrazioni: {e}")
-            # Continua comunque, potrebbe essere che le migrazioni siano già applicate
+            print(f"Error applying database migrations: {e}")
+            # Continue anyway, it might be that the migrations are already applied
         
         db = SessionLocal()
         # Controlla se esistono tenant, utenti e ruoli
@@ -143,19 +143,19 @@ async def startup_event():
         role_count = db.query(Role).count()
         
         if tenant_count == 0 and user_count == 0 and role_count == 0:
-            print("Database vuoto rilevato. Inizializzazione automatica...")
+            print("Empty database detected. Automatic initialization...")
             setup_system()
-            print("Database inizializzato con successo!")
-            print("Credenziali di default:")
-            print("  Admin: admin@demo.com / admin123")
-            print("  Editor: editor@demo.com / editor123")
-            print("  Viewer: viewer@demo.com / viewer123")
+            print("Database initialized successfully!")
+            print("Default credentials:")
+            print("  Admin: admin@example.com / admin123")
+            print("  Editor: editor@example.com / editor123")
+            print("  Viewer: viewer@example.com / viewer123")
         else:
-            print(f"Database già configurato (tenant: {tenant_count}, utenti: {user_count}, ruoli: {role_count})")
+            print(f"Database already configured (tenant: {tenant_count}, users: {user_count}, roles: {role_count})")
         
         db.close()
     except Exception as e:
-        print(f"Errore durante l'inizializzazione del database: {e}")
+        print(f"Error during database initialization: {e}")
         # Non blocchiamo l'avvio dell'app in caso di errore
 
 
@@ -165,7 +165,7 @@ from app.errors.validation_errors import ValidationError, InvalidVATNumberError,
 async def validation_exception_handler(
     request: Request, validation_exc: RequestValidationError
 ):
-    # Log dell'errore per debugging (solo in development)
+    # Log the error for debugging (only in development)
     if settings.DEBUG:
         import builtins
         # builtins.print("Validation error:", validation_exc.errors)
