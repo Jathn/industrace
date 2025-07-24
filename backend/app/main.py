@@ -173,16 +173,16 @@ async def validation_exception_handler(
         # for error in validation_exc.errors():
         #     builtins.print(f"  Field: {error['loc']}, Message: {error['msg']}, Type: {error['type']}")
 
-    # Estrai i messaggi di errore specifici
+    # Extract specific error messages
     validation_errors = []
     for error in validation_exc.errors():
         field = " -> ".join(str(loc) for loc in error["loc"])
         
-        # Gestisci le nostre eccezioni personalizzate
+        # Handle our custom exceptions
         error_msg = error["msg"]
         # print(f"Processing error message: '{error_msg}'")
         
-        # Estrai il codice di errore dal messaggio
+        # Extract the error code from the message
         if "INVALID_VAT_NUMBER" in error_msg:
             error_code = "INVALID_VAT_NUMBER"
         elif "INVALID_TAX_CODE" in error_msg:
@@ -236,7 +236,7 @@ async def validation_exception_handler(
             "type": error["type"]
         })
     
-    # Log della risposta finale per debugging
+    # Log the final response for debugging
     if settings.DEBUG:
         # print("Final response:", {
         #     "error_code": "VALIDATION_ERROR", 
@@ -245,7 +245,7 @@ async def validation_exception_handler(
         # })
         pass
     
-    # Restituisci i dettagli degli errori di validazione
+    # Return the validation error details
     return JSONResponse(
         status_code=422,
         content={
@@ -260,13 +260,13 @@ async def validation_exception_handler(
 async def custom_validation_exception_handler(
     request: Request, validation_exc: ValidationError
 ):
-    # Log dell'errore per debugging (solo in development)
+    # Log the error for debugging (only in development)
     if settings.DEBUG:
         import builtins
         # builtins.print(f"Custom validation error: {validation_exc.error_code} for field {validation_exc.field}")
         pass
     
-    # Restituisci l'errore di validazione personalizzato
+    # Return the custom validation error
     return JSONResponse(
         status_code=422,
         content={
@@ -322,7 +322,7 @@ async def login(
         expires_delta=access_token_expires,
     )
 
-    # Audit log del login
+    # Audit log for login
     ip_address = request.client.host if request and request.client else None
     create_audit_log(
         db=db,
@@ -463,27 +463,27 @@ class ErrorCodeException(HTTPException):
 
 @app.exception_handler(ErrorCodeException)
 async def error_code_exception_handler(request: Request, exc: ErrorCodeException):
-    # Log dell'errore per debugging (solo in development)
+    # Log the error for debugging (only in development)
     if settings.DEBUG:
         # print(f"ErrorCodeException: {exc.error_code} - {exc.status_code}")
         pass
     
-    # Usa le traduzioni se disponibili
+    # Use the translations if available
     from app.errors.translations import messages
     from app.services.auth import get_current_user
     
-    # Prova a determinare la lingua dall'utente corrente
+    # Try to determine the language from the current user
     language = "en"  # default
     try:
-        # Prova a ottenere l'utente corrente per determinare la lingua
-        # Se non funziona, usa l'header Accept-Language
+        # Try to get the current user to determine the language
+        # If it doesn't work, use the Accept-Language header
         accept_language = request.headers.get("accept-language", "en")
         if "it" in accept_language.lower():
             language = "it"
     except:
         pass
     
-    # Ottieni il messaggio tradotto
+        # Get the translated message
     translated_message = messages.get(language, {}).get(exc.error_code, exc.error_code)
     
     return JSONResponse(
@@ -498,10 +498,10 @@ logging.basicConfig(level=logging.ERROR)
 
 @app.exception_handler(Exception)
 async def generic_exception_handler(request: Request, exc: Exception):
-    # Log completo dell'errore per debugging
+    # Log the error for debugging
     logging.error(f"Error 500 on {request.url}: {exc}", exc_info=True)
     
-    # Per l'utente, restituisci solo un messaggio generico
+    # For the user, return only a generic message
     return JSONResponse(
         status_code=500, 
         content={"error_code": "INTERNAL_ERROR", "detail": "Errore interno del server"}

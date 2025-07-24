@@ -88,6 +88,16 @@ def setup_system():
     setup_asset_statuses()
     setup_asset_types()
 
+    # Add demo data if in development environment
+    from app.config import settings
+    if settings.ENVIRONMENT == "development":
+        try:
+            from app.init_demo_data import seed_demo_data
+            print("🌱 Adding demo data for development environment...")
+            seed_demo_data()
+        except Exception as e:
+            print(f"⚠️  Demo data seeding failed: {e}")
+
     db.close()
     # print("\nSetup system completed!\nExample credentials:")
     # print(f"Admin: {ADMIN_EMAIL} / {ADMIN_PASSWORD}")

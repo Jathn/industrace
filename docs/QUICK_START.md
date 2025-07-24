@@ -94,6 +94,13 @@ Open your browser and go to:
    - Editor: `editor@demo.com` / `editor123`
    - Viewer: `viewer@demo.com` / `viewer123`
 
+2. **Demo Data**: The system automatically populates with realistic demo data including:
+   - 3 Sites (Production Plant, R&D Center, Distribution Warehouse)
+   - 12 Areas (Assembly Lines, Labs, Control Rooms, etc.)
+   - 4 Suppliers (Siemens, Rockwell, Schneider, ABB)
+   - 6 Contacts (Sales, Support, Management)
+   - 8 Assets (PLCs, HMIs, Robots, Sensors, etc.)
+
 2. **Initial Setup**: The system will automatically guide you through the first tenant configuration
 
 ## Main File Structure
