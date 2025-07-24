@@ -24,7 +24,7 @@ Industrace is an open-source Configuration Management Database (CMDB) specifical
 
 ## 🚀 Quick Start
 
-**Vuoi iniziare subito?** Vai al [Quick Start Guide](docs/QUICK_START.md) per l'installazione in **meno di 5 minuti**.
+**Quick Start?** Go to [Quick Start Guide](docs/QUICK_START.md) for a quick installation **in less than 5 minutes**.
 
 ### Prerequisites
 - Docker and Docker Compose
