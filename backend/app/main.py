@@ -61,6 +61,9 @@ from app.routers import print
 from app.routers import api_keys
 from app.routers import external_api
 from app.routers import setup
+from app.setup_system import setup_system
+from app.database import SessionLocal
+from app.models import Tenant, User, Role
 
 # Setup logging
 setup_logging()
@@ -115,6 +118,45 @@ app.include_router(print.router, tags=["print"])
 app.include_router(api_keys.router, tags=["api-keys"])
 app.include_router(external_api.router, tags=["external-api"])
 app.include_router(setup.router, tags=["setup"])
+
+
+@app.on_event("startup")
+async def startup_event():
+    """Inizializza il database se vuoto"""
+    try:
+        # Prima applica le migrazioni Alembic
+        import subprocess
+        import os
+        
+        print("Applicazione migrazioni database...")
+        try:
+            subprocess.run(["alembic", "upgrade", "head"], check=True, capture_output=True)
+            print("Migrazioni applicate con successo!")
+        except subprocess.CalledProcessError as e:
+            print(f"Errore nell'applicazione delle migrazioni: {e}")
+            # Continua comunque, potrebbe essere che le migrazioni siano già applicate
+        
+        db = SessionLocal()
+        # Controlla se esistono tenant, utenti e ruoli
+        tenant_count = db.query(Tenant).count()
+        user_count = db.query(User).count()
+        role_count = db.query(Role).count()
+        
+        if tenant_count == 0 and user_count == 0 and role_count == 0:
+            print("Database vuoto rilevato. Inizializzazione automatica...")
+            setup_system()
+            print("Database inizializzato con successo!")
+            print("Credenziali di default:")
+            print("  Admin: admin@demo.com / admin123")
+            print("  Editor: editor@demo.com / editor123")
+            print("  Viewer: viewer@demo.com / viewer123")
+        else:
+            print(f"Database già configurato (tenant: {tenant_count}, utenti: {user_count}, ruoli: {role_count})")
+        
+        db.close()
+    except Exception as e:
+        print(f"Errore durante l'inizializzazione del database: {e}")
+        # Non blocchiamo l'avvio dell'app in caso di errore
 
 
 from app.errors.validation_errors import ValidationError, InvalidVATNumberError, InvalidTaxCodeError, InvalidURLError, InvalidPhoneError, InvalidEmailError, InvalidIPAddressError, InvalidMACAddressError, InvalidVLANError, InvalidImpactValueError, InvalidPurdueLevelError, InvalidRiskScoreError, InvalidBusinessCriticalityError, InvalidRemoteAccessTypeError, InvalidPhysicalAccessEaseError, InvalidTenantSlugError, InvalidPasswordError

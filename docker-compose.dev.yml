@@ -14,25 +14,6 @@ services:
     networks:
       - industrace-network
 
-  db-init:
-    build: ./backend
-    command: >
-      sh -c "
-        echo 'Waiting for database...' &&
-        while ! nc -z db 5432; do sleep 1; done &&
-        echo 'Database is ready!' &&
-        alembic upgrade head &&
-        python -c 'from app.setup_system import setup_system; setup_system()' &&
-        echo 'Database initialized successfully!'
-      "
-    depends_on:
-      - db
-    networks:
-      - industrace-network
-    environment:
-      - DATABASE_URL=postgresql://industrace_user:secure_password_123@db:5432/industrace
-      - SECRET_KEY=your-secret-key-change-in-production
-
   backend:
     build: ./backend
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
@@ -50,7 +31,7 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - db-init
+      - db
     networks:
       - industrace-network
 

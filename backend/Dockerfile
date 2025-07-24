@@ -11,7 +11,6 @@ RUN apt-get update && apt-get install -y \
     tshark \
     gcc \
     postgresql-client \
-    netcat \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
