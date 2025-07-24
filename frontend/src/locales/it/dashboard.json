@@ -1,0 +1,108 @@
+{
+  "title": "Dashboard",
+  "welcome": "Benvenuto in Industrace",
+  "overview": "Panoramica",
+  "metrics": "Metriche",
+  "analytics": "Analisi",
+  "recentActivity": "Attività Recenti",
+  "quickActions": "Azioni Rapide",
+  "alerts": "Avvisi",
+  "notifications": "Notifiche",
+  
+  "stats": {
+    "totalAssets": "Asset Totali",
+    "criticalAssets": "Asset Critici",
+    "assetsAtRisk": "Asset a Rischio",
+    "recentChanges": "Modifiche Recenti",
+    "activeAssets": "Asset Attivi",
+    "inactiveAssets": "Asset Inattivi",
+    "totalSites": "Siti Totali",
+    "totalSuppliers": "Fornitori Totali",
+    "totalManufacturers": "Produttori Totali"
+  },
+  
+  "charts": {
+    "assetsByType": "Asset per Tipo",
+    "assetsByStatus": "Asset per Stato",
+    "assetsBySite": "Asset per Sito",
+    "riskScoreDistribution": "Distribuzione Risk Score",
+    "businessCriticality": "Criticalità Business",
+    "assetGrowthTrend": "Trend Crescita Asset",
+    "monthlyGrowth": "Crescita Mensile",
+    "weeklyActivity": "Attività Settimanale"
+  },
+  
+  "tables": {
+    "latestAssets": "Ultimi Asset",
+    "topRiskyAssets": "Asset Più a Rischio",
+    "recentActivities": "Attività Recenti",
+    "criticalAssets": "Asset Critici",
+    "assetsNeedingAttention": "Asset che Richiedono Attenzione"
+  },
+  
+  "columns": {
+    "name": "Nome",
+    "type": "Tipo",
+    "site": "Sito",
+    "status": "Stato",
+    "riskScore": "Risk Score",
+    "businessCriticality": "Criticalità",
+    "created": "Creato",
+    "updated": "Aggiornato",
+    "lastActivity": "Ultima Attività",
+    "manufacturer": "Produttore",
+    "ipAddress": "Indirizzo IP",
+    "location": "Posizione"
+  },
+  
+  "actions": {
+    "addAsset": "Aggiungi Asset",
+    "viewAllAssets": "Vedi Tutti gli Asset",
+    "generateReport": "Genera Report",
+    "exportData": "Esporta Dati",
+    "viewAlerts": "Vedi Avvisi",
+    "manageSites": "Gestisci Siti",
+    "manageSuppliers": "Gestisci Fornitori"
+  },
+  
+  "trends": {
+    "increasing": "in aumento",
+    "decreasing": "in diminuzione",
+    "stable": "stabile",
+    "thisMonth": "questo mese",
+    "thisWeek": "questa settimana",
+    "today": "oggi",
+    "yesterday": "ieri"
+  },
+  
+  "riskLevels": {
+    "low": "Basso",
+    "medium": "Medio",
+    "high": "Alto",
+    "critical": "Critico"
+  },
+  
+  "criticalityLevels": {
+    "low": "Bassa",
+    "medium": "Media",
+    "high": "Alta",
+    "critical": "Critica"
+  },
+  
+  "timeframes": {
+    "last24Hours": "Ultime 24 ore",
+    "last7Days": "Ultimi 7 giorni",
+    "last30Days": "Ultimi 30 giorni",
+    "last90Days": "Ultimi 90 giorni",
+    "thisYear": "Quest'anno"
+  },
+  
+  "messages": {
+    "noData": "Nessun dato disponibile",
+    "loading": "Caricamento...",
+    "errorLoading": "Errore nel caricamento dei dati",
+    "noRecentActivity": "Nessuna attività recente",
+    "noAlerts": "Nessun avviso attivo",
+    "allSystemsOperational": "Tutti i sistemi operativi"
+  }
+} 

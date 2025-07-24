@@ -1,0 +1,3 @@
+nome,tag,site_code,asset_type,ip_address,manufacturer
+PLC Laminatoio,PLC001,SITE01,PLC,192.168.5.55,Rockwell Automation
+EWS Consulente,EWS001,SITE01,EWS,192.168.7.66,HP

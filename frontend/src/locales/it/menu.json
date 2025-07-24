@@ -1,0 +1,25 @@
+{
+  "section": {
+    "management": "Dispositivi",
+    "registry": "Registro",
+    "users": "Utenti e Permessi",
+    "utility": "Utility",
+    "setup": "Setup"
+  },
+  "setup": "Setup",
+  "assets": "Dispositivi",
+  "assettypes": "Tipi Dispositivo",
+  "assetstatuses": "Stati Dispositivo",
+  "sites": "Siti",
+  "areas": "Aree",
+  "locations": "Posizioni",
+  "suppliers": "Fornitori",
+  "manufacturers": "Produttori",
+  "users": "Utenti",
+  "tenants": "Tenant",
+  "dashboard": "Dashboard",
+  "networkMap": "Mappa di Rete",
+  "pcap": "Carica PCAP",
+  "logout": "Logout",
+  "roles": "Ruoli"
+} 

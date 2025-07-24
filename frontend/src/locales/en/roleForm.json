@@ -1,0 +1,16 @@
+{
+  "basicInfo": "Basic Information",
+  "name": "Name",
+  "description": "Description",
+  "parentRole": "Parent Role",
+  "selectParentRole": "Select parent role",
+  "inheritanceInfo": "Parent role permissions will be automatically inherited",
+  "inheritable": "Inheritable",
+  "inheritableDescription": "This role can be used as a parent role for other roles",
+  "active": "Active",
+  "permissions": "Permissions",
+  "inheritedPermissions": "Inherited Permissions",
+  "inherited": "Inherited",
+  "cancel": "Cancel",
+  "save": "Save"
+} 

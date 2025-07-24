@@ -1,0 +1,16 @@
+{
+  "basicInfo": "Informazioni Base",
+  "name": "Nome",
+  "description": "Descrizione",
+  "parentRole": "Ruolo Padre",
+  "selectParentRole": "Seleziona ruolo padre",
+  "inheritanceInfo": "I permessi del ruolo padre verranno ereditati automaticamente",
+  "inheritable": "Ereditabile",
+  "inheritableDescription": "Questo ruolo può essere utilizzato come ruolo padre per altri ruoli",
+  "active": "Attivo",
+  "permissions": "Permessi",
+  "inheritedPermissions": "Permessi Ereditati",
+  "inherited": "Ereditato",
+  "cancel": "Annulla",
+  "save": "Salva"
+} 

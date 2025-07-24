@@ -1,0 +1,19 @@
+{
+  "welcomeMessage": "Intelligent industrial asset management",
+  "signIn": "Sign In",
+  "enterCredentials": "Enter your credentials to access",
+  "emailPlaceholder": "Enter your email",
+  "passwordPlaceholder": "Enter your password",
+  "emailRequired": "Email is required",
+  "emailInvalid": "Please enter a valid email",
+  "passwordRequired": "Password is required",
+  "rememberMe": "Remember me",
+  "forgotPassword": "Forgot password?",
+  "or": "or",
+  "demoMode": "Demo Mode",
+  "noAccount": "Don't have an account?",
+  "signUp": "Sign up",
+  "success": "Login successful",
+  "demoSuccess": "Demo login successful",
+  "demoError": "Demo login error"
+} 

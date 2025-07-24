@@ -1,0 +1,108 @@
+{
+  "title": "Dashboard",
+  "welcome": "Welcome to Industrace",
+  "overview": "Overview",
+  "metrics": "Metrics",
+  "analytics": "Analytics",
+  "recentActivity": "Recent Activity",
+  "quickActions": "Quick Actions",
+  "alerts": "Alerts",
+  "notifications": "Notifications",
+  
+  "stats": {
+    "totalAssets": "Total Assets",
+    "criticalAssets": "Critical Assets",
+    "assetsAtRisk": "Assets at Risk",
+    "recentChanges": "Recent Changes",
+    "activeAssets": "Active Assets",
+    "inactiveAssets": "Inactive Assets",
+    "totalSites": "Total Sites",
+    "totalSuppliers": "Total Suppliers",
+    "totalManufacturers": "Total Manufacturers"
+  },
+  
+  "charts": {
+    "assetsByType": "Assets by Type",
+    "assetsByStatus": "Assets by Status",
+    "assetsBySite": "Assets by Site",
+    "riskScoreDistribution": "Risk Score Distribution",
+    "businessCriticality": "Business Criticality",
+    "assetGrowthTrend": "Asset Growth Trend",
+    "monthlyGrowth": "Monthly Growth",
+    "weeklyActivity": "Weekly Activity"
+  },
+  
+  "tables": {
+    "latestAssets": "Latest Assets",
+    "topRiskyAssets": "Top Risky Assets",
+    "recentActivities": "Recent Activities",
+    "criticalAssets": "Critical Assets",
+    "assetsNeedingAttention": "Assets Needing Attention"
+  },
+  
+  "columns": {
+    "name": "Name",
+    "type": "Type",
+    "site": "Site",
+    "status": "Status",
+    "riskScore": "Risk Score",
+    "businessCriticality": "Criticality",
+    "created": "Created",
+    "updated": "Updated",
+    "lastActivity": "Last Activity",
+    "manufacturer": "Manufacturer",
+    "ipAddress": "IP Address",
+    "location": "Location"
+  },
+  
+  "actions": {
+    "addAsset": "Add Asset",
+    "viewAllAssets": "View All Assets",
+    "generateReport": "Generate Report",
+    "exportData": "Export Data",
+    "viewAlerts": "View Alerts",
+    "manageSites": "Manage Sites",
+    "manageSuppliers": "Manage Suppliers"
+  },
+  
+  "trends": {
+    "increasing": "increasing",
+    "decreasing": "decreasing",
+    "stable": "stable",
+    "thisMonth": "this month",
+    "thisWeek": "this week",
+    "today": "today",
+    "yesterday": "yesterday"
+  },
+  
+  "riskLevels": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "critical": "Critical"
+  },
+  
+  "criticalityLevels": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "critical": "Critical"
+  },
+  
+  "timeframes": {
+    "last24Hours": "Last 24 hours",
+    "last7Days": "Last 7 days",
+    "last30Days": "Last 30 days",
+    "last90Days": "Last 90 days",
+    "thisYear": "This year"
+  },
+  
+  "messages": {
+    "noData": "No data available",
+    "loading": "Loading...",
+    "errorLoading": "Error loading data",
+    "noRecentActivity": "No recent activity",
+    "noAlerts": "No active alerts",
+    "allSystemsOperational": "All systems operational"
+  }
+} 

@@ -1,0 +1,25 @@
+name: Frontend CI
+
+on: [push, pull_request]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: |
+          cd frontend
+          npm ci
+      - name: Run unit tests
+        run: |
+          cd frontend
+          npx vitest run
+      - name: Run e2e tests
+        run: |
+          cd frontend
+          npx cypress run 

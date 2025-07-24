@@ -1,0 +1,23 @@
+{
+  "title": "Areas",
+  "description": "Manage organizational areas of your sites",
+  "create": "Create Area",
+  "edit": "Edit Area",
+  "deleteTitle": "Delete Area",
+  "deleteMessage": "Are you sure you want to delete the area \"{name}\"?",
+  "created": "Area created successfully",
+  "updated": "Area updated successfully",
+  "deleted": "Area deleted successfully",
+  "saveError": "Error saving area",
+  "searchPlaceholder": "Search areas...",
+  "basicInfo": "Basic Information",
+  "code": "Code",
+  "typology": "Typology",
+  "namePlaceholder": "Enter area name",
+  "codePlaceholder": "Ex: ASM, PROD, OFFICE",
+  "typologyPlaceholder": "Ex: Production, Offices, Warehouse",
+  "notesPlaceholder": "Enter additional notes about the area",
+  "codeRequired": "Code is required",
+  "noAreas": "No areas found",
+  "noAreasForSite": "No areas found for this site"
+} 

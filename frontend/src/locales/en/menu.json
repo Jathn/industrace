@@ -1,0 +1,25 @@
+{
+  "section": {
+    "management": "Devices",
+    "registry": "Registry",
+    "users": "Users & Permissions",
+    "utility": "Utility",
+    "setup": "Setup"
+  },
+  "setup": "Setup",
+  "assets": "Assets",
+  "assettypes": "Asset Types",
+  "assetstatuses": "Asset Statuses",
+  "sites": "Sites",
+  "areas": "Areas",
+  "locations": "Locations",
+  "suppliers": "Suppliers",
+  "manufacturers": "Manufacturers",
+  "users": "Users",
+  "tenants": "Tenants",
+  "dashboard": "Dashboard",
+  "networkMap": "Network Map",
+  "pcap": "Upload PCAP",
+  "logout": "Logout",
+  "roles": "Roles"
+} 

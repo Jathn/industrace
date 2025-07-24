@@ -1,0 +1,20 @@
+{
+  "none": "Nessuno",
+  "read": "Lettura",
+  "write": "Scrittura",
+  "delete": "Eliminazione",
+  "bulk": "Operazioni Massive",
+  "noneDescription": "Nessun accesso alle risorse",
+  "readDescription": "Può visualizzare le risorse ma non modificarle",
+  "writeDescription": "Può creare e modificare le risorse",
+  "deleteDescription": "Può eliminare le risorse",
+  "bulkDescription": "Può eseguire operazioni su più risorse contemporaneamente",
+  "users": "Utenti",
+  "roles": "Ruoli",
+  "assets": "Dispositivi",
+  "locations": "Posizioni",
+  "sites": "Siti",
+  "suppliers": "Fornitori",
+  "manufacturers": "Produttori",
+  "contacts": "Contatti"
+} 

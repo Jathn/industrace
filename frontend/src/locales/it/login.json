@@ -1,0 +1,19 @@
+{
+  "welcomeMessage": "Gestione intelligente degli asset industriali",
+  "signIn": "Accedi",
+  "enterCredentials": "Inserisci le tue credenziali per accedere",
+  "emailPlaceholder": "Inserisci la tua email",
+  "passwordPlaceholder": "Inserisci la tua password",
+  "emailRequired": "L'email è obbligatoria",
+  "emailInvalid": "Inserisci un'email valida",
+  "passwordRequired": "La password è obbligatoria",
+  "rememberMe": "Ricordami",
+  "forgotPassword": "Password dimenticata?",
+  "or": "oppure",
+  "demoMode": "Modalità Demo",
+  "noAccount": "Non hai un account?",
+  "signUp": "Registrati",
+  "success": "Accesso effettuato con successo",
+  "demoSuccess": "Accesso in modalità demo effettuato",
+  "demoError": "Errore nell'accesso demo"
+} 

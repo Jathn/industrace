@@ -1,0 +1,14 @@
+{
+  "dialogTitle": "Opzioni di Stampa",
+  "confirmPrint": "Conferma la stampa del dispositivo",
+  "print": "Stampa",
+  "templates": {
+    "loadError": "Errore nel caricamento dei template",
+    "tenantSpecific": "Specifico Tenant",
+    "global": "Globale"
+  },
+  "generation": {
+    "success": "Stampa generata con successo",
+    "error": "Errore durante la generazione della stampa"
+  }
+} 

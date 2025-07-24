@@ -1,0 +1,127 @@
+{
+  "title": "System Configuration",
+  "description": "Configure system settings for your tenant",
+  "welcome": "Welcome to Industrace Setup",
+  "refresh": "Refresh",
+  "next": "Next",
+  "back": "Back",
+  "install": "Install",
+  "goToLogin": "Go to Login",
+  "smtp": {
+    "title": "SMTP Configuration",
+    "description": "Configure email server settings",
+    "host": "SMTP Host",
+    "port": "Port",
+    "username": "Username",
+    "password": "Password",
+    "fromEmail": "From Email",
+    "useTls": "Use TLS",
+    "testConnection": "Test Connection",
+    "saveSettings": "Save Settings"
+  },
+  "printTemplates": {
+    "title": "Print Templates",
+    "description": "Manage templates for device printing",
+    "createTemplate": "Create Template",
+    "editTemplate": "Edit Template",
+    "initDefaults": "Initialize Defaults",
+    "templateName": "Template Name",
+    "templateKey": "Template Key",
+    "templateDescription": "Template Description",
+    "basicInfo": "Basic Information",
+    "keyPlaceholder": "Enter template key (e.g., asset-card)",
+    "icon": "Icon",
+    "selectIcon": "Select icon",
+    "namePlaceholder": "Enter template name",
+    "descriptionPlaceholder": "Enter template description",
+    "printOptions": "Print Options",
+    "component": "Component",
+    "selectComponent": "Select component",
+    "keyRequired": "Template key is required",
+    "keyFormat": "Key must contain only lowercase letters, numbers and hyphens",
+    "nameRequired": "Template name is required",
+    "templateCreated": "Template created successfully",
+    "templateUpdated": "Template updated successfully",
+    "saveError": "Error saving template"
+  },
+  "printedKit": {
+    "title": "Printed Kit",
+    "description": "Generate complete printable company documentation",
+    "generate": "Generate Printed Kit",
+    "generating": "Generating...",
+    "success": "Printed Kit generated successfully",
+    "error": "Error generating Printed Kit",
+    "options": {
+      "includeAssets": "Include asset sheets",
+      "includeSites": "Include site information",
+      "includeContacts": "Include contacts",
+      "includeSuppliers": "Include suppliers",
+      "includePhotos": "Include asset photos",
+      "includeDocuments": "Include asset documents"
+    },
+    "info": {
+      "title": "Printed Kit - Complete Documentation",
+      "description": "Generate complete printable documentation including:",
+      "items": [
+        "General tenant information",
+        "List of sites and areas",
+        "Complete asset sheets",
+        "Contacts and suppliers",
+        "Asset documents and photos"
+      ]
+    }
+  },
+  "systemCheck": {
+    "title": "System Check",
+    "description": "Verify that the system is ready for installation",
+    "database": "Database",
+    "freshInstall": "Fresh installation"
+  },
+  "organization": {
+    "title": "Organization",
+    "description": "Configure your organization information",
+    "name": "Organization Name",
+    "namePlaceholder": "Enter your organization name",
+    "slug": "Organization Slug",
+    "slugPlaceholder": "Enter a slug for the organization",
+    "language": "Language",
+    "languagePlaceholder": "Select default language"
+  },
+  "admin": {
+    "title": "Administrator",
+    "description": "Create the system administrator account",
+    "name": "Administrator Name",
+    "namePlaceholder": "Enter administrator name",
+    "email": "Administrator Email",
+    "emailPlaceholder": "Enter administrator email",
+    "password": "Administrator Password",
+    "passwordPlaceholder": "Enter administrator password"
+  },
+  "review": {
+    "title": "Review",
+    "description": "Review settings before installation",
+    "organization": "Organization",
+    "admin": "Administrator"
+  },
+  "success": {
+    "title": "Installation Complete",
+    "description": "Industrace has been successfully installed",
+    "credentials": "Login Credentials",
+    "warning": "Save these credentials in a safe place",
+    "installed": "System installed successfully"
+  },
+  "steps": {
+    "systemCheck": "System Check",
+    "organization": "Organization",
+    "admin": "Administrator",
+    "review": "Review",
+    "complete": "Complete"
+  },
+  "errors": {
+    "required": "Required field",
+    "invalidSlug": "Invalid slug (only lowercase letters, numbers and hyphens)",
+    "invalidEmail": "Invalid email",
+    "passwordTooShort": "Password too short (minimum 8 characters)",
+    "installationFailed": "Installation failed"
+  }
+} 

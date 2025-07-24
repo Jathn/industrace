@@ -1,0 +1,23 @@
+{
+  "title": "Aree",
+  "description": "Gestisci le aree organizzative dei tuoi siti",
+  "create": "Crea Area",
+  "edit": "Modifica Area",
+  "deleteTitle": "Elimina Area",
+  "deleteMessage": "Sei sicuro di voler eliminare l'area \"{name}\"?",
+  "created": "Area creata con successo",
+  "updated": "Area aggiornata con successo",
+  "deleted": "Area eliminata con successo",
+  "saveError": "Errore nel salvataggio dell'area",
+  "searchPlaceholder": "Cerca aree...",
+  "basicInfo": "Informazioni Base",
+  "code": "Codice",
+  "typology": "Tipologia",
+  "namePlaceholder": "Inserisci il nome dell'area",
+  "codePlaceholder": "Es: ASM, PROD, OFFICE",
+  "typologyPlaceholder": "Es: Produzione, Uffici, Magazzino",
+  "notesPlaceholder": "Inserisci note aggiuntive sull'area",
+  "codeRequired": "Il codice è obbligatorio",
+  "noAreas": "Nessuna area trovata",
+  "noAreasForSite": "Nessuna area trovata per questo sito"
+} 

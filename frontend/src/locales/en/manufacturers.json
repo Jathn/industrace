@@ -1,0 +1,17 @@
+{
+  "title": "Manufacturers",
+  "description": "Manage device manufacturers",
+  "newManufacturer": "New Manufacturer",
+  "create": "Create new manufacturer",
+  "edit": "Edit manufacturer",
+  "name": "Manufacturer Name",
+  "description": "Description",
+  "website": "Website",
+  "createSuccess": "Manufacturer created successfully",
+  "updateSuccess": "Manufacturer updated successfully",
+  "deleteSuccess": "Manufacturer deleted successfully",
+  "createError": "Error creating manufacturer",
+  "updateError": "Error updating manufacturer",
+  "deleteError": "Error deleting manufacturer",
+  "fetchError": "Error loading manufacturers"
+} 

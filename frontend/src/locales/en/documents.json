@@ -1,0 +1,15 @@
+{
+  "title": "Documents",
+  "description": "Manage documents and files",
+  "upload": "Upload Document",
+  "download": "Download",
+  "delete": "Delete Document",
+  "filename": "Filename",
+  "uploadedAt": "Uploaded at",
+  "fileSize": "File Size",
+  "uploadSuccess": "Document uploaded successfully",
+  "uploadError": "Error uploading document",
+  "deleteSuccess": "Document deleted successfully",
+  "deleteError": "Error deleting document",
+  "downloadError": "Error downloading document"
+} 

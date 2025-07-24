@@ -1,0 +1,10 @@
+{
+    "title": "Tipi di asset",
+    "level0": "Livello 0 (Processi Fisici)",
+    "level1": "Livello 1 (Controllo Base)",
+    "level2": "Livello 2 (Controllo Supervisore)",
+    "level3": "Livello 3 (Operazioni di Produzione)",
+    "level4": "Livello 4 (Logistica e Business)",
+    "level1_5": "Livello 1.5 (Interfaccia di Accesso Dati / Gateway OT)",
+    "updated": "Tipo di asset aggiornato con successo"
+}

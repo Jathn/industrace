@@ -1,0 +1,18 @@
+{
+  "title": "Asset Statuses",
+  "description": "Manage device statuses and states",
+  "newAssetStatus": "New Asset Status",
+  "create": "Create new asset status",
+  "edit": "Edit asset status",
+  "name": "Status Name",
+  "description": "Description",
+  "color": "Color",
+  "order": "Order",
+  "createSuccess": "Asset status created successfully",
+  "updateSuccess": "Asset status updated successfully",
+  "deleteSuccess": "Asset status deleted successfully",
+  "createError": "Error creating asset status",
+  "updateError": "Error updating asset status",
+  "deleteError": "Error deleting asset status",
+  "fetchError": "Error loading asset statuses"
+} 

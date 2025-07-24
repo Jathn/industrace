@@ -1,0 +1,20 @@
+{
+  "none": "None",
+  "read": "Read",
+  "write": "Write",
+  "delete": "Delete",
+  "bulk": "Bulk Operations",
+  "noneDescription": "No access to resources",
+  "readDescription": "Can view resources but cannot modify them",
+  "writeDescription": "Can create and modify resources",
+  "deleteDescription": "Can delete resources",
+  "bulkDescription": "Can perform operations on multiple resources at once",
+  "users": "Users",
+  "roles": "Roles",
+  "assets": "Devices",
+  "locations": "Locations",
+  "sites": "Sites",
+  "suppliers": "Suppliers",
+  "manufacturers": "Manufacturers",
+  "contacts": "Contacts"
+} 
