@@ -4,13 +4,16 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.main import app
 from app.database import get_db, Base
-from app.models import User, Tenant, Role
+from app.models.user import User
+from app.models.tenant import Tenant
+from app.models.role import Role
 from app.services.auth import get_password_hash
 import uuid
+import os
 
-# Test database
-SQLALCHEMY_DATABASE_URL = "sqlite:///./test.db"
-engine = create_engine(SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False})
+# Test database - use PostgreSQL for consistency
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://test:test@localhost:5432/testdb")
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def override_get_db():
@@ -77,7 +80,7 @@ def test_user(test_tenant, test_role):
 client = TestClient(app)
 
 def test_login_success(test_user):
-    response = client.post("/login", data={
+    response = client.post("/api/auth/login", json={
         "email": "test@example.com",
         "password": "testpassword"
     })
@@ -86,24 +89,24 @@ def test_login_success(test_user):
     assert "access_token" in data
 
 def test_login_invalid_credentials():
-    response = client.post("/login", data={
+    response = client.post("/api/auth/login", json={
         "email": "wrong@example.com",
         "password": "wrongpassword"
     })
     assert response.status_code == 401
 
 def test_protected_endpoint_without_token():
-    response = client.get("/users/me")
+    response = client.get("/api/users/me")
     assert response.status_code == 401
 
 def test_protected_endpoint_with_valid_token(test_user):
     # Login to get token
-    login_response = client.post("/login", data={
+    login_response = client.post("/api/auth/login", json={
         "email": "test@example.com",
         "password": "testpassword"
     })
     token = login_response.json()["access_token"]
     
     # Use token to access protected endpoint
-    response = client.get("/users/me", headers={"Authorization": f"Bearer {token}"})
+    response = client.get("/api/users/me", headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == 200 

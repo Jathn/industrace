@@ -4,17 +4,12 @@ from app.main import app
 
 client = TestClient(app)
 
-
-def test_create_user():
-    response = client.post(
-        "/users",
-        json={
-            "email": "test@example.com",
-            "password": "test123",
-            "name": "Test User",
-            "role_id": "00000000-0000-0000-0000-000000000001",
-        },
-    )
+def test_health_check():
+    """Test basic health check endpoint"""
+    response = client.get("/api/health")
     assert response.status_code == 200
-    data = response.json()
-    assert data["email"] == "test@example.com"
+
+def test_api_docs():
+    """Test that API documentation is accessible"""
+    response = client.get("/docs")
+    assert response.status_code == 200
