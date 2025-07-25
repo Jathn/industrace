@@ -102,6 +102,19 @@
       </div>
     </div>
 
+    <!-- Debug section (temporary) -->
+    <div class="debug-section" style="background: #f8f9fa; padding: 1rem; margin: 1rem 0; border-radius: 0.5rem;">
+      <h3>Debug Info:</h3>
+      <p><strong>Risky Assets Count:</strong> {{ riskyAssets.length }}</p>
+      <p><strong>Recent Assets Count:</strong> {{ recentAssets.length }}</p>
+      <div v-if="riskyAssets.length > 0">
+        <p><strong>First Risky Asset:</strong> {{ JSON.stringify(riskyAssets[0]) }}</p>
+      </div>
+      <div v-if="recentAssets.length > 0">
+        <p><strong>First Recent Asset:</strong> {{ JSON.stringify(recentAssets[0]) }}</p>
+      </div>
+    </div>
+
     <!-- Tabelle informative -->
     <div class="tables-section">
       <div class="table-row">
@@ -116,7 +129,7 @@
           </div>
           <DataTable 
             v-else
-            :value="riskyAssets" 
+            :value="riskyAssetsDebug" 
             :rows="5" 
             responsiveLayout="scroll"
             class="dashboard-table"
@@ -160,7 +173,7 @@
           </div>
           <DataTable 
             v-else
-            :value="recentAssets" 
+            :value="recentAssetsDebug" 
             :rows="5" 
             responsiveLayout="scroll"
             class="dashboard-table"
@@ -235,6 +248,17 @@ const assetTypes = ref([])
 const recentAssets = ref([])
 const riskyAssets = ref([])
 
+// Debug computed properties
+const riskyAssetsDebug = computed(() => {
+  console.log('Computed risky assets:', riskyAssets.value)
+  return riskyAssets.value
+})
+
+const recentAssetsDebug = computed(() => {
+  console.log('Computed recent assets:', recentAssets.value)
+  return recentAssets.value
+})
+
 // Chart data
 const assetTypeChartData = ref({ labels: [], datasets: [] })
 const statusChartData = ref({ labels: [], datasets: [] })
@@ -302,11 +326,15 @@ onMounted(async () => {
     const riskyRes = await api.getRiskyAssets(5)
     riskyAssets.value = riskyRes.data
     console.log('Risky assets:', riskyAssets.value)
+    console.log('Risky assets first item:', riskyAssets.value[0])
+    console.log('Risky assets length:', riskyAssets.value.length)
 
     // Carica ultimi asset
     const recentRes = await api.getAssets({ limit: 5 })
     recentAssets.value = recentRes.data
     console.log('Recent assets:', recentAssets.value)
+    console.log('Recent assets first item:', recentAssets.value[0])
+    console.log('Recent assets length:', recentAssets.value.length)
 
     // Prepara dati per i grafici
     prepareChartData()
