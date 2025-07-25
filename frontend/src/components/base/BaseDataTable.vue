@@ -93,6 +93,9 @@
           <template #body="slotProps" v-else-if="col.field === 'risk_score'">
             <slot name="body-risk_score" :data="slotProps.data.__original || slotProps.data" />
           </template>
+          <template #body="slotProps" v-else-if="col.field === 'is_active'">
+            <slot name="body-is_active" :data="slotProps.data.__original || slotProps.data" />
+          </template>
           <template #body="slotProps" v-else-if="col.bodyTemplate">
             <component 
               :is="col.bodyTemplate" 

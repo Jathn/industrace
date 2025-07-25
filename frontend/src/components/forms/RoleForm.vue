@@ -222,6 +222,12 @@ const permissionSections = {
       { value: 2, label: t('permissions.write'), description: t('permissions.writeDescription') },
       { value: 3, label: t('permissions.delete'), description: t('permissions.deleteDescription') }
     ]
+  },
+  reset_user_password: {
+    levels: [
+      { value: 0, label: t('permissions.none'), description: t('permissions.noneDescription') },
+      { value: 1, label: t('permissions.resetPassword'), description: t('permissions.resetPasswordDescription') }
+    ]
   }
 }
 

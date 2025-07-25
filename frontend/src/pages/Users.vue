@@ -125,8 +125,10 @@
       <UserForm 
         :user="editingUser" 
         :roles="roles" 
+        :canResetPassword="canResetUserPassword"
         @submit="saveUser" 
         @cancel="close" 
+        @reset-password="handleResetPassword"
       />
     </BaseDialog>
 
@@ -155,11 +157,18 @@
       @execute="executeConfirmedAction"
       @close="closeConfirmDialog"
     />
+    
+    <PasswordResetDialog
+      v-model:isVisible="showPasswordResetDialog"
+      :temporaryPassword="tempPassword"
+      :userEmail="tempUserEmail"
+      @ok="handlePasswordResetOk"
+    />
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useApi } from '../composables/useApi'
@@ -174,6 +183,7 @@ import BaseDataTable from '../components/base/BaseDataTable.vue'
 import BaseDialog from '../components/base/BaseDialog.vue'
 import BaseConfirmDialog from '../components/base/BaseConfirmDialog.vue'
 import UserForm from '../components/forms/UserForm.vue'
+import PasswordResetDialog from '../components/dialogs/PasswordResetDialog.vue'
 import Button from 'primevue/button'
 import Dropdown from 'primevue/dropdown'
 import Tag from 'primevue/tag'
@@ -183,7 +193,7 @@ const router = useRouter()
 
 // Composables
 const { loading, execute } = useApi()
-const { canWrite, canDelete } = usePermissions()
+const { canWrite, canDelete, hasPermission } = usePermissions()
 const { filters, globalSearch, selectedColumns, filterData, getApiParams } = useFilters({
   global: { value: null, matchMode: 'contains' },
   role_id: { value: null, matchMode: 'equals' },
@@ -195,7 +205,7 @@ const {
   showConfirmDialog, 
   confirmData, 
   confirmDelete, 
-  confirmBulkAction, 
+  confirmBulkAction,
   confirmEmptyTrash,
   executeConfirmedAction,
   closeConfirmDialog 
@@ -208,6 +218,11 @@ const users = ref([])
 const roles = ref([])
 const selectedUsers = ref([])
 const trashMode = ref(false)
+
+// Password reset dialog
+const showPasswordResetDialog = ref(false)
+const tempPassword = ref('')
+const tempUserEmail = ref('')
 
 // Import/Export
 const showImportDialog = ref(false)
@@ -235,6 +250,11 @@ const statusOptions = [
   { label: t('common.active'), value: true },
   { label: t('common.inactive'), value: false }
 ]
+
+// Computed properties
+const canResetUserPassword = computed(() => {
+  return hasPermission('reset_user_password', 1)
+})
 
 const filteredUsers = computed(() => {
   let filtered = users.value
@@ -395,6 +415,32 @@ async function duplicateUser(user) {
     'user',
     excludeFunctions.user
   )
+}
+
+async function handleResetPassword(user) {
+  await execute(async () => {
+    const response = await api.resetUserPassword(user.id)
+    
+    // Chiudi prima il dialog di modifica
+    close()
+    
+    // Imposta i dati per il dialog di reset password
+    // I dati sono dentro response.data
+    tempPassword.value = response.data.temporary_password
+    tempUserEmail.value = response.data.user_email
+    
+    // Mostra dialog con password temporanea dopo che il DOM è stato aggiornato
+    await nextTick()
+    showPasswordResetDialog.value = true
+  }, {
+    successMessage: t('users.resetPasswordSuccess'),
+    errorContext: t('users.resetPasswordError')
+  })
+}
+
+function handlePasswordResetOk() {
+  // Il dialog è già chiuso automaticamente
+  // Qui possiamo aggiungere logica aggiuntiva se necessario
 }
 
 async function updateUserRole(user) {

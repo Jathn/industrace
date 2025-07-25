@@ -16,5 +16,8 @@
   "sites": "Siti",
   "suppliers": "Fornitori",
   "manufacturers": "Produttori",
-  "contacts": "Contatti"
+  "contacts": "Contatti",
+  "reset_user_password": "Reset Password Utenti",
+  "resetPassword": "Reset Password",
+  "resetPasswordDescription": "Può resettare la password di altri utenti"
 } 

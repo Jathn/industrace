@@ -237,6 +237,8 @@
   "trashTrashEmptyError": "Error emptying trash",
   "loginTitle": "Login",
   "loginEmail": "Email",
+  "copy": "Copy",
+  "ok": "OK",
   "loginPassword": "Password",
   "loginSubmit": "Login",
   "loginSuccess": "Login successful",

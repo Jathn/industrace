@@ -2,17 +2,17 @@
   <form @submit.prevent="handleSubmit">
     <div class="p-fluid">
       <div class="p-field">
-        <label for="name">{{ t('userForm.name') }}</label>
+        <label for="name">{{ t('common.name') }}</label>
         <InputText id="name" v-model="form.name" required maxlength="100" />
       </div>
       
       <div class="p-field">
-        <label for="email">{{ t('userForm.email') }}</label>
+        <label for="email">{{ t('common.email') }}</label>
         <InputText id="email" v-model="form.email" type="email" required maxlength="254" />
       </div>
       
       <div class="p-field">
-        <label for="role">{{ t('userForm.role') }}</label>
+        <label for="role">{{ t('users.role') }}</label>
         <Dropdown 
           id="role" 
           v-model="form.role_id" 
@@ -24,17 +24,17 @@
       </div>
       
       <div class="p-field" v-if="!props.user">
-        <label for="password">{{ t('userForm.password') }}</label>
+        <label for="password">{{ t('common.loginPassword') }}</label>
         <Password id="password" v-model="form.password" :feedback="false" :required="!props.user" toggleMask maxlength="100" />
       </div>
       
-      <div class="p-field" v-else>
-        <Button :label="t('userForm.resetPassword')" icon="pi pi-refresh" class="p-button-warning" @click.prevent="handleResetPassword" />
+      <div class="p-field" v-else-if="canResetPassword">
+        <Button :label="t('users.resetPassword')" icon="pi pi-refresh" class="p-button-warning" @click.prevent="handleResetPassword" />
       </div>
       
       <div class="flex justify-content-end gap-2 mt-4">
-        <Button :label="t('userForm.cancel')" class="p-button-text" @click="handleCancel" />
-        <Button :label="t('userForm.save')" type="submit" />
+        <Button :label="t('common.cancel')" class="p-button-text" @click="handleCancel" />
+        <Button :label="t('common.save')" type="submit" />
       </div>
     </div>
   </form>
@@ -50,7 +50,8 @@ import Button from 'primevue/button'
 
 const props = defineProps({
   user: { type: Object, default: null },
-  roles: { type: Array, default: () => [] }
+  roles: { type: Array, default: () => [] },
+  canResetPassword: { type: Boolean, default: false }
 })
 
 const { t } = useI18n()

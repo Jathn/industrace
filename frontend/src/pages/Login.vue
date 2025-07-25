@@ -166,7 +166,7 @@ const handleSubmit = async () => {
     await authStore.login(email.value, password.value)
     toast.add({
       severity: 'success',
-      summary: t('toast.success'),
+      summary: t('common.success'),
       detail: t('login.success'),
       life: 3000
     })
@@ -175,8 +175,13 @@ const handleSubmit = async () => {
     const errorCode = error.response?.data?.error_code
     let message = t('toast.error_generic')
 
-    if (errorCode && t(`errors.${errorCode}`) !== `errors.${errorCode}`) {
-      message = t(`errors.${errorCode}`)
+    // Prova a ottenere la traduzione specifica per il codice di errore
+    if (errorCode) {
+      const translatedError = t(`errors.${errorCode}`)
+      // Se la traduzione esiste e non è uguale alla chiave, usala
+      if (translatedError && translatedError !== `errors.${errorCode}`) {
+        message = translatedError
+      }
     }
 
     toast.add({

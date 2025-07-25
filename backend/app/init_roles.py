@@ -26,6 +26,7 @@ def seed_roles(tenant_id=None):
                 "asset_documents": 3,
                 "asset_photos": 3,
                 "locations_floormap": 3,
+                "reset_user_password": 1,
             },
         },
         {

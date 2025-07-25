@@ -241,6 +241,9 @@ export default {
   getUser(id) {
     return api.get(`/users/${id}`)
   },
+  resetUserPassword(id) {
+    return api.post(`/users/${id}/reset-password`)
+  },
   createUser(userData) {
     return api.post('/users', userData, {
       params: {

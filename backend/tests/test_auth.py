@@ -80,7 +80,7 @@ def test_user(test_tenant, test_role):
 client = TestClient(app)
 
 def test_login_success(test_user):
-    response = client.post("/api/auth/login", json={
+    response = client.post("/login", data={
         "email": "test@example.com",
         "password": "testpassword"
     })
@@ -89,24 +89,24 @@ def test_login_success(test_user):
     assert "access_token" in data
 
 def test_login_invalid_credentials():
-    response = client.post("/api/auth/login", json={
+    response = client.post("/login", data={
         "email": "wrong@example.com",
         "password": "wrongpassword"
     })
     assert response.status_code == 401
 
 def test_protected_endpoint_without_token():
-    response = client.get("/api/users/me")
+    response = client.get("/users/me")
     assert response.status_code == 401
 
 def test_protected_endpoint_with_valid_token(test_user):
     # Login to get token
-    login_response = client.post("/api/auth/login", json={
+    login_response = client.post("/login", data={
         "email": "test@example.com",
         "password": "testpassword"
     })
     token = login_response.json()["access_token"]
     
     # Use token to access protected endpoint
-    response = client.get("/api/users/me", headers={"Authorization": f"Bearer {token}"})
+    response = client.get("/users/me", headers={"Authorization": f"Bearer {token}"})
     assert response.status_code == 200 

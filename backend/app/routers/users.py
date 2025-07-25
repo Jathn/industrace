@@ -9,6 +9,7 @@ from app.models import User
 from app.schemas.user import UserCreate, UserUpdate, UserRead, PasswordChange
 from app.services.auth import get_current_user, get_password_hash
 from app.services.audit_decorator import audit_log_action
+from app.services.rbac import require_permission
 from app.crud import users as crud_users
 from app.errors.exceptions import ErrorCodeException
 from app.errors.error_codes import ErrorCode
@@ -117,11 +118,12 @@ def list_users(
 
 
 @router.post("/{user_id}/reset-password")
+@audit_log_action("reset_password", "User", model_class=User)
 def reset_password(
     user_id: uuid.UUID,
-    background_tasks: BackgroundTasks,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
+    perm=Depends(require_permission("reset_user_password", 1)),
 ):
     user = (
         db.query(User)
@@ -130,15 +132,18 @@ def reset_password(
     )
     if not user:
         raise ErrorCodeException(status_code=404, error_code=ErrorCode.USER_NOT_FOUND)
+    
     # Generate temporary password
     new_password = secrets.token_urlsafe(10)
     user.password_hash = get_password_hash(new_password)
     db.commit()
-    # Send email (draft: print to console)
-    background_tasks.add_task(
-        print, f"Send email to {user.email} with new password: {new_password}"
-    )
-    return {"detail": "Password reset and sent via email."}
+    
+    # Return the temporary password to the admin
+    return {
+        "detail": "Password reset successfully",
+        "temporary_password": new_password,
+        "user_email": user.email
+    }
 
 
 @router.post("/reset-password")

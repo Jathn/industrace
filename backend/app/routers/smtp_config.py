@@ -9,11 +9,10 @@ from app.schemas.tenant_smtp_config import (
     TenantSMTPConfigUpdate,
 )
 from app.services.auth import get_current_user
+from app.services.email_service import EmailConfig, EmailProvider, send_email
 from app.errors.exceptions import ErrorCodeException
 from app.errors.error_codes import ErrorCode
 from pydantic import EmailStr
-import smtplib
-from email.message import EmailMessage
 
 router = APIRouter(
     prefix="/smtp-config",
@@ -74,17 +73,27 @@ def test_smtp_config(
         raise ErrorCodeException(
             status_code=404, error_code=ErrorCode.SMTP_CONFIG_NOT_FOUND
         )
+    
+    # Converti configurazione database in EmailConfig
+    email_config = EmailConfig(
+        provider=EmailProvider(config.provider or "smtp"),
+        api_key=config.api_key,
+        domain=config.domain,
+        region=config.region,
+        from_email=config.from_email,
+        credentials=config.credentials,
+        smtp_host=config.host,
+        smtp_port=config.port,
+        smtp_username=config.username,
+        smtp_password=config.password,
+        smtp_use_tls=config.use_tls
+    )
+    
     try:
-        msg = EmailMessage()
-        msg["Subject"] = "Test SMTP"
-        msg["From"] = config.from_email
-        msg["To"] = to_email
-        msg.set_content("This is an SMTP test email.")
-        with smtplib.SMTP(config.host, config.port) as server:
-            if config.use_tls:
-                server.starttls()
-            server.login(config.username, config.password)
-            server.send_message(msg)
-        return {"detail": "Test email sent"}
+        success = send_email(to_email, "Test Email", "This is a test email from Industrace.", email_config)
+        if success:
+            return {"detail": "Test email sent successfully"}
+        else:
+            raise ErrorCodeException(status_code=400, error_code=ErrorCode.SMTP_SEND_ERROR)
     except Exception as e:
         raise ErrorCodeException(status_code=400, error_code=ErrorCode.SMTP_SEND_ERROR)

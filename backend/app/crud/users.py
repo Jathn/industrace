@@ -9,14 +9,20 @@ from passlib.context import CryptContext
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-def get_user(db: Session, user_id: uuid.UUID) -> Optional[User]:
-    """Retrieve a user by ID"""
-    return db.query(User).filter(User.id == user_id).first()
+def get_user(db: Session, user_id: uuid.UUID, tenant_id: uuid.UUID = None) -> Optional[User]:
+    """Retrieve a user by ID, optionally filtered by tenant"""
+    query = db.query(User).filter(User.id == user_id)
+    if tenant_id:
+        query = query.filter(User.tenant_id == tenant_id)
+    return query.first()
 
 
-def get_user_by_email(db: Session, email: str) -> Optional[User]:
-    """Retrieve a user by email"""
-    return db.query(User).filter(User.email == email).first()
+def get_user_by_email(db: Session, email: str, tenant_id: uuid.UUID = None) -> Optional[User]:
+    """Retrieve a user by email, optionally filtered by tenant"""
+    query = db.query(User).filter(User.email == email)
+    if tenant_id:
+        query = query.filter(User.tenant_id == tenant_id)
+    return query.first()
 
 
 def get_users(
@@ -49,9 +55,9 @@ def create_user(db: Session, user: UserCreate, tenant_id: uuid.UUID) -> User:
     return db_user
 
 
-def authenticate_user(db: Session, email: str, password: str) -> Optional[User]:
+def authenticate_user(db: Session, email: str, password: str, tenant_id: uuid.UUID = None) -> Optional[User]:
     """Authenticate a user"""
-    user = get_user_by_email(db, email)
+    user = get_user_by_email(db, email, tenant_id)
     if not user or not pwd_context.verify(password, user.password_hash):
         return None
     return user

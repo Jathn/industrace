@@ -45,6 +45,7 @@ const routes = [
   { path: '/asset-types/:id', name: 'AssetTypeDetail', component: AssetTypeDetail, meta: { requiresAuth: true } },  
   { path: '/utility', name: 'Utility', component: Utility, meta: { requiresAuth: true } },
   { path: '/users', name: 'Users', component: Users, meta: { requiresAuth: true } },
+  { path: '/users/:id', name: 'UserDetail', component: () => import('./pages/UserDetail.vue'), meta: { requiresAuth: true } },
   { path: '/asset-statuses', name: 'AssetStatuses', component: AssetStatuses, meta: { requiresAuth: true } },
   { path: '/locations', name: 'Locations', component: Locations, meta: { requiresAuth: true } },
   { path: '/contacts', name: 'Contacts', component: Contacts, meta: { requiresAuth: true } },
