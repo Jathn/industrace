@@ -20,6 +20,40 @@
 - **API-First Design**: RESTful API for integration with other systems
 - **Modern UI**: Responsive Vue.js frontend with intuitive interface
 
+## 📸 Screenshots & Demo
+
+### 🏠 Dashboard Overview
+![Dashboard](docs/images/dashboard-overview.png)
+*Main dashboard showing asset overview, risk scores, and system status*
+
+### 📊 Asset Management
+![Asset Management](docs/images/asset-management.gif)
+*Complete asset lifecycle management with detailed information and connections*
+
+### 🌐 Network Topology
+![Network Topology](docs/images/network-topology.gif)
+*Interactive network visualization showing asset connections and communications*
+
+### 🔍 Asset Details
+![Asset Details](docs/images/asset-details.png)
+*Detailed asset view with interfaces, connections, and documentation*
+
+### 👥 User Management
+![User Management](docs/images/user-management.gif)
+*Role-based access control with granular permissions management*
+
+### 📋 Audit Trail
+![Audit Trail](docs/images/audit-trail.png)
+*Complete activity logging and change tracking for compliance*
+
+### 🗺️ Floor Plan Integration
+![Floor Plan](docs/images/floor-plan.gif)
+*Visual asset placement on floor plans with interactive mapping*
+
+### 📱 Responsive Design
+![Mobile View](docs/images/mobile-view.png)
+*Fully responsive interface that works on desktop, tablet, and mobile*
+
 ## 🏗️ Architecture
 
 - **Backend**: FastAPI with SQLAlchemy ORM

@@ -63,3 +63,8 @@ logs/
 
 # Uploads (test data)
 uploads/
+
+# Documentation temporary files
+docs/images/temp/
+docs/images/*.tmp
+docs/images/*.bak
