@@ -14,17 +14,7 @@ export default defineConfig({
     port: 5173,
   },
   build: {
-    chunkSizeWarningLimit: 1000,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['vue', 'vue-router', 'pinia'],
-          ui: ['primevue', 'primeicons'],
-          charts: ['chart.js', 'vue-chartjs'],
-          network: ['vis-network']
-        }
-      }
-    }
+    chunkSizeWarningLimit: 1000
   },
   optimizeDeps: {
     include: ['vis-network']
