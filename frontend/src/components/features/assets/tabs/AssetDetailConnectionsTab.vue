@@ -29,17 +29,17 @@
       <div class="p-fluid">
         <div class="field">
           <label>{{ t('assetDetail.localInterface') }}</label>
-          <Dropdown v-model="editConnectionData.interfaceA?.id" :options="localInterfaces" optionLabel="name" optionValue="id" :placeholder="t('common.select')" />
+          <Dropdown v-model="editConnectionData.interfaceA.id" :options="localInterfaces" optionLabel="name" optionValue="id" :placeholder="t('common.select')" />
         </div>
         <div class="field">
           <label>{{ t('assetDetail.remoteAsset') }}</label>
-          <Dropdown v-model="editConnectionData.assetB?.id" :options="remoteAssets" optionLabel="name" optionValue="id" :placeholder="t('common.select')" />
+          <Dropdown v-model="editConnectionData.assetB.id" :options="remoteAssets" optionLabel="name" optionValue="id" :placeholder="t('common.select')" />
         </div>
         <div class="field">
           <label>{{ t('assetDetail.remoteInterface') }}</label>
-          <Dropdown v-model="editConnectionData.interfaceB?.id" :options="editRemoteInterfaces" optionLabel="name" optionValue="id" :placeholder="t('common.select')" :disabled="!editConnectionData.assetB?.id" />
+          <Dropdown v-model="editConnectionData.interfaceB.id" :options="editRemoteInterfaces" optionLabel="name" optionValue="id" :placeholder="t('common.select')" :disabled="!editConnectionData.assetB.id" />
         </div>
-        <Button :label="t('common.save')" icon="pi pi-check" class="mt-3" @click="saveEditConnection" :disabled="!editConnectionData.interfaceA?.id || !editConnectionData.assetB?.id || !editConnectionData.interfaceB?.id" />
+        <Button :label="t('common.save')" icon="pi pi-check" class="mt-3" @click="saveEditConnection" :disabled="!editConnectionData.interfaceA.id || !editConnectionData.assetB.id || !editConnectionData.interfaceB.id" />
       </div>
     </Dialog>
   </div>
