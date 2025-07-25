@@ -29,17 +29,17 @@
       <div class="p-fluid">
         <div class="field">
           <label>{{ t('assetDetail.localInterface') }}</label>
-          <Dropdown v-model="editConnectionData.interfaceA.id" :options="localInterfaces" optionLabel="name" optionValue="id" :placeholder="t('common.select')" />
+          <Dropdown v-model="editConnectionData.interfaceA?.id" :options="localInterfaces" optionLabel="name" optionValue="id" :placeholder="t('common.select')" />
         </div>
         <div class="field">
           <label>{{ t('assetDetail.remoteAsset') }}</label>
-          <Dropdown v-model="editConnectionData.assetB.id" :options="remoteAssets" optionLabel="name" optionValue="id" :placeholder="t('common.select')" />
+          <Dropdown v-model="editConnectionData.assetB?.id" :options="remoteAssets" optionLabel="name" optionValue="id" :placeholder="t('common.select')" />
         </div>
         <div class="field">
           <label>{{ t('assetDetail.remoteInterface') }}</label>
-          <Dropdown v-model="editConnectionData.interfaceB.id" :options="editRemoteInterfaces" optionLabel="name" optionValue="id" :placeholder="t('common.select')" :disabled="!editConnectionData.assetB.id" />
+          <Dropdown v-model="editConnectionData.interfaceB?.id" :options="editRemoteInterfaces" optionLabel="name" optionValue="id" :placeholder="t('common.select')" :disabled="!editConnectionData.assetB?.id" />
         </div>
-        <Button :label="t('common.save')" icon="pi pi-check" class="mt-3" @click="saveEditConnection" :disabled="!editConnectionData.interfaceA.id || !editConnectionData.assetB.id || !editConnectionData.interfaceB.id" />
+        <Button :label="t('common.save')" icon="pi pi-check" class="mt-3" @click="saveEditConnection" :disabled="!editConnectionData.interfaceA?.id || !editConnectionData.assetB?.id || !editConnectionData.interfaceB?.id" />
       </div>
     </Dialog>
   </div>
@@ -76,7 +76,12 @@ const selectedLocalInterface = ref(null)
 const selectedRemoteAsset = ref(null)
 const selectedRemoteInterface = ref(null)
 const remoteAssets = ref([])
-const editConnectionData = ref(null)
+const editConnectionData = ref({
+  interfaceA: { id: null },
+  assetB: { id: null },
+  interfaceB: { id: null },
+  id: null
+})
 
 // Computed
 const localInterfaces = computed(() => props.assetInterfaces || [])
@@ -187,8 +192,22 @@ function resetAddConnectionForm() {
   selectedRemoteInterface.value = null
 }
 
+function resetEditConnectionForm() {
+  editConnectionData.value = {
+    interfaceA: { id: null },
+    assetB: { id: null },
+    interfaceB: { id: null },
+    id: null
+  }
+}
+
 function onEditConnection(row) {
-  editConnectionData.value = { ...row }
+  editConnectionData.value = {
+    interfaceA: { id: row.interfaceA?.id || null },
+    assetB: { id: row.assetB?.id || null },
+    interfaceB: { id: row.interfaceB?.id || null },
+    id: row.id || null
+  }
   showEditConnectionDialog.value = true
 }
 
@@ -217,6 +236,7 @@ async function saveEditConnection() {
     })
     toast.add({ severity: 'success', summary: t('common.success'), detail: t('assetConnections.editSuccess') })
     showEditConnectionDialog.value = false
+    resetEditConnectionForm()
     await fetchConnections()
   } catch (e) {
     toast.add({ severity: 'error', summary: t('common.error'), detail: t('assetConnections.editError') })
