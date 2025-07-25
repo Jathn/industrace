@@ -9,6 +9,8 @@ from app.models.tenant import Tenant
 from app.models.role import Role
 from app.models.asset import Asset
 from app.models.site import Site
+from app.models.asset_type import AssetType
+from app.models.asset_status import AssetStatus
 from app.services.auth import get_password_hash
 import uuid
 import os
@@ -167,6 +169,37 @@ def test_site(test_tenant):
     db.close()
     return site
 
+@pytest.fixture
+def test_asset_type(test_tenant):
+    db = TestingSessionLocal()
+    asset_type = AssetType(
+        id=uuid.uuid4(),
+        name="Test Asset Type",
+        description="Test asset type for testing",
+        tenant_id=test_tenant.id
+    )
+    db.add(asset_type)
+    db.commit()
+    db.refresh(asset_type)
+    db.close()
+    return asset_type
+
+@pytest.fixture
+def test_asset_status(test_tenant):
+    db = TestingSessionLocal()
+    asset_status = AssetStatus(
+        id=uuid.uuid4(),
+        name="Active",
+        description="Active status for testing",
+        tenant_id=test_tenant.id,
+        active=True
+    )
+    db.add(asset_status)
+    db.commit()
+    db.refresh(asset_status)
+    db.close()
+    return asset_status
+
 client = TestClient(app)
 
 class TestAuthentication:
@@ -314,7 +347,7 @@ class TestUserManagement:
 class TestAssetManagement:
     """Asset management tests"""
     
-    def test_create_asset_as_admin(self, admin_user, test_site):
+    def test_create_asset_as_admin(self, admin_user, test_site, test_asset_type, test_asset_status):
         """Create asset as admin"""
         login_response = client.post("/login", data={
             "email": "admin@test.com",
@@ -326,8 +359,8 @@ class TestAssetManagement:
             "name": "Test Asset",
             "description": "Test asset for testing",
             "site_id": str(test_site.id),
-            "asset_type_id": None,
-            "asset_status_id": None,
+            "asset_type_id": str(test_asset_type.id),
+            "status_id": str(test_asset_status.id),
             "ip_address": "192.168.1.100",
             "serial_number": "SN123456",
             "manufacturer_id": None,
@@ -358,7 +391,7 @@ class TestAssetManagement:
         assert response.status_code == 200
         # Viewer can read but not create/update
     
-    def test_create_asset_unauthorized(self, viewer_user, test_site):
+    def test_create_asset_unauthorized(self, viewer_user, test_site, test_asset_type, test_asset_status):
         """Try to create asset without permission"""
         login_response = client.post("/login", data={
             "email": "viewer@test.com",
@@ -369,7 +402,9 @@ class TestAssetManagement:
         asset_data = {
             "name": "Unauthorized Asset",
             "description": "This should fail",
-            "site_id": str(test_site.id)
+            "site_id": str(test_site.id),
+            "asset_type_id": str(test_asset_type.id),
+            "status_id": str(test_asset_status.id)
         }
         
         response = client.post("/assets", 
@@ -400,7 +435,7 @@ class TestValidation:
                               headers={"Authorization": f"Bearer {token}"})
         assert response.status_code == 422  # Validation error
     
-    def test_invalid_ip_address(self, admin_user, test_site):
+    def test_invalid_ip_address(self, admin_user, test_site, test_asset_type, test_asset_status):
         """Invalid IP address format"""
         login_response = client.post("/login", data={
             "email": "admin@test.com",
@@ -411,7 +446,9 @@ class TestValidation:
         asset_data = {
             "name": "Test Asset",
             "ip_address": "invalid-ip",
-            "site_id": str(test_site.id)
+            "site_id": str(test_site.id),
+            "asset_type_id": str(test_asset_type.id),
+            "status_id": str(test_asset_status.id)
         }
         
         response = client.post("/assets", 
