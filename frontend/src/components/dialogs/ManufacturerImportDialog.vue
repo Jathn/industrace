@@ -1,10 +1,35 @@
 <template>
-  <Dialog :visible="visible" @update:visible="$emit('close')" :header="t('manufacturerImport.title')" :modal="true" :style="{ width: '50vw' }">
+  <Dialog :visible="visible" @update:visible="$emit('close')" :header="t('manufacturers.manufacturerImport.title')" :modal="true" :style="{ width: '60vw' }">
     <div class="mb-3">
       <a :href="templateUrl" download class="p-button p-button-sm p-button-outlined">
-        <i class="pi pi-download mr-2" />{{ t('manufacturerImport.downloadTemplate') }}
+        <i class="pi pi-download mr-2" />{{ t('manufacturers.manufacturerImport.downloadTemplate') }}
       </a>
     </div>
+    
+    <!-- Informazioni utili -->
+    <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded">
+      <h4 class="text-blue-800 mb-2">{{ t('manufacturers.manufacturerImport.importantInfo') }}</h4>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+        <div>
+          <h5 class="font-semibold text-blue-700 mb-1">{{ t('manufacturers.manufacturerImport.requiredFields') }}</h5>
+          <ul class="text-blue-600">
+            <li>• {{ t('manufacturers.manufacturerImport.nameRequired') }}</li>
+          </ul>
+        </div>
+        <div>
+          <h5 class="font-semibold text-blue-700 mb-1">{{ t('manufacturers.manufacturerImport.validFormats') }}</h5>
+          <ul class="text-blue-600">
+            <li>• {{ t('manufacturers.manufacturerImport.emailFormat') }}</li>
+            <li>• {{ t('manufacturers.manufacturerImport.websiteFormat') }}</li>
+            <li>• {{ t('manufacturers.manufacturerImport.phoneFormat') }}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-3 text-blue-600 text-sm">
+        <p><strong>{{ t('manufacturers.manufacturerImport.tip') }}:</strong> {{ t('manufacturers.manufacturerImport.tipText') }}</p>
+      </div>
+    </div>
+    
     <div class="mb-3">
       <input type="file" accept=".csv,.xlsx" @change="onFileChange" />
     </div>
@@ -16,16 +41,16 @@
     </div>
     <div v-if="previewResult">
       <div v-if="previewResult.to_create && previewResult.to_create.length">
-        <h4 class="mb-1">{{ t('manufacturerImport.toCreate') }}</h4>
+        <h4 class="mb-1">{{ t('manufacturers.manufacturerImport.toCreate') }}</h4>
         <DataTable :value="previewResult.to_create" scrollable :scrollHeight="'20vh'">
-          <Column v-for="col in columns" :key="col.field" :field="col.field" :header="col.header" />
+          <Column v-for="col in columns" :key="col.field" :field="col.field" :header="t(col.header)" />
         </DataTable>
       </div>
       <div v-if="previewResult.to_update && previewResult.to_update.length">
-        <h4 class="mt-3 mb-1">{{ t('manufacturerImport.toUpdate') }}</h4>
+        <h4 class="mt-3 mb-1">{{ t('manufacturers.manufacturerImport.toUpdate') }}</h4>
         <DataTable :value="previewResult.to_update" scrollable :scrollHeight="'20vh'">
-          <Column field="name" :header="t('manufacturerForm.name')" />
-          <Column field="diff" :header="t('manufacturerImport.differences')">
+          <Column field="name" :header="t('manufacturers.manufacturerForm.name')" />
+          <Column field="diff" :header="t('manufacturers.manufacturerImport.differences')">
             <template #body="{ data }">
               <ul>
                 <li v-for="(change, field) in data.diff" :key="field">
@@ -37,15 +62,15 @@
         </DataTable>
       </div>
       <div v-if="previewResult.errors && previewResult.errors.length">
-        <h4 class="mt-3 mb-1 text-red-600">{{ t('manufacturerImport.errors') }}</h4>
+        <h4 class="mt-3 mb-1 text-red-600">{{ t('manufacturers.manufacturerImport.errors') }}</h4>
         <ul>
-          <li v-for="err in previewResult.errors" :key="err.row">{{ t('manufacturerImport.row') }} {{ err.row }}: {{ err.error }}</li>
+          <li v-for="err in previewResult.errors" :key="err.row">{{ t('manufacturers.manufacturerImport.row') }} {{ err.row }}: {{ err.error }}</li>
         </ul>
       </div>
     </div>
     <template #footer>
       <Button :label="t('common.cancel')" class="p-button-text" @click="$emit('close')" />
-      <Button :label="t('manufacturerImport.confirm')" :disabled="!file || loading || (previewResult && previewResult.errors && previewResult.errors.length)" @click="confirmImport" />
+      <Button :label="t('manufacturers.manufacturerImport.confirm')" :disabled="!file || loading || (previewResult && previewResult.errors && previewResult.errors.length)" @click="confirmImport" />
     </template>
   </Dialog>
 </template>
@@ -68,13 +93,13 @@ const emit = defineEmits(['close', 'imported'])
 
 const templateUrl = '/template_import_manufacturer.csv'
 const file = ref(null)
-const columns = [
-  { field: 'name', header: t('manufacturerForm.name') },
-  { field: 'description', header: t('manufacturerForm.description') },
-  { field: 'website', header: t('manufacturerForm.website') },
-  { field: 'email', header: t('manufacturerForm.email') },
-  { field: 'phone', header: t('manufacturerForm.phone') },
-]
+const columns = ref([
+  { field: 'name', header: 'manufacturers.manufacturerForm.name' },
+  { field: 'description', header: 'manufacturers.manufacturerForm.description' },
+  { field: 'website', header: 'manufacturers.manufacturerForm.website' },
+  { field: 'email', header: 'manufacturers.manufacturerForm.email' },
+  { field: 'phone', header: 'manufacturers.manufacturerForm.phone' },
+])
 const loading = ref(false)
 const error = ref('')
 const previewResult = ref(null)
@@ -89,9 +114,9 @@ async function onFileChange(e) {
   try {
     const { data } = await api.previewManufacturerImportXlsx(f)
     previewResult.value = data
-    error.value = (data.errors && data.errors.length) ? data.errors.map(e => `Riga ${e.row}: ${e.error}`).join('\n') : ''
+    error.value = (data.errors && data.errors.length) ? data.errors.map(e => `${t('manufacturers.manufacturerImport.row')} ${e.row}: ${e.error}`).join('\n') : ''
   } catch (e) {
-    error.value = t('manufacturerImport.readError')
+    error.value = t('manufacturers.manufacturerImport.readError')
   }
   loading.value = false
 }

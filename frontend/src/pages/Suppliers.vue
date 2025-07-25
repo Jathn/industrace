@@ -432,9 +432,11 @@ async function deleteSupplier(id) {
         await api.deleteSupplier(id)
         await fetchSuppliers()
       }, {
-        successMessage: t('common.deleted'),
         errorContext: t('common.deleteError')
       })
+    },
+    {
+      successMessage: t('common.deleted')
     }
   )
 }

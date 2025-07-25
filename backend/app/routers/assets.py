@@ -318,7 +318,10 @@ def import_assets_xlsx_preview(
     try:
         filename = file.filename.lower()
         if filename.endswith(".csv"):
-            df = pd.read_csv(file.file)
+            # Read CSV with string dtype for all columns to avoid numeric interpretation
+            df = pd.read_csv(file.file, dtype=str)
+            # Replace NaN values with None
+            df = df.where(pd.notnull(df), None)
         else:
             df = pd.read_excel(file.file, engine="openpyxl")
     except Exception as e:
@@ -332,20 +335,17 @@ def import_assets_xlsx_preview(
         ip_address = row.get("ip_address")
         manufacturer_name = row.get("manufacturer")
         missing = []
-        # Handle NaN, None, empty string
-        if pd.isna(name) or name is None or str(name).strip() == "":
+        # Handle None, empty string
+        if name is None or str(name).strip() == "":
             missing.append("name")
-        if pd.isna(site_code) or site_code is None or str(site_code).strip() == "":
+        if site_code is None or str(site_code).strip() == "":
             missing.append("site_code")
-        if (
-            pd.isna(asset_type_name)
-            or asset_type_name is None
-            or str(asset_type_name).strip() == ""
-        ):
+        if asset_type_name is None or str(asset_type_name).strip() == "":
             missing.append("asset_type")
         site_id = None
         asset_type_id = None
         manufacturer_id = None
+        status_id = None
         # Validation of site_code and asset_type
         if not missing:
             from app.crud.sites import get_site_by_code
@@ -380,6 +380,36 @@ def import_assets_xlsx_preview(
                 )
             else:
                 asset_type_id = asset_type.id
+            
+            # Get default status (Active)
+            from app.models.asset_status import AssetStatus
+            default_status = (
+                db.query(AssetStatus)
+                .filter(
+                    AssetStatus.name == "Active",
+                    AssetStatus.tenant_id == current_user.tenant_id,
+                )
+                .first()
+            )
+            if default_status:
+                status_id = default_status.id
+            else:
+                # Fallback: get first available status
+                first_status = (
+                    db.query(AssetStatus)
+                    .filter(AssetStatus.tenant_id == current_user.tenant_id)
+                    .first()
+                )
+                if first_status:
+                    status_id = first_status.id
+                else:
+                    errors.append(
+                        {
+                            "row": int(idx) + 2,
+                            "error": "No asset status available",
+                        }
+                    )
+                    continue
         # Validation/lookup/creation of manufacturer
         if not missing and manufacturer_name and str(manufacturer_name).strip() != "":
             manufacturer = (
@@ -430,24 +460,47 @@ def import_assets_xlsx_preview(
             )
         if asset:
             diff = {}
-            for field, new in [
-                ("name", name),
-                ("site_id", site_id),
-                ("asset_type_id", asset_type_id),
-                ("manufacturer", manufacturer_name),
-            ]:
-                old = getattr(asset, field, None)
+            # Check all CSV fields for differences
+            csv_fields = {
+                "name": name,
+                "site_code": site_code,
+                "asset_type": asset_type_name,
+                "ip_address": row.get("ip_address"),
+                "manufacturer": manufacturer_name,
+                "serial_number": row.get("serial_number"),
+                "model": row.get("model"),
+                "firmware_version": row.get("firmware_version"),
+                "description": row.get("description"),
+                "business_criticality": row.get("business_criticality"),
+                "physical_access_ease": row.get("physical_access_ease"),
+                "purdue_level": row.get("purdue_level"),
+                "installation_date": row.get("installation_date"),
+            }
+            
+            for field, new_value in csv_fields.items():
                 if field == "manufacturer":
                     # compare the manufacturer name
                     old_manuf = asset.manufacturer.name if asset.manufacturer else None
                     if (
                         str(old_manuf).strip().lower()
-                        != str(manufacturer_name).strip().lower()
+                        != str(new_value).strip().lower()
                     ):
-                        diff[field] = {"old": old_manuf, "new": manufacturer_name}
+                        diff[field] = {"old": old_manuf, "new": new_value}
+                elif field == "site_code":
+                    # compare site code
+                    old_site_code = asset.site.code if asset.site else None
+                    if str(old_site_code) != str(new_value):
+                        diff[field] = {"old": old_site_code, "new": new_value}
+                elif field == "asset_type":
+                    # compare asset type name
+                    old_asset_type = asset.asset_type.name if asset.asset_type else None
+                    if str(old_asset_type) != str(new_value):
+                        diff[field] = {"old": old_asset_type, "new": new_value}
                 else:
-                    if str(old) != str(new):
-                        diff[field] = {"old": old, "new": new}
+                    old_value = getattr(asset, field, None)
+                    if str(old_value) != str(new_value):
+                        diff[field] = {"old": old_value, "new": new_value}
+            
             if diff or interfaces:
                 to_update.append(
                     {
@@ -462,9 +515,18 @@ def import_assets_xlsx_preview(
                 {
                     "name": name,
                     "tag": tag,
-                    "site_id": str(site_id),
-                    "asset_type_id": str(asset_type_id),
+                    "site_code": site_code,
+                    "asset_type": asset_type_name,
+                    "ip_address": row.get("ip_address"),
                     "manufacturer": manufacturer_name,
+                    "serial_number": row.get("serial_number"),
+                    "model": row.get("model"),
+                    "firmware_version": row.get("firmware_version"),
+                    "description": row.get("description"),
+                    "business_criticality": row.get("business_criticality"),
+                    "physical_access_ease": row.get("physical_access_ease"),
+                    "purdue_level": row.get("purdue_level"),
+                    "installation_date": row.get("installation_date"),
                     "manufacturer_action": manufacturer_action,
                     "interfaces": interfaces,
                 }
@@ -489,7 +551,10 @@ def import_assets_xlsx_confirm(
     try:
         filename = file.filename.lower()
         if filename.endswith(".csv"):
-            df = pd.read_csv(file.file)
+            # Read CSV with string dtype for all columns to avoid numeric interpretation
+            df = pd.read_csv(file.file, dtype=str)
+            # Replace NaN values with None
+            df = df.where(pd.notnull(df), None)
         else:
             df = pd.read_excel(file.file, engine="openpyxl")
     except Exception as e:
@@ -503,19 +568,16 @@ def import_assets_xlsx_confirm(
         ip_address = row.get("ip_address")
         manufacturer_name = row.get("manufacturer")
         missing = []
-        if pd.isna(name) or name is None or str(name).strip() == "":
+        if name is None or str(name).strip() == "":
             missing.append("name")
-        if pd.isna(site_code) or site_code is None or str(site_code).strip() == "":
+        if site_code is None or str(site_code).strip() == "":
             missing.append("site_code")
-        if (
-            pd.isna(asset_type_name)
-            or asset_type_name is None
-            or str(asset_type_name).strip() == ""
-        ):
+        if asset_type_name is None or str(asset_type_name).strip() == "":
             missing.append("asset_type")
         site_id = None
         asset_type_id = None
         manufacturer_id = None
+        status_id = None
         if not missing:
             from app.crud.sites import get_site_by_code
 
@@ -549,6 +611,36 @@ def import_assets_xlsx_confirm(
                 )
             else:
                 asset_type_id = asset_type.id
+            
+            # Get default status (Active)
+            from app.models.asset_status import AssetStatus
+            default_status = (
+                db.query(AssetStatus)
+                .filter(
+                    AssetStatus.name == "Active",
+                    AssetStatus.tenant_id == current_user.tenant_id,
+                )
+                .first()
+            )
+            if default_status:
+                status_id = default_status.id
+            else:
+                # Fallback: get first available status
+                first_status = (
+                    db.query(AssetStatus)
+                    .filter(AssetStatus.tenant_id == current_user.tenant_id)
+                    .first()
+                )
+                if first_status:
+                    status_id = first_status.id
+                else:
+                    errors.append(
+                        {
+                            "row": int(idx) + 2,
+                            "error": "No asset status available",
+                        }
+                    )
+                    continue
         # Lookup/creazione manufacturer
         if not missing and manufacturer_name and str(manufacturer_name).strip() != "":
             manufacturer = (
@@ -599,11 +691,35 @@ def import_assets_xlsx_confirm(
             asset = None
         try:
             if asset:
+                # Parse installation_date if provided
+                installation_date = None
+                if row.get("installation_date") and str(row.get("installation_date")).strip() != "":
+                    try:
+                        installation_date = datetime.strptime(str(row.get("installation_date")).strip(), "%Y-%m-%d").date()
+                    except:
+                        pass  # Keep as None if parsing fails
+                
+                # Parse purdue_level if provided
+                purdue_level = 0.0
+                if row.get("purdue_level") and str(row.get("purdue_level")).strip() != "":
+                    try:
+                        purdue_level = float(str(row.get("purdue_level")).strip())
+                    except:
+                        pass  # Keep default if parsing fails
+                
                 asset.name = name
                 asset.site_id = site_id
                 asset.asset_type_id = asset_type_id
                 if manufacturer_id:
                     asset.manufacturer_id = manufacturer_id
+                asset.serial_number = row.get("serial_number")
+                asset.model = row.get("model")
+                asset.firmware_version = row.get("firmware_version")
+                asset.description = row.get("description")
+                asset.business_criticality = row.get("business_criticality")
+                asset.physical_access_ease = row.get("physical_access_ease")
+                asset.purdue_level = purdue_level
+                asset.installation_date = installation_date
                 db.commit()
                 updated.append(tag)
                 # If ip_address present, create LAN interface if not already present
@@ -633,13 +749,38 @@ def import_assets_xlsx_confirm(
                         db.add(interface)
                         db.commit()
             else:
+                # Parse installation_date if provided
+                installation_date = None
+                if row.get("installation_date") and str(row.get("installation_date")).strip() != "":
+                    try:
+                        installation_date = datetime.strptime(str(row.get("installation_date")).strip(), "%Y-%m-%d").date()
+                    except:
+                        pass  # Keep as None if parsing fails
+                
+                # Parse purdue_level if provided
+                purdue_level = 0.0
+                if row.get("purdue_level") and str(row.get("purdue_level")).strip() != "":
+                    try:
+                        purdue_level = float(str(row.get("purdue_level")).strip())
+                    except:
+                        pass  # Keep default if parsing fails
+                
                 new_asset = Asset(
                     name=name,
                     tag=tag,
                     site_id=site_id,
                     asset_type_id=asset_type_id,
+                    status_id=status_id,
                     tenant_id=current_user.tenant_id,
                     manufacturer_id=manufacturer_id,
+                    serial_number=row.get("serial_number"),
+                    model=row.get("model"),
+                    firmware_version=row.get("firmware_version"),
+                    description=row.get("description"),
+                    business_criticality=row.get("business_criticality"),
+                    physical_access_ease=row.get("physical_access_ease"),
+                    purdue_level=purdue_level,
+                    installation_date=installation_date,
                 )
                 db.add(new_asset)
                 db.commit()

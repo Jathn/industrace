@@ -1,21 +1,35 @@
 <template>
-  <Dialog :visible="visible" @update:visible="$emit('close')" :header="t('assetImport.title')" :modal="true" :style="{ width: '50vw' }">
+  <Dialog :visible="visible" @update:visible="$emit('close')" :header="t('assets.assetImport.title')" :modal="true" :style="{ width: '60vw' }">
     <div class="mb-3">
-      <b>{{ t('assetImport.instructionsTitle') }}</b><br><br>
-      1. {{ t('assetImport.step1') }}<br>
-      2. {{ t('assetImport.step2') }}<br>
-      <li>{{ t('assetImport.nameField') }}</li>
-      <li>{{ t('assetImport.tagField') }}</li>
-      <li>{{ t('assetImport.siteCodeField') }}</li>
-      <li>{{ t('assetImport.assetTypeField') }}</li>
-      <li>{{ t('assetImport.ipAddressField') }}</li>
-      <li>{{ t('assetImport.manufacturerField') }}</li>
-      <br>
-      3. {{ t('assetImport.step3') }}<br>
-      4. {{ t('assetImport.step4') }}<br><br>
       <a :href="templateUrl" download class="p-button p-button-sm p-button-outlined">
-        <i class="pi pi-download mr-2" />{{ t('assetImport.downloadTemplate') }}
+        <i class="pi pi-download mr-2" />{{ t('assets.assetImport.downloadTemplate') }}
       </a>
+    </div>
+    
+    <!-- Informazioni utili -->
+    <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded">
+      <h4 class="text-blue-800 mb-2">{{ t('assets.assetImport.importantInfo') }}</h4>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+        <div>
+          <h5 class="font-semibold text-blue-700 mb-1">{{ t('assets.assetImport.requiredFields') }}</h5>
+          <ul class="text-blue-600">
+            <li>• {{ t('assets.assetImport.nameRequired') }}</li>
+            <li>• {{ t('assets.assetImport.siteCodeRequired') }}</li>
+            <li>• {{ t('assets.assetImport.assetTypeRequired') }}</li>
+          </ul>
+        </div>
+        <div>
+          <h5 class="font-semibold text-blue-700 mb-1">{{ t('assets.assetImport.validFormats') }}</h5>
+          <ul class="text-blue-600">
+            <li>• {{ t('assets.assetImport.ipFormat') }}</li>
+            <li>• {{ t('assets.assetImport.dateFormat') }}</li>
+            <li>• {{ t('assets.assetImport.purdueFormat') }}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-3 text-blue-600 text-sm">
+        <p><strong>{{ t('assets.assetImport.tip') }}:</strong> {{ t('assets.assetImport.tipText') }}</p>
+      </div>
     </div>
     <div class="mb-3">
       <input type="file" accept=".csv,.xlsx" @change="onFileChange" :aria-label="t('assetImport.fileInput')" />
@@ -28,26 +42,16 @@
     </div>
     <div v-if="previewResult">
       <div v-if="previewResult.to_create && previewResult.to_create.length">
-        <h4 class="mb-1">{{ t('assetImport.toCreate') }}</h4>
+        <h4 class="mb-1">{{ t('assets.assetImport.toCreate') }}</h4>
         <DataTable :value="previewResult.to_create" scrollable :scrollHeight="'20vh'">
-          <Column v-for="col in columns" :key="col" :field="col" :header="col" v-if="col !== 'interfaces'" />
-          <Column v-if="columns.includes('interfaces')" field="interfaces" header="Interfacce">
-            <template #body="{ data }">
-              <ul v-if="data.interfaces && data.interfaces.length">
-                <li v-for="iface in data.interfaces" :key="iface.ip_address">
-                  {{ iface.name }} ({{ iface.type }}) - {{ iface.ip_address }}
-                </li>
-              </ul>
-              <span v-else>-</span>
-            </template>
-          </Column>
+          <Column v-for="col in columns" :key="col.field" :field="col.field" :header="t(col.header)" />
         </DataTable>
       </div>
       <div v-if="previewResult.to_update && previewResult.to_update.length">
-        <h4 class="mt-3 mb-1">{{ t('assetImport.toUpdate') }}</h4>
+        <h4 class="mt-3 mb-1">{{ t('assets.assetImport.toUpdate') }}</h4>
         <DataTable :value="previewResult.to_update" scrollable :scrollHeight="'20vh'">
-          <Column field="tag" header="Tag" />
-          <Column field="diff" header="Differenze">
+          <Column field="tag" :header="t('assets.assetForm.tag')" />
+          <Column field="diff" :header="t('assets.assetImport.differences')">
             <template #body="{ data }">
               <ul>
                 <li v-for="(change, field) in data.diff" :key="field">
@@ -56,28 +60,18 @@
               </ul>
             </template>
           </Column>
-          <Column v-if="data.interfaces && data.interfaces.length" field="interfaces" header="Interfacce">
-            <template #body="{ data }">
-              <ul v-if="data.interfaces && data.interfaces.length">
-                <li v-for="iface in data.interfaces" :key="iface.ip_address">
-                  {{ iface.name }} ({{ iface.type }}) - {{ iface.ip_address }}
-                </li>
-              </ul>
-              <span v-else>-</span>
-            </template>
-          </Column>
         </DataTable>
       </div>
       <div v-if="previewResult.errors && previewResult.errors.length">
-        <h4 class="mt-3 mb-1 text-red-600">{{ t('assetImport.errors') }}</h4>
+        <h4 class="mt-3 mb-1 text-red-600">{{ t('assets.assetImport.errors') }}</h4>
         <ul>
-          <li v-for="err in previewResult.errors" :key="err.row">Riga {{ err.row }}: {{ err.error }}</li>
+          <li v-for="err in previewResult.errors" :key="err.row">{{ t('assets.assetImport.row') }} {{ err.row }}: {{ err.error }}</li>
         </ul>
       </div>
     </div>
     <template #footer>
       <Button :label="t('common.cancel')" class="p-button-text" @click="$emit('close')" />
-      <Button :label="t('assetImport.confirm')" :disabled="!file || loading || (previewResult && previewResult.errors && previewResult.errors.length)" @click="confirmImport" />
+      <Button :label="t('assets.assetImport.confirm')" :disabled="!file || loading || (previewResult && previewResult.errors && previewResult.errors.length)" @click="confirmImport" />
     </template>
   </Dialog>
 </template>
@@ -101,8 +95,17 @@ const emit = defineEmits(['close', 'imported'])
 
 const templateUrl = '/template_import_asset.csv'
 const file = ref(null)
-const preview = ref([])
-const columns = ref([])
+const columns = ref([
+  { field: 'name', header: 'assets.assetForm.name' },
+  { field: 'tag', header: 'assets.assetForm.tag' },
+  { field: 'site_code', header: 'assets.assetForm.site_code' },
+  { field: 'asset_type', header: 'assets.assetForm.asset_type' },
+  { field: 'ip_address', header: 'assets.assetForm.ip_address' },
+  { field: 'manufacturer', header: 'assets.assetForm.manufacturer' },
+  { field: 'serial_number', header: 'assets.assetForm.serial_number' },
+  { field: 'model', header: 'assets.assetForm.model' },
+  { field: 'description', header: 'assets.assetForm.description' }
+])
 const loading = ref(false)
 const error = ref('')
 const previewResult = ref(null)
@@ -118,11 +121,9 @@ async function onFileChange(e) {
     // Chiamata preview backend
     const { data } = await api.previewAssetImportXlsx(f)
     previewResult.value = data
-    columns.value = ['name', 'tag', 'site_id', 'asset_type_id', 'manufacturer', 'interfaces']
-    preview.value = (data.to_create || []).concat((data.to_update || []).map(u => ({ ...u, _update: true })))
-    error.value = (data.errors && data.errors.length) ? data.errors.map(e => `Riga ${e.row}: ${e.error}`).join('\n') : ''
+    error.value = (data.errors && data.errors.length) ? data.errors.map(e => `${t('assets.assetImport.row')} ${e.row}: ${e.error}`).join('\n') : ''
   } catch (e) {
-    error.value = t('assetImport.readError')
+    error.value = t('assets.assetImport.readError')
   }
   loading.value = false
 }
@@ -135,7 +136,7 @@ async function confirmImport() {
     const { data } = await api.confirmAssetImportXlsx(file.value)
     emit('imported', data)
   } catch (e) {
-    error.value = t('assetImport.readError')
+    error.value = t('assets.assetImport.readError')
   }
   loading.value = false
 }

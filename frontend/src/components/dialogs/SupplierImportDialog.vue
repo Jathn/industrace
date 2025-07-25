@@ -1,10 +1,36 @@
 <template>
-  <Dialog :visible="visible" @update:visible="$emit('close')" :header="t('supplierImport.title')" :modal="true" :style="{ width: '50vw' }">
+  <Dialog :visible="visible" @update:visible="$emit('close')" :header="t('suppliers.supplierImport.title')" :modal="true" :style="{ width: '60vw' }">
     <div class="mb-3">
       <a :href="templateUrl" download class="p-button p-button-sm p-button-outlined">
-        <i class="pi pi-download mr-2" />{{ t('supplierImport.downloadTemplate') }}
+        <i class="pi pi-download mr-2" />{{ t('suppliers.supplierImport.downloadTemplate') }}
       </a>
     </div>
+    
+    <!-- Informazioni utili -->
+    <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded">
+      <h4 class="text-blue-800 mb-2">{{ t('suppliers.supplierImport.importantInfo') }}</h4>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+        <div>
+          <h5 class="font-semibold text-blue-700 mb-1">{{ t('suppliers.supplierImport.requiredFields') }}</h5>
+          <ul class="text-blue-600">
+            <li>• {{ t('suppliers.supplierImport.nameRequired') }}</li>
+            <li>• {{ t('suppliers.supplierImport.vatRequired') }}</li>
+          </ul>
+        </div>
+        <div>
+          <h5 class="font-semibold text-blue-700 mb-1">{{ t('suppliers.supplierImport.validFormats') }}</h5>
+          <ul class="text-blue-600">
+            <li>• {{ t('suppliers.supplierImport.vatFormat') }}</li>
+            <li>• {{ t('suppliers.supplierImport.emailFormat') }}</li>
+            <li>• {{ t('suppliers.supplierImport.websiteFormat') }}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-3 text-blue-600 text-sm">
+        <p><strong>{{ t('suppliers.supplierImport.tip') }}:</strong> {{ t('suppliers.supplierImport.tipText') }}</p>
+      </div>
+    </div>
+    
     <div class="mb-3">
       <input type="file" accept=".csv,.xlsx" @change="onFileChange" />
     </div>
@@ -16,16 +42,16 @@
     </div>
     <div v-if="previewResult">
       <div v-if="previewResult.to_create && previewResult.to_create.length">
-        <h4 class="mb-1">{{ t('supplierImport.toCreate') }}</h4>
+        <h4 class="mb-1">{{ t('suppliers.supplierImport.toCreate') }}</h4>
         <DataTable :value="previewResult.to_create" scrollable :scrollHeight="'20vh'">
-          <Column v-for="col in columns" :key="col" :field="col" :header="col" />
+          <Column v-for="col in columns" :key="col.field" :field="col.field" :header="t(col.header)" />
         </DataTable>
       </div>
       <div v-if="previewResult.to_update && previewResult.to_update.length">
-        <h4 class="mt-3 mb-1">{{ t('supplierImport.toUpdate') }}</h4>
+        <h4 class="mt-3 mb-1">{{ t('suppliers.supplierImport.toUpdate') }}</h4>
         <DataTable :value="previewResult.to_update" scrollable :scrollHeight="'20vh'">
-          <Column field="vat_number" :header="t('supplierForm.vat_number')" />
-          <Column field="diff" :header="t('supplierImport.differences')">
+          <Column field="vat_number" :header="t('suppliers.supplierForm.vat_number')" />
+          <Column field="diff" :header="t('suppliers.supplierImport.differences')">
             <template #body="{ data }">
               <ul>
                 <li v-for="(change, field) in data.diff" :key="field">
@@ -37,15 +63,15 @@
         </DataTable>
       </div>
       <div v-if="previewResult.errors && previewResult.errors.length">
-        <h4 class="mt-3 mb-1 text-red-600">{{ t('supplierImport.errors') }}</h4>
+        <h4 class="mt-3 mb-1 text-red-600">{{ t('suppliers.supplierImport.errors') }}</h4>
         <ul>
-          <li v-for="err in previewResult.errors" :key="err.row">Riga {{ err.row }}: {{ err.error }}</li>
+          <li v-for="err in previewResult.errors" :key="err.row">{{ t('suppliers.supplierImport.row') }} {{ err.row }}: {{ err.error }}</li>
         </ul>
       </div>
     </div>
     <template #footer>
       <Button :label="t('common.cancel')" class="p-button-text" @click="$emit('close')" />
-      <Button :label="t('supplierImport.confirm')" :disabled="!file || loading || (previewResult && previewResult.errors && previewResult.errors.length)" @click="confirmImport" />
+      <Button :label="t('suppliers.supplierImport.confirm')" :disabled="!file || loading || (previewResult && previewResult.errors && previewResult.errors.length)" @click="confirmImport" />
     </template>
   </Dialog>
 </template>
@@ -68,7 +94,21 @@ const emit = defineEmits(['close', 'imported'])
 
 const templateUrl = '/template_import_supplier.csv'
 const file = ref(null)
-const columns = ref(['name', 'description', 'vat_number', 'city', 'country', 'email', 'phone'])
+const columns = ref([
+  { field: 'name', header: 'suppliers.supplierForm.name' },
+  { field: 'description', header: 'suppliers.supplierForm.description' },
+  { field: 'vat_number', header: 'suppliers.supplierForm.vat_number' },
+  { field: 'tax_code', header: 'suppliers.supplierForm.tax_code' },
+  { field: 'address', header: 'suppliers.supplierForm.address' },
+  { field: 'city', header: 'suppliers.supplierForm.city' },
+  { field: 'zip_code', header: 'suppliers.supplierForm.zip_code' },
+  { field: 'province', header: 'suppliers.supplierForm.province' },
+  { field: 'country', header: 'suppliers.supplierForm.country' },
+  { field: 'phone', header: 'suppliers.supplierForm.phone' },
+  { field: 'email', header: 'suppliers.supplierForm.email' },
+  { field: 'website', header: 'suppliers.supplierForm.website' },
+  { field: 'notes', header: 'suppliers.supplierForm.notes' }
+])
 const loading = ref(false)
 const error = ref('')
 const previewResult = ref(null)
@@ -83,7 +123,7 @@ async function onFileChange(e) {
   try {
     const { data } = await api.previewSupplierImportXlsx(f)
     previewResult.value = data
-    error.value = (data.errors && data.errors.length) ? data.errors.map(e => `Riga ${e.row}: ${e.error}`).join('\n') : ''
+    error.value = (data.errors && data.errors.length) ? data.errors.map(e => `${t('supplierImport.row')} ${e.row}: ${e.error}`).join('\n') : ''
   } catch (e) {
     error.value = t('supplierImport.readError')
   }
@@ -98,7 +138,7 @@ async function confirmImport() {
     const { data } = await api.confirmSupplierImportXlsx(file.value)
     emit('imported', data)
   } catch (e) {
-    error.value = t('supplierImport.readError')
+    error.value = t('suppliers.supplierImport.readError')
   }
   loading.value = false
 }

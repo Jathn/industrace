@@ -2,6 +2,8 @@
 
 import uuid
 import logging
+import json
+import math
 
 from datetime import timedelta
 from typing import Optional
@@ -9,6 +11,29 @@ from jose import jwt, JWTError, ExpiredSignatureError
 from datetime import timedelta
 
 logger = logging.getLogger(__name__)
+
+# Custom JSON encoder to handle inf and NaN values
+class SafeJSONEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, float):
+            if math.isnan(obj):
+                return None
+            if math.isinf(obj):
+                return None
+        return super().default(obj)
+
+def clean_data_for_json(data):
+    """Clean data to remove inf and NaN values before JSON serialization"""
+    if isinstance(data, dict):
+        return {k: clean_data_for_json(v) for k, v in data.items()}
+    elif isinstance(data, list):
+        return [clean_data_for_json(item) for item in data]
+    elif isinstance(data, float):
+        if math.isnan(data) or math.isinf(data):
+            return None
+        return data
+    else:
+        return data
 
 
 from fastapi import FastAPI, Depends, HTTPException, Form, Request, Cookie
@@ -568,6 +593,14 @@ logging.basicConfig(level=logging.ERROR)
 async def generic_exception_handler(request: Request, exc: Exception):
     # Log the error for debugging
     logging.error(f"Error 500 on {request.url}: {exc}", exc_info=True)
+    
+    # Handle JSON serialization errors specifically
+    if isinstance(exc, ValueError) and "Out of range float values are not JSON compliant" in str(exc):
+        logger.error("JSON serialization error with inf/NaN values detected")
+        return JSONResponse(
+            status_code=500,
+            content={"error_code": "SERIALIZATION_ERROR", "detail": "Errore di serializzazione dati - valori numerici non validi rilevati"},
+        )
     
     # For the user, return only a generic message
     return JSONResponse(

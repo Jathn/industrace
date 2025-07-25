@@ -150,25 +150,44 @@ def validate_website(cls, v):
 
 
 def validate_vat_number(cls, v):
-    """Validate VAT number format (Italian format)"""
+    """Validate VAT number format (International formats)"""
     if v is None or v == "":
         return v
     # Remove spaces and convert to uppercase
     vat = re.sub(r'\s', '', v).upper()
-    if not re.match(r'^IT[0-9]{11}$', vat):
-        raise InvalidVATNumberError('vat_number')
-    return v
+    
+    # More flexible VAT number patterns
+    vat_patterns = [
+        r'^[A-Z]{2}[0-9A-Z]{5,15}$',  # Generic: 2 letters + 5-15 alphanumeric
+        r'^[0-9A-Z]{8,15}$',          # Generic: 8-15 alphanumeric (no country prefix)
+    ]
+    
+    for pattern in vat_patterns:
+        if re.match(pattern, vat):
+            return v
+    
+    raise InvalidVATNumberError('vat_number')
 
 
 def validate_tax_code(cls, v):
-    """Validate tax code format (Italian format)"""
+    """Validate tax code format (International formats)"""
     if v is None or v == "":
         return v
     # Remove spaces and convert to uppercase
     tax_code = re.sub(r'\s', '', v).upper()
-    if not re.match(r'^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$', tax_code):
-        raise InvalidTaxCodeError('tax_code')
-    return v
+    
+    # More flexible tax code patterns
+    tax_patterns = [
+        r'^[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$',  # Italian Codice Fiscale
+        r'^[A-Z0-9]{6,20}$',  # Generic alphanumeric (most countries)
+        r'^[0-9]{6,15}$',     # Numeric only (some countries)
+    ]
+    
+    for pattern in tax_patterns:
+        if re.match(pattern, tax_code):
+            return v
+    
+    raise InvalidTaxCodeError('tax_code')
 
 
 def validate_tenant_slug(cls, v):

@@ -1,3 +1,47 @@
 {
-  "title": "Fornitori"
+  "title": "Fornitori",
+  "new": "Nuovo fornitore",
+  "import": "Importa",
+  "exportCsv": "Esporta CSV",
+  "bulkEdit": "Modifica multipla",
+  "bulkEditInfo": "Modifica {count} fornitori selezionati",
+  "importNotImplemented": "Importazione non ancora implementata",
+  "supplierImport": {
+    "title": "Importa fornitori da file",
+    "downloadTemplate": "Scarica template CSV",
+    "confirm": "Conferma import",
+    "emptyFile": "Il file è vuoto o non valido.",
+    "readError": "Errore nella lettura del file.",
+    "importedInfo": "File importato",
+    "toCreate": "Fornitori da creare",
+    "toUpdate": "Fornitori da aggiornare",
+    "errors": "Errori nel file",
+    "differences": "Differenze",
+    "row": "Riga",
+    "importantInfo": "Informazioni Importanti",
+    "requiredFields": "Campi Obbligatori",
+    "nameRequired": "Nome del fornitore",
+    "vatRequired": "Partita IVA/Codice fiscale",
+    "validFormats": "Formati Validati",
+    "vatFormat": "Partita IVA: formato flessibile (es. IT12345678901)",
+    "emailFormat": "Email: formato standard valido",
+    "websiteFormat": "Sito web: con protocollo http o https",
+    "tip": "Suggerimento",
+    "tipText": "Scarica il template per vedere esempi di formati validi. L'email è opzionale."
+  },
+  "supplierForm": {
+    "name": "Nome",
+    "description": "Descrizione",
+    "vat_number": "Partita IVA",
+    "tax_code": "Codice Fiscale",
+    "address": "Indirizzo",
+    "city": "Città",
+    "zip_code": "CAP",
+    "province": "Provincia",
+    "country": "Paese",
+    "phone": "Telefono",
+    "email": "Email",
+    "website": "Sito Web",
+    "notes": "Note"
+  }
 } 

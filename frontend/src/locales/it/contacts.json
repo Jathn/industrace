@@ -4,5 +4,36 @@
     "add": "Aggiungi contatto",
     "remove": "Rimuovi contatto",
     "contacts": "Contatti",
-    "addContacts": "Aggiungi contatti"
+    "addContacts": "Aggiungi contatti",
+    "contactForm": {
+        "first_name": "Nome",
+        "last_name": "Cognome",
+        "email": "Email",
+        "phone1": "Telefono 1",
+        "phone2": "Telefono 2",
+        "type": "Tipo",
+        "notes": "Note"
+    },
+    "contactImport": {
+        "title": "Importa Contatti",
+        "downloadTemplate": "Scarica Template",
+        "confirm": "Conferma Import",
+        "emptyFile": "File vuoto",
+        "readError": "Errore nella lettura del file",
+        "importedInfo": "Contatti importati con successo",
+        "toCreate": "Da Creare",
+        "toUpdate": "Da Aggiornare",
+        "errors": "Errori",
+        "differences": "Differenze",
+        "row": "Riga",
+        "importantInfo": "Informazioni Importanti",
+        "requiredFields": "Campi Obbligatori",
+        "nameRequired": "Nome: obbligatorio",
+        "surnameRequired": "Cognome: obbligatorio",
+        "validFormats": "Formati Validi",
+        "emailFormat": "Email: formato standard valido",
+        "phoneFormat": "Telefono: con prefisso internazionale",
+        "tip": "Suggerimento",
+        "tipText": "L'email è opzionale. I contatti vengono identificati univocamente da nome e cognome."
+    }
 }

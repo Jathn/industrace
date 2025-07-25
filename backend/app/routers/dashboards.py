@@ -1,3 +1,4 @@
+import math
 from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 
@@ -6,6 +7,19 @@ from app.models import User, Asset, AssetStatus
 from app.services.audit_decorator import audit_log_action
 from app.services.auth import get_current_user
 from app.services.audit_log import create_audit_log
+
+def clean_float_values(data):
+    """Clean float values to prevent JSON serialization errors"""
+    if isinstance(data, dict):
+        return {k: clean_float_values(v) for k, v in data.items()}
+    elif isinstance(data, list):
+        return [clean_float_values(item) for item in data]
+    elif isinstance(data, float):
+        if math.isnan(data) or math.isinf(data):
+            return None
+        return data
+    else:
+        return data
 
 router = APIRouter(
     prefix="/dashboard",

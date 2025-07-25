@@ -400,18 +400,15 @@ async function deleteManufacturer(id) {
     t('common.deleteConfirm'),
     t('common.deleteWarning'),
     async () => {
-      try {
+      await execute(async () => {
         await api.deleteManufacturer(id)
         await fetchManufacturers()
-        toast.add({ severity: 'success', summary: t('common.success'), detail: t('common.deleted') })
-      } catch (error) {
-        const errorCode = error.response?.data?.error_code
-        if (errorCode === 'MANUFACTURER_LINKED_TO_ASSETS') {
-          toast.add({ severity: 'error', summary: t('common.error'), detail: t('errors.MANUFACTURER_LINKED_TO_ASSETS') })
-        } else {
-          toast.add({ severity: 'error', summary: t('common.error'), detail: t('common.deleteError') })
-        }
-      }
+      }, {
+        errorContext: t('common.deleteError')
+      })
+    },
+    {
+      successMessage: t('common.deleted')
     }
   )
 }

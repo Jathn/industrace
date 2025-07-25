@@ -19,6 +19,8 @@ def setup_asset_types():
             "purdue_level": 1,
         },
         {"name": "HMI", "description": "Human Machine Interface", "purdue_level": 2},
+        {"name": "EWS", "description": "Engineering Workstation", "purdue_level": 3},
+        {"name": "RTU", "description": "Remote Terminal Unit", "purdue_level": 1},
         {"name": "Gateway", "description": "Industrial Gateway", "purdue_level": 1.5},
         {
             "name": "Switch",

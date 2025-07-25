@@ -18,6 +18,13 @@ from app.schemas import (
     SupplierDocument as SupplierDocumentSchema,
     SupplierDocumentCreate,
 )
+from app.schemas.validators import (
+    validate_vat_number,
+    validate_tax_code,
+    validate_email,
+    validate_phone,
+    validate_website,
+)
 from app.services.auth import get_current_user
 from app.crud import suppliers as crud_suppliers
 from app.crud import supplier_documents as crud_documents
@@ -113,7 +120,10 @@ def import_suppliers_xlsx_preview(
 ):
     try:
         if file.filename.endswith(".csv"):
-            df = pd.read_csv(file.file)
+            # Read CSV with string dtype for all columns to avoid numeric interpretation
+            df = pd.read_csv(file.file, dtype=str)
+            # Replace NaN values with None
+            df = df.where(pd.notnull(df), None)
         else:
             df = pd.read_excel(file.file)
     except Exception as e:
@@ -124,12 +134,10 @@ def import_suppliers_xlsx_preview(
         vat_number = row.get("vat_number")
         email = row.get("email")
         missing = []
-        if pd.isna(name) or name is None or str(name).strip() == "":
+        if name is None or str(name).strip() == "":
             missing.append("name")
-        if pd.isna(vat_number) or vat_number is None or str(vat_number).strip() == "":
+        if vat_number is None or str(vat_number).strip() == "":
             missing.append("vat_number")
-        if pd.isna(email) or email is None or str(email).strip() == "":
-            missing.append("email")
         if missing:
             errors.append(
                 {
@@ -138,6 +146,28 @@ def import_suppliers_xlsx_preview(
                 }
             )
             continue
+        
+        # Validate fields if they are provided
+        try:
+            if vat_number:
+                validate_vat_number(None, vat_number)
+            if row.get("tax_code"):
+                validate_tax_code(None, row.get("tax_code"))
+            if email:
+                validate_email(None, email)
+            if row.get("phone"):
+                validate_phone(None, row.get("phone"))
+            if row.get("website"):
+                validate_website(None, row.get("website"))
+        except Exception as e:
+            errors.append(
+                {
+                    "row": int(idx) + 2,
+                    "error": f"Validation error: {str(e)}",
+                }
+            )
+            continue
+            
         supplier = (
             db.query(Supplier)
             .filter(
@@ -148,7 +178,7 @@ def import_suppliers_xlsx_preview(
         )
         if supplier:
             diff = {}
-            for field in ["name", "description", "city", "country", "email", "phone"]:
+            for field in ["name", "description", "vat_number", "tax_code", "address", "city", "zip_code", "province", "country", "phone", "email", "website", "notes"]:
                 new = row.get(field)
                 old = getattr(supplier, field)
                 if str(old) != str(new):
@@ -161,10 +191,16 @@ def import_suppliers_xlsx_preview(
                     "name": name,
                     "description": row.get("description"),
                     "vat_number": vat_number,
+                    "tax_code": row.get("tax_code"),
+                    "address": row.get("address"),
                     "city": row.get("city"),
+                    "zip_code": row.get("zip_code"),
+                    "province": row.get("province"),
                     "country": row.get("country"),
-                    "email": email,
                     "phone": row.get("phone"),
+                    "email": email,
+                    "website": row.get("website"),
+                    "notes": row.get("notes"),
                 }
             )
     return {"to_create": to_create, "to_update": to_update, "errors": errors}
@@ -178,7 +214,10 @@ def import_suppliers_xlsx_confirm(
 ):
     try:
         if file.filename.endswith(".csv"):
-            df = pd.read_csv(file.file)
+            # Read CSV with string dtype for all columns to avoid numeric interpretation
+            df = pd.read_csv(file.file, dtype=str)
+            # Replace NaN values with None
+            df = df.where(pd.notnull(df), None)
         else:
             df = pd.read_excel(file.file)
     except Exception as e:
@@ -189,12 +228,10 @@ def import_suppliers_xlsx_confirm(
         vat_number = row.get("vat_number")
         email = row.get("email")
         missing = []
-        if pd.isna(name) or name is None or str(name).strip() == "":
+        if name is None or str(name).strip() == "":
             missing.append("name")
-        if pd.isna(vat_number) or vat_number is None or str(vat_number).strip() == "":
+        if vat_number is None or str(vat_number).strip() == "":
             missing.append("vat_number")
-        if pd.isna(email) or email is None or str(email).strip() == "":
-            missing.append("email")
         if missing:
             errors.append(
                 {
@@ -203,6 +240,28 @@ def import_suppliers_xlsx_confirm(
                 }
             )
             continue
+        
+        # Validate fields if they are provided
+        try:
+            if vat_number:
+                validate_vat_number(None, vat_number)
+            if row.get("tax_code"):
+                validate_tax_code(None, row.get("tax_code"))
+            if email:
+                validate_email(None, email)
+            if row.get("phone"):
+                validate_phone(None, row.get("phone"))
+            if row.get("website"):
+                validate_website(None, row.get("website"))
+        except Exception as e:
+            errors.append(
+                {
+                    "row": int(idx) + 2,
+                    "error": f"Validation error: {str(e)}",
+                }
+            )
+            continue
+            
         supplier = (
             db.query(Supplier)
             .filter(
@@ -215,10 +274,17 @@ def import_suppliers_xlsx_confirm(
             if supplier:
                 supplier.name = name
                 supplier.description = row.get("description")
+                supplier.vat_number = vat_number
+                supplier.tax_code = row.get("tax_code")
+                supplier.address = row.get("address")
                 supplier.city = row.get("city")
+                supplier.zip_code = row.get("zip_code")
+                supplier.province = row.get("province")
                 supplier.country = row.get("country")
-                supplier.email = email
                 supplier.phone = row.get("phone")
+                supplier.email = email
+                supplier.website = row.get("website")
+                supplier.notes = row.get("notes")
                 db.commit()
                 updated.append(vat_number)
             else:
@@ -226,10 +292,16 @@ def import_suppliers_xlsx_confirm(
                     name=name,
                     description=row.get("description"),
                     vat_number=vat_number,
+                    tax_code=row.get("tax_code"),
+                    address=row.get("address"),
                     city=row.get("city"),
+                    zip_code=row.get("zip_code"),
+                    province=row.get("province"),
                     country=row.get("country"),
-                    email=email,
                     phone=row.get("phone"),
+                    email=email,
+                    website=row.get("website"),
+                    notes=row.get("notes"),
                     tenant_id=current_user.tenant_id,
                 )
                 db.add(new_supplier)

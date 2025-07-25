@@ -1,3 +1,37 @@
 {
-    "title": "Produttori"
+    "title": "Produttori",
+    "new": "Nuovo produttore",
+    "add": "Aggiungi produttore",
+    "remove": "Rimuovi produttore",
+    "manufacturers": "Produttori",
+    "addManufacturers": "Aggiungi produttori",
+    "manufacturerForm": {
+        "name": "Nome",
+        "description": "Descrizione",
+        "website": "Sito web",
+        "email": "Email",
+        "phone": "Telefono"
+    },
+    "manufacturerImport": {
+        "title": "Importa Produttori",
+        "downloadTemplate": "Scarica Template",
+        "confirm": "Conferma Import",
+        "emptyFile": "File vuoto",
+        "readError": "Errore nella lettura del file",
+        "importedInfo": "Produttori importati con successo",
+        "toCreate": "Da Creare",
+        "toUpdate": "Da Aggiornare",
+        "errors": "Errori",
+        "differences": "Differenze",
+        "row": "Riga",
+        "importantInfo": "Informazioni Importanti",
+        "requiredFields": "Campi Obbligatori",
+        "nameRequired": "Nome: obbligatorio",
+        "validFormats": "Formati Validi",
+        "emailFormat": "Email: formato standard valido",
+        "websiteFormat": "Sito web: con protocollo http o https",
+        "phoneFormat": "Telefono: con prefisso internazionale",
+        "tip": "Suggerimento",
+        "tipText": "Tutti i campi tranne il nome sono opzionali. I produttori vengono identificati univocamente dal nome."
+    }
 }

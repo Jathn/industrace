@@ -1,10 +1,35 @@
 <template>
-  <Dialog :visible="visible" @update:visible="$emit('close')" :header="t('contactImport.title')" :modal="true" :style="{ width: '50vw' }">
+  <Dialog :visible="visible" @update:visible="$emit('close')" :header="t('contacts.contactImport.title')" :modal="true" :style="{ width: '60vw' }">
     <div class="mb-3">
       <a :href="templateUrl" download class="p-button p-button-sm p-button-outlined">
-        <i class="pi pi-download mr-2" />{{ t('contactImport.downloadTemplate') }}
+        <i class="pi pi-download mr-2" />{{ t('contacts.contactImport.downloadTemplate') }}
       </a>
     </div>
+    
+    <!-- Informazioni utili -->
+    <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded">
+      <h4 class="text-blue-800 mb-2">{{ t('contacts.contactImport.importantInfo') }}</h4>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+        <div>
+          <h5 class="font-semibold text-blue-700 mb-1">{{ t('contacts.contactImport.requiredFields') }}</h5>
+          <ul class="text-blue-600">
+            <li>• {{ t('contacts.contactImport.nameRequired') }}</li>
+            <li>• {{ t('contacts.contactImport.surnameRequired') }}</li>
+          </ul>
+        </div>
+        <div>
+          <h5 class="font-semibold text-blue-700 mb-1">{{ t('contacts.contactImport.validFormats') }}</h5>
+          <ul class="text-blue-600">
+            <li>• {{ t('contacts.contactImport.emailFormat') }}</li>
+            <li>• {{ t('contacts.contactImport.phoneFormat') }}</li>
+          </ul>
+        </div>
+      </div>
+      <div class="mt-3 text-blue-600 text-sm">
+        <p><strong>{{ t('contacts.contactImport.tip') }}:</strong> {{ t('contacts.contactImport.tipText') }}</p>
+      </div>
+    </div>
+    
     <div class="mb-3">
       <input type="file" accept=".csv,.xlsx" @change="onFileChange" />
     </div>
@@ -16,18 +41,18 @@
     </div>
     <div v-if="previewResult">
       <div v-if="previewResult.to_create && previewResult.to_create.length">
-        <h4 class="mb-1">{{ t('contactImport.toCreate') }}</h4>
+        <h4 class="mb-1">{{ t('contacts.contactImport.toCreate') }}</h4>
         <DataTable :value="previewResult.to_create" scrollable :scrollHeight="'20vh'">
-          <Column v-for="col in columns" :key="col" :field="col" :header="col" />
+          <Column v-for="col in columns" :key="col.field" :field="col.field" :header="t(col.header)" />
         </DataTable>
       </div>
       <div v-if="previewResult.to_update && previewResult.to_update.length">
-        <h4 class="mt-3 mb-1">{{ t('contactImport.toUpdate') }}</h4>
+        <h4 class="mt-3 mb-1">{{ t('contacts.contactImport.toUpdate') }}</h4>
         <DataTable :value="previewResult.to_update" scrollable :scrollHeight="'20vh'">
-          <Column field="first_name" header="Nome" />
-          <Column field="last_name" header="Cognome" />
-          <Column field="email" header="Email" />
-          <Column field="diff" header="Differenze">
+          <Column field="first_name" :header="t('contacts.contactForm.first_name')" />
+          <Column field="last_name" :header="t('contacts.contactForm.last_name')" />
+          <Column field="email" :header="t('contacts.contactForm.email')" />
+          <Column field="diff" :header="t('contacts.contactImport.differences')">
             <template #body="{ data }">
               <ul>
                 <li v-for="(change, field) in data.diff" :key="field">
@@ -39,15 +64,15 @@
         </DataTable>
       </div>
       <div v-if="previewResult.errors && previewResult.errors.length">
-        <h4 class="mt-3 mb-1 text-red-600">{{ t('contactImport.errors') }}</h4>
+        <h4 class="mt-3 mb-1 text-red-600">{{ t('contacts.contactImport.errors') }}</h4>
         <ul>
-          <li v-for="err in previewResult.errors" :key="err.row">Riga {{ err.row }}: {{ err.error }}</li>
+          <li v-for="err in previewResult.errors" :key="err.row">{{ t('contacts.contactImport.row') }} {{ err.row }}: {{ err.error }}</li>
         </ul>
       </div>
     </div>
     <template #footer>
       <Button :label="t('common.cancel')" class="p-button-text" @click="$emit('close')" />
-      <Button :label="t('contactImport.confirm')" :disabled="!file || loading || (previewResult && previewResult.errors && previewResult.errors.length)" @click="confirmImport" />
+      <Button :label="t('contacts.contactImport.confirm')" :disabled="!file || loading || (previewResult && previewResult.errors && previewResult.errors.length)" @click="confirmImport" />
     </template>
   </Dialog>
 </template>
@@ -70,7 +95,15 @@ const emit = defineEmits(['close', 'imported'])
 
 const templateUrl = '/template_import_contact.csv'
 const file = ref(null)
-const columns = ref(['first_name', 'last_name', 'email', 'phone1', 'phone2', 'type', 'notes'])
+const columns = ref([
+  { field: 'first_name', header: 'contacts.contactForm.first_name' },
+  { field: 'last_name', header: 'contacts.contactForm.last_name' },
+  { field: 'email', header: 'contacts.contactForm.email' },
+  { field: 'phone1', header: 'contacts.contactForm.phone1' },
+  { field: 'phone2', header: 'contacts.contactForm.phone2' },
+  { field: 'type', header: 'contacts.contactForm.type' },
+  { field: 'notes', header: 'contacts.contactForm.notes' }
+])
 const loading = ref(false)
 const error = ref('')
 const previewResult = ref(null)
@@ -85,9 +118,9 @@ async function onFileChange(e) {
   try {
     const { data } = await api.previewContactImportXlsx(f)
     previewResult.value = data
-    error.value = (data.errors && data.errors.length) ? data.errors.map(e => `Riga ${e.row}: ${e.error}`).join('\n') : ''
+    error.value = (data.errors && data.errors.length) ? data.errors.map(e => `${t('contacts.contactImport.row')} ${e.row}: ${e.error}`).join('\n') : ''
   } catch (e) {
-    error.value = t('contactImport.readError')
+    error.value = t('contacts.contactImport.readError')
   }
   loading.value = false
 }
@@ -100,7 +133,7 @@ async function confirmImport() {
     const { data } = await api.confirmContactImportXlsx(file.value)
     emit('imported', data)
   } catch (e) {
-    error.value = t('contactImport.readError')
+    error.value = t('contacts.contactImport.readError')
   }
   loading.value = false
 }

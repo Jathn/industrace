@@ -82,7 +82,10 @@ def import_contacts_xlsx_preview(
 ):
     try:
         if file.filename.endswith(".csv"):
-            df = pd.read_csv(file.file)
+            # Read CSV with string dtype for all columns to avoid numeric interpretation
+            df = pd.read_csv(file.file, dtype=str)
+            # Replace NaN values with None
+            df = df.where(pd.notnull(df), None)
         else:
             df = pd.read_excel(file.file)
     except Exception as e:
@@ -93,12 +96,10 @@ def import_contacts_xlsx_preview(
         last_name = row.get("last_name")
         email = row.get("email")
         missing = []
-        if pd.isna(first_name) or not str(first_name).strip():
+        if first_name is None or str(first_name).strip() == "":
             missing.append("first_name")
-        if pd.isna(last_name) or not str(last_name).strip():
+        if last_name is None or str(last_name).strip() == "":
             missing.append("last_name")
-        if pd.isna(email) or not str(email).strip():
-            missing.append("email")
         if missing:
             errors.append(
                 {
@@ -113,7 +114,6 @@ def import_contacts_xlsx_preview(
                 Contact.tenant_id == current_user.tenant_id,
                 Contact.first_name == first_name,
                 Contact.last_name == last_name,
-                Contact.email == email,
             )
             .first()
         )
@@ -157,7 +157,10 @@ def import_contacts_xlsx_confirm(
 ):
     try:
         if file.filename.endswith(".csv"):
-            df = pd.read_csv(file.file)
+            # Read CSV with string dtype for all columns to avoid numeric interpretation
+            df = pd.read_csv(file.file, dtype=str)
+            # Replace NaN values with None
+            df = df.where(pd.notnull(df), None)
         else:
             df = pd.read_excel(file.file)
     except Exception as e:
@@ -168,12 +171,10 @@ def import_contacts_xlsx_confirm(
         last_name = row.get("last_name")
         email = row.get("email")
         missing = []
-        if pd.isna(first_name) or not str(first_name).strip():
+        if first_name is None or str(first_name).strip() == "":
             missing.append("first_name")
-        if pd.isna(last_name) or not str(last_name).strip():
+        if last_name is None or str(last_name).strip() == "":
             missing.append("last_name")
-        if pd.isna(email) or not str(email).strip():
-            missing.append("email")
         if missing:
             errors.append(
                 {
@@ -188,7 +189,6 @@ def import_contacts_xlsx_confirm(
                 Contact.tenant_id == current_user.tenant_id,
                 Contact.first_name == first_name,
                 Contact.last_name == last_name,
-                Contact.email == email,
             )
             .first()
         )
@@ -199,7 +199,8 @@ def import_contacts_xlsx_confirm(
                 contact.type = row.get("type")
                 contact.notes = row.get("notes")
                 db.commit()
-                updated.append(f"{first_name} {last_name} <{email}>")
+                email_display = f" <{email}>" if email else ""
+                updated.append(f"{first_name} {last_name}{email_display}")
             else:
                 new_contact = Contact(
                     first_name=first_name,
@@ -213,7 +214,8 @@ def import_contacts_xlsx_confirm(
                 )
                 db.add(new_contact)
                 db.commit()
-                created.append(f"{first_name} {last_name} <{email}>")
+                email_display = f" <{email}>" if email else ""
+                created.append(f"{first_name} {last_name}{email_display}")
         except IntegrityError as e:
             db.rollback()
             errors.append(

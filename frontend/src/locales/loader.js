@@ -122,7 +122,8 @@ const messages = {
     permissions: enPermissions,
     print: enPrint,
     login: enLogin,
-    networkMap: enNetworkMap
+    networkMap: enNetworkMap,
+    suppliers: enSuppliers
   },
   it: {
     common: itCommon,
@@ -161,7 +162,8 @@ const messages = {
     permissions: itPermissions,
     print: itPrint,
     login: itLogin,
-    networkMap: itNetworkMap
+    networkMap: itNetworkMap,
+    suppliers: itSuppliers
   }
 }
 

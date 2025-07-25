@@ -72,7 +72,10 @@ def import_manufacturers_xlsx_preview(
 ):
     try:
         if file.filename.endswith(".csv"):
-            df = pd.read_csv(file.file)
+            # Read CSV with string dtype for all columns to avoid numeric interpretation
+            df = pd.read_csv(file.file, dtype=str)
+            # Replace NaN values with None
+            df = df.where(pd.notnull(df), None)
         else:
             df = pd.read_excel(file.file)
     except Exception as e:
@@ -81,7 +84,7 @@ def import_manufacturers_xlsx_preview(
     for idx, row in df.iterrows():
         name = row.get("name")
         missing = []
-        if pd.isna(name) or not str(name).strip():
+        if name is None or str(name).strip() == "":
             missing.append("name")
         if missing:
             errors.append(
@@ -129,7 +132,10 @@ def import_manufacturers_xlsx_confirm(
 ):
     try:
         if file.filename.endswith(".csv"):
-            df = pd.read_csv(file.file)
+            # Read CSV with string dtype for all columns to avoid numeric interpretation
+            df = pd.read_csv(file.file, dtype=str)
+            # Replace NaN values with None
+            df = df.where(pd.notnull(df), None)
         else:
             df = pd.read_excel(file.file)
     except Exception as e:
@@ -138,7 +144,7 @@ def import_manufacturers_xlsx_confirm(
     for idx, row in df.iterrows():
         name = row.get("name")
         missing = []
-        if pd.isna(name) or not str(name).strip():
+        if name is None or str(name).strip() == "":
             missing.append("name")
         if missing:
             errors.append(
