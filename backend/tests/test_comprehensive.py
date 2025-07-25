@@ -157,6 +157,7 @@ def test_site(test_tenant):
     site = Site(
         id=uuid.uuid4(),
         name="Test Site",
+        code="TEST-SITE",
         description="Test site for testing",
         tenant_id=test_tenant.id
     )

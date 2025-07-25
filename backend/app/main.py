@@ -380,6 +380,10 @@ async def login(
     user = db.query(User).filter(User.email == email).first()
     if not user or not verify_password(password, user.password_hash):
         raise ErrorCodeException(status_code=401, error_code="INVALID_CREDENTIALS")
+    
+    # Check if user is active
+    if not user.is_active:
+        raise ErrorCodeException(status_code=401, error_code="INVALID_CREDENTIALS")
     access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={"sub": str(user.id), "tenant_id": str(user.tenant_id)},
