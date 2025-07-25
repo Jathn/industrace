@@ -1,5 +1,6 @@
 {
   "section": {
+    "dashboard": "Dashboard",
     "management": "Devices",
     "registry": "Registry",
     "users": "Users & Permissions",

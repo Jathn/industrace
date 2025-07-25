@@ -8,12 +8,6 @@
       </div>
       <div class="quick-actions">
         <Button 
-          :label="t('dashboard.actions.addAsset')" 
-          icon="pi pi-plus" 
-          @click="$router.push('/assets/new')"
-          class="p-button-primary"
-        />
-        <Button 
           :label="t('dashboard.actions.viewAllAssets')" 
           icon="pi pi-list" 
           @click="$router.push('/assets')"

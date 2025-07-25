@@ -55,6 +55,14 @@ const authStore = useAuthStore()
 const menuSections = computed(() => {
   const sections = []
 
+  // Sezione Dashboard (sempre prima)
+  sections.push({
+    label: t('menu.section.dashboard'),
+    items: [
+      { label: t('menu.dashboard'), icon: 'pi-chart-bar', to: '/' }
+    ]
+  })
+
   // Sezione Management
   const managementItems = []
   if (canRead('assets')) managementItems.push({ label: t('menu.assets'), icon: 'pi-server', to: '/assets' })
@@ -100,7 +108,6 @@ const menuSections = computed(() => {
 
   // Sezione Utility
   const utilityItems = []
-  utilityItems.push({ label: t('menu.dashboard'), icon: 'pi-chart-bar', to: '/' }) // Dashboard sempre visibile
   utilityItems.push({ label: t('menu.networkMap'), icon: 'pi-sitemap', to: '/network-map' }) // Mappa di rete
   utilityItems.push({ label: t('profile.title'), icon: 'pi-user', to: '/profile' }) // Profilo sempre visibile
   if (canRead('utility')) utilityItems.push({ label: t('menu.pcap'), icon: 'pi-upload', to: '/utility' })

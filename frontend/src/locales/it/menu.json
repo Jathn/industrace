@@ -1,5 +1,6 @@
 {
   "section": {
+    "dashboard": "Dashboard",
     "management": "Dispositivi",
     "registry": "Registro",
     "users": "Utenti e Permessi",
