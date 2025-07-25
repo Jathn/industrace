@@ -144,12 +144,17 @@ def get_risky_assets(
 ):
     """Ottieni gli asset più a rischio"""
     from sqlalchemy import and_
-    
     from sqlalchemy.orm import joinedload
+    
+    from app.models import AssetType, Site
     
     risky_assets = (
         db.query(Asset)
-        .options(joinedload(Asset.interfaces))
+        .options(
+            joinedload(Asset.interfaces),
+            joinedload(Asset.asset_type),
+            joinedload(Asset.site)
+        )
         .filter(
             and_(
                 Asset.tenant_id == current_user.tenant_id,
@@ -167,10 +172,11 @@ def get_risky_assets(
             "name": asset.name,
             "risk_score": asset.risk_score,
             "business_criticality": asset.business_criticality,
-            "asset_type_name": asset.asset_type.name if asset.asset_type else None,
-            "site_name": asset.site.name if asset.site else None,
-            "manufacturer_name": asset.manufacturer.name if asset.manufacturer else None,
+            "asset_type_name": asset.asset_type.name if asset.asset_type else "N/A",
+            "site_name": asset.site.name if asset.site else "N/A",
+            "manufacturer_name": asset.manufacturer.name if asset.manufacturer else "N/A",
             "ip_address": asset.interfaces[0].ip_address if asset.interfaces else None,
+            "created_at": asset.created_at.isoformat() if asset.created_at else None,
             "updated_at": asset.updated_at.isoformat() if asset.updated_at else None
         }
         for asset in risky_assets
