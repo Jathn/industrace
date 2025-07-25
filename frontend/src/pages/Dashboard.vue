@@ -111,7 +111,11 @@
             <i class="pi pi-exclamation-triangle"></i>
             {{ t('dashboard.tables.topRiskyAssets') }}
           </template>
+          <div v-if="riskyAssets.length === 0" class="no-data">
+            {{ t('dashboard.noData') }}
+          </div>
           <DataTable 
+            v-else
             :value="riskyAssets" 
             :rows="5" 
             responsiveLayout="scroll"
@@ -151,7 +155,11 @@
             <i class="pi pi-clock"></i>
             {{ t('dashboard.tables.latestAssets') }}
           </template>
+          <div v-if="recentAssets.length === 0" class="no-data">
+            {{ t('dashboard.noData') }}
+          </div>
           <DataTable 
+            v-else
             :value="recentAssets" 
             :rows="5" 
             responsiveLayout="scroll"
@@ -288,16 +296,17 @@ onMounted(async () => {
     // Carica statistiche
     const statsRes = await api.getDashboardStats()
     stats.value = statsRes.data
-
-
+    console.log('Dashboard stats:', stats.value)
 
     // Carica asset a rischio
     const riskyRes = await api.getRiskyAssets(5)
     riskyAssets.value = riskyRes.data
+    console.log('Risky assets:', riskyAssets.value)
 
     // Carica ultimi asset
     const recentRes = await api.getAssets({ limit: 5 })
     recentAssets.value = recentRes.data
+    console.log('Recent assets:', recentAssets.value)
 
     // Prepara dati per i grafici
     prepareChartData()
@@ -503,7 +512,7 @@ const prepareChartData = () => {
 .no-data {
   text-align: center;
   padding: 2rem;
-  color: #666;
+  color: #6c757d;
   font-style: italic;
 }
 
