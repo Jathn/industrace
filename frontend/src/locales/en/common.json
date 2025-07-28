@@ -99,6 +99,8 @@
   "uiActionsMenuRestore": "Restore",
   "uiActionsMenuUpdate": "Update",
   "language": "Language",
+  "selectAll": "Select all",
+  "select": "Select",
   "toast": {
     "success": "Success",
     "error": "Error",

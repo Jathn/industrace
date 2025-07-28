@@ -99,6 +99,8 @@
   "manufacturer": "Produttore",
   "supplier": "Fornitore",
   "language": "Lingua",
+  "selectAll": "Seleziona tutto",
+  "select": "Seleziona",
   "copy": "Copia",
   "ok": "OK",
   "contact": "Contatto",

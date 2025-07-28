@@ -70,12 +70,30 @@
         </div>
       </template>
       
-      <!-- Colonna di selezione -->
+      <!-- Colonna di selezione personalizzata per accessibilità -->
       <Column 
         v-if="selectionMode" 
-        selectionMode="multiple" 
         headerStyle="width: 3rem"
-      />
+        :header="t('common.selectAll')"
+      >
+        <template #header>
+          <Checkbox 
+            :modelValue="isAllSelected"
+            @update:modelValue="toggleSelectAll"
+            :indeterminate="isIndeterminate"
+            :aria-label="t('common.selectAll')"
+            inputId="select_all_checkbox"
+          />
+        </template>
+        <template #body="slotProps">
+          <Checkbox 
+            :modelValue="isRowSelected(slotProps.data)"
+            @update:modelValue="(checked) => toggleRowSelection(slotProps.data, checked)"
+            :aria-label="`${t('common.select')} ${getRowLabel(slotProps.data)}`"
+            :inputId="`row_select_${slotProps.data.id || slotProps.index}`"
+          />
+        </template>
+      </Column>
       
       <!-- Colonne dinamiche -->
       <template v-for="col in visibleColumns" :key="col.field">
@@ -144,6 +162,7 @@ import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import MultiSelect from 'primevue/multiselect'
 import OverlayPanel from 'primevue/overlaypanel'
+import Checkbox from 'primevue/checkbox'
 import { useTableHeight } from '@/composables/useTableHeight'
 
 const { t } = useI18n()
@@ -378,6 +397,42 @@ watch(selectedColumns, (newColumns) => {
 watch(selection, (newSelection) => {
   emit('selection-change', newSelection)
 }, { deep: true })
+
+// Funzioni per selezione personalizzata accessibile
+const isAllSelected = computed(() => {
+  return props.data.length > 0 && selection.value.length === props.data.length
+})
+
+const isIndeterminate = computed(() => {
+  return selection.value.length > 0 && selection.value.length < props.data.length
+})
+
+const isRowSelected = (row) => {
+  return selection.value.some(selected => selected.id === row.id)
+}
+
+const toggleSelectAll = (checked) => {
+  if (checked) {
+    selection.value = [...props.data]
+  } else {
+    selection.value = []
+  }
+}
+
+const toggleRowSelection = (row, checked) => {
+  if (checked) {
+    if (!isRowSelected(row)) {
+      selection.value.push(row)
+    }
+  } else {
+    selection.value = selection.value.filter(selected => selected.id !== row.id)
+  }
+}
+
+const getRowLabel = (row) => {
+  // Prova a ottenere un'etichetta significativa per la riga
+  return row.name || row.title || row.id || 'riga'
+}
 
 // Lifecycle
 onMounted(() => {
