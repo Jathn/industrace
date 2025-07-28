@@ -400,11 +400,11 @@ watch(selection, (newSelection) => {
 
 // Funzioni per selezione personalizzata accessibile
 const isAllSelected = computed(() => {
-  return props.data.length > 0 && selection.value.length === props.data.length
+  return Array.isArray(props.data) && props.data.length > 0 && selection.value.length === props.data.length
 })
 
 const isIndeterminate = computed(() => {
-  return selection.value.length > 0 && selection.value.length < props.data.length
+  return Array.isArray(props.data) && selection.value.length > 0 && selection.value.length < props.data.length
 })
 
 const isRowSelected = (row) => {
@@ -413,7 +413,12 @@ const isRowSelected = (row) => {
 
 const toggleSelectAll = (checked) => {
   if (checked) {
-    selection.value = [...props.data]
+    // Verifica che props.data sia un array prima di fare lo spread
+    if (Array.isArray(props.data)) {
+      selection.value = [...props.data]
+    } else {
+      selection.value = []
+    }
   } else {
     selection.value = []
   }
