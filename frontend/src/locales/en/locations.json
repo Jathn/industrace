@@ -54,5 +54,8 @@
   "unpositioned": "Unpositioned",
   "positionChanged": "Position changed",
   "saveStatus": "Save status",
-  "unsavedChanges": "Unsaved changes"
+  "unsavedChanges": "Unsaved changes",
+  "noAssets": "No assets present in this location",
+  "floorplanPresent": "Floorplan present",
+  "floorplanAbsent": "Floorplan absent"
 } 

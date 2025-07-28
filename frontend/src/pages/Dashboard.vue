@@ -223,6 +223,7 @@ import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import Button from 'primevue/button'
 import Tag from 'primevue/tag'
+import Card from 'primevue/card'
 import api from '../api/api'
 
 const { t } = useI18n()
@@ -295,22 +296,19 @@ onMounted(async () => {
     // Carica statistiche
     const statsRes = await api.getDashboardStats()
     stats.value = statsRes.data
-    console.log('Dashboard stats:', stats.value)
 
     // Carica asset a rischio
     const riskyRes = await api.getRiskyAssets(5)
     riskyAssets.value = riskyRes.data
-    console.log('Risky assets loaded:', riskyAssets.value.length)
 
     // Carica ultimi asset
     const recentRes = await api.getAssets({ limit: 5 })
     recentAssets.value = recentRes.data
-    console.log('Recent assets loaded:', recentAssets.value.length)
 
     // Prepara dati per i grafici
     prepareChartData()
   } catch (error) {
-    console.error('Error loading dashboard data:', error)
+    console.error('Error loading dashboard data:', error.response?.data || error  )
   }
 })
 

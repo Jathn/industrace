@@ -32,6 +32,7 @@ import enPermissions from './en/permissions.json'
 import enPrint from './en/print.json'
 import enLogin from './en/login.json'
 import enNetworkMap from './en/networkMap.json'
+import enFloorplanPositioning from './en/floorplanPositioning.json'
 
 // Import new English translation files
 import enLocations from './en/locations.json'
@@ -70,6 +71,7 @@ import itPermissions from './it/permissions.json'
 import itPrint from './it/print.json'
 import itLogin from './it/login.json'
 import itNetworkMap from './it/networkMap.json'
+import itFloorplanPositioning from './it/floorplanPositioning.json'
 
 // Import new asset-related translation files
 import itAssetConnections from './it/assetConnections.json'
@@ -123,6 +125,7 @@ const messages = {
     print: enPrint,
     login: enLogin,
     networkMap: enNetworkMap,
+    floorplanPositioning: enFloorplanPositioning,
     suppliers: enSuppliers
   },
   it: {
@@ -163,6 +166,7 @@ const messages = {
     print: itPrint,
     login: itLogin,
     networkMap: itNetworkMap,
+    floorplanPositioning: itFloorplanPositioning,
     suppliers: itSuppliers
   }
 }

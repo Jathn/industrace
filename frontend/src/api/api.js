@@ -43,6 +43,9 @@ export default {
   getAssets(params = {}) {
     return api.get('/assets', { params })
   },
+  getAssetsByLocation(locationId, params = {}) {
+    return api.get(`/assets/by-location/${locationId}`, { params })
+  },
   getAsset(id) {
     return api.get(`/assets/${id}`)
   },

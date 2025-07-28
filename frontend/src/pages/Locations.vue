@@ -215,16 +215,62 @@
       v-model:visible="showViewDialog"
       :title="t('locations.title') + ' - ' + (viewingLocation?.name || '')"
       :showFooter="false"
+      :style="{ width: '800px' }"
       @close="showViewDialog = false"
     >
-      <div v-if="viewingLocation">
-        <div class="mb-2"><b>{{ t('common.name') }}:</b> {{ viewingLocation.name }}</div>
-        <div class="mb-2"><b>{{ t('common.code') }}:</b> {{ viewingLocation.code }}</div>
-        <div class="mb-2"><b>{{ t('common.description') }}:</b> {{ viewingLocation.description }}</div>
-        <div class="mb-2"><b>{{ t('locations.area') }}:</b> {{ viewingLocation.area }}</div>
-        <div class="mb-2"><b>{{ t('common.site') }}:</b> {{ viewingLocation.site?.name }}</div>
-        <div class="mb-2"><b>{{ t('locations.floorplan') }}:</b> {{ viewingLocation.floorplan ? 'Presente' : 'Assente' }}</div>
-        <div class="mb-2"><b>{{ t('common.notes') }}:</b> {{ viewingLocation.notes }}</div>
+      <div v-if="viewingLocation" class="location-detail">
+        <!-- Informazioni base della posizione -->
+        <div class="location-info mb-4">
+          <h3 class="text-lg font-semibold mb-3">{{ t('common.info') }}</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div><b>{{ t('common.name') }}:</b> {{ viewingLocation.name }}</div>
+            <div><b>{{ t('common.code') }}:</b> {{ viewingLocation.code || '-' }}</div>
+            <div><b>{{ t('common.description') }}:</b> {{ viewingLocation.description || '-' }}</div>
+            <div><b>{{ t('locations.area') }}:</b> {{ viewingLocation.area || '-' }}</div>
+            <div><b>{{ t('common.site') }}:</b> {{ viewingLocation.site?.name || '-' }}</div>
+            <div><b>{{ t('locations.floorplan') }}:</b> {{ viewingLocation.floorplan ? t('locations.floorplanPresent') : t('locations.floorplanAbsent') }}</div>
+          </div>
+          <div v-if="viewingLocation.notes" class="mt-3">
+            <b>{{ t('common.notes') }}:</b> {{ viewingLocation.notes }}
+          </div>
+        </div>
+
+        <!-- Sezione Asset -->
+        <div class="assets-section">
+          <h3 class="text-lg font-semibold mb-3">{{ t('assets.title') }}</h3>
+          <div v-if="loadingAssets" class="text-center py-4">
+            <i class="pi pi-spinner pi-spin" style="font-size: 1.5rem;"></i>
+            <p class="mt-2">{{ t('common.loading') }}</p>
+          </div>
+          <div v-else-if="locationAssets.length === 0" class="text-center py-4 text-gray-500">
+            <i class="pi pi-info-circle" style="font-size: 1.5rem;"></i>
+            <p class="mt-2">{{ t('locations.noAssets') }}</p>
+          </div>
+          <div v-else class="assets-grid">
+            <div 
+              v-for="asset in locationAssets" 
+              :key="asset.id" 
+              class="asset-card"
+              @click="viewAsset(asset.id)"
+            >
+              <div class="asset-header">
+                <div class="asset-name">{{ asset.name }}</div>
+                <Tag 
+                  :value="asset.status?.name || '-'" 
+                  :severity="getStatusSeverity(asset.status)"
+                />
+              </div>
+              <div class="asset-details">
+                <div class="asset-type">{{ asset.asset_type?.name || '-' }}</div>
+                <div class="asset-manufacturer">{{ asset.manufacturer?.name || '-' }}</div>
+                <div v-if="asset.risk_score !== null" class="asset-risk">
+                  <i class="pi pi-shield"></i>
+                  {{ t('assets.riskScore') }}: {{ asset.risk_score.toFixed(1) }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </BaseDialog>
   </div>
@@ -240,6 +286,7 @@ import { useFilters } from '../composables/useFilters'
 import { useDialog } from '../composables/useDialog'
 import { useConfirm } from '../composables/useConfirm'
 import { useDuplicate } from '../composables/useDuplicate'
+import { useStatus } from '../composables/useStatus'
 import api from '../api/api'
 
 import BaseDataTable from '../components/base/BaseDataTable.vue'
@@ -251,10 +298,12 @@ import Button from 'primevue/button'
 import Dropdown from 'primevue/dropdown'
 import InputText from 'primevue/inputtext'
 import Image from 'primevue/image'
+import Tag from 'primevue/tag'
 
 const { t } = useI18n()
 const router = useRouter()
 const { canWrite, canDelete } = usePermissions()
+const { getStatusSeverity } = useStatus()
 
 // Composables
 const { loading, execute } = useApi()
@@ -279,6 +328,8 @@ const { duplicating, duplicateItem, excludeFunctions } = useDuplicate()
 
 const showViewDialog = ref(false)
 const viewingLocation = ref(null)
+const locationAssets = ref([])
+const loadingAssets = ref(false)
 
 
 // Data
@@ -504,13 +555,33 @@ async function duplicateLocation(location) {
   )
 }
 
-function viewLocation(id) {
+async function viewLocation(id) {
   const loc = locations.value.find(l => l.id === id)
   if (loc) {
     viewingLocation.value = loc
     showViewDialog.value = true
+    await loadLocationAssets(id)
   }
 }
+
+async function loadLocationAssets(locationId) {
+  loadingAssets.value = true
+  try {
+    const response = await api.getAssetsByLocation(locationId)
+    locationAssets.value = response.data
+  } catch (error) {
+    console.error('Error loading location assets:', error)
+    locationAssets.value = []
+  } finally {
+    loadingAssets.value = false
+  }
+}
+
+function viewAsset(assetId) {
+  router.push(`/assets/${assetId}`)
+}
+
+
 
 function openFloorplanDialog(location) {
   selectedFloorplan.value = location.floorplan
@@ -612,5 +683,84 @@ function updateFilter(newFilters) {
   display: flex;
   gap: 1rem;
   margin-bottom: 1.5rem;
+}
+
+/* Location Detail Dialog Styles */
+.location-detail {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.location-info {
+  border-bottom: 1px solid var(--surface-border);
+  padding-bottom: 1rem;
+}
+
+.assets-section {
+  margin-top: 1rem;
+}
+
+.assets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.asset-card {
+  background: var(--surface-card);
+  border: 1px solid var(--surface-border);
+  border-radius: 8px;
+  padding: 1rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.asset-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: var(--primary-color);
+}
+
+.asset-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+}
+
+.asset-name {
+  font-weight: 600;
+  color: var(--text-color);
+  flex: 1;
+  margin-right: 0.5rem;
+}
+
+.asset-details {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.asset-type {
+  font-size: 0.875rem;
+  color: var(--text-color-secondary);
+}
+
+.asset-manufacturer {
+  font-size: 0.875rem;
+  color: var(--text-color-secondary);
+}
+
+.asset-risk {
+  font-size: 0.875rem;
+  color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.asset-risk i {
+  font-size: 0.75rem;
 }
 </style> 

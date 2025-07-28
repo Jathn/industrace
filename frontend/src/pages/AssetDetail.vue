@@ -241,10 +241,6 @@ async function initializeAsset() {
   loading.value = true
   try {
     const res = await api.getAsset(route.params.id)
-    console.log('DEBUG: Asset ricevuto in initializeAsset:', res.data)
-    console.log('DEBUG: Asset.area_id in initializeAsset:', res.data.area_id)
-    console.log('DEBUG: Asset.area_name in initializeAsset:', res.data.area_name)
-    console.log('DEBUG: Asset.area_code in initializeAsset:', res.data.area_code)
     asset.value = res.data
     await fetchAssetStatuses()
     await fetchAssetTypes()
@@ -272,10 +268,6 @@ async function fetchAsset() {
   loading.value = true
   try {
     const response = await api.getAsset(route.params.id)
-    console.log('DEBUG: Asset ricevuto dal backend:', response.data)
-    console.log('DEBUG: Asset.area_id:', response.data.area_id)
-    console.log('DEBUG: Asset.area_name:', response.data.area_name)
-    console.log('DEBUG: Asset.area_code:', response.data.area_code)
     asset.value = response.data
   } catch {
     toast.add({ 

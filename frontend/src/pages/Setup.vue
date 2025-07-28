@@ -3,7 +3,7 @@
     <div class="setup-header">
       <h1>{{ $t('setup.title') }}</h1>
       <p class="setup-description">
-        Configura le impostazioni del sistema per il tuo tenant
+        {{ $t('setup.description') }}
       </p>
     </div>
 
@@ -29,7 +29,7 @@
         </div>
         <div class="tile-content">
           <h3>{{ $t('setup.printTemplates.title') }}</h3>
-          <p>Inizializza i template di stampa predefiniti</p>
+          <p>{{ $t('setup.printTemplates.initDescription') }}</p>
         </div>
         <div class="tile-status" :class="{ 'configured': templatesConfigured }">
           <i :class="templatesConfigured ? 'pi pi-check-circle' : 'pi pi-cog'"></i>
@@ -56,8 +56,8 @@
           <i class="pi pi-bell"></i>
         </div>
         <div class="tile-content">
-          <h3>Notifiche</h3>
-          <p>Configura le notifiche del sistema</p>
+          <h3>{{ $t('setup.notifications.title') }}</h3>
+          <p>{{ $t('setup.notifications.description') }}</p>
         </div>
         <div class="tile-status">
           <i class="pi pi-lock"></i>
@@ -69,8 +69,8 @@
           <i class="pi pi-shield"></i>
         </div>
         <div class="tile-content">
-          <h3>Sicurezza</h3>
-          <p>Impostazioni di sicurezza e accesso</p>
+          <h3>{{ $t('setup.security.title') }}</h3>
+          <p>{{ $t('setup.security.description') }}</p>
         </div>
         <div class="tile-status">
           <i class="pi pi-lock"></i>
@@ -150,10 +150,12 @@
       <div class="templates-simple">
         <div class="templates-info">
           <i class="pi pi-info-circle" style="color: var(--primary-color); font-size: 1.2rem;"></i>
-          <p>I template di stampa predefiniti includono:</p>
+          <p>{{ $t('setup.printTemplates.defaultTemplatesInfo') }}</p>
           <ul>
-            <li>Scheda Asset completa</li>
-            <li>Riepilogo Asset compatto</li>
+            <li v-for="item in defaultTemplatesList" :key="item">{{ item }}</li>
+            <!-- Fallback se gli array non funzionano -->
+            <li v-if="defaultTemplatesList.length === 0">{{ $t('setup.printTemplates.defaultTemplate1') }}</li>
+            <li v-if="defaultTemplatesList.length === 0">{{ $t('setup.printTemplates.defaultTemplate2') }}</li>
           </ul>
         </div>
         
@@ -183,12 +185,18 @@
           <i class="pi pi-book" style="color: var(--primary-color); font-size: 1.2rem;"></i>
           <p>{{ $t('setup.printedKit.info.description') }}</p>
           <ul>
-            <li v-for="item in $t('setup.printedKit.info.items')" :key="item">{{ item }}</li>
+            <li v-for="item in printedKitItems" :key="item">{{ item }}</li>
+            <!-- Fallback se gli array non funzionano -->
+            <li v-if="printedKitItems.length === 0">{{ $t('setup.printedKit.info.item1') }}</li>
+            <li v-if="printedKitItems.length === 0">{{ $t('setup.printedKit.info.item2') }}</li>
+            <li v-if="printedKitItems.length === 0">{{ $t('setup.printedKit.info.item3') }}</li>
+            <li v-if="printedKitItems.length === 0">{{ $t('setup.printedKit.info.item4') }}</li>
+            <li v-if="printedKitItems.length === 0">{{ $t('setup.printedKit.info.item5') }}</li>
           </ul>
         </div>
         
         <div class="kit-options">
-          <h4>Opzioni di generazione:</h4>
+          <h4>{{ $t('setup.printedKit.generationOptions') }}</h4>
           <div class="option-item">
             <label class="checkbox-label">
               <Checkbox v-model="kitOptions.includeAssets" :binary="true" />
@@ -231,7 +239,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useToast } from 'primevue/usetoast'
 import api from '@/api/api'
@@ -246,6 +254,17 @@ import Checkbox from 'primevue/checkbox'
 
 const { t, locale } = useI18n()
 const toast = useToast()
+
+// Computed properties for arrays
+const printedKitItems = computed(() => {
+  const items = t('setup.printedKit.info.items')
+  return Array.isArray(items) ? items : []
+})
+
+const defaultTemplatesList = computed(() => {
+  const items = t('setup.printTemplates.defaultTemplatesList')
+  return Array.isArray(items) ? items : []
+})
 
 // State
 const smtpDialogVisible = ref(false)
@@ -304,7 +323,7 @@ const saveSmtpConfig = async () => {
     toast.add({
       severity: 'success',
       summary: t('common.success'),
-      detail: 'Configurazione SMTP salvata',
+      detail: t('setup.messages.smtpSaved'),
       life: 3000
     })
     smtpDialogVisible.value = false
@@ -312,7 +331,7 @@ const saveSmtpConfig = async () => {
     toast.add({
       severity: 'error',
       summary: t('common.error'),
-      detail: 'Error saving SMTP configuration',
+      detail: t('setup.messages.smtpSaveError'),
       life: 3000
     })
   } finally {
@@ -327,14 +346,14 @@ const testSmtpConnection = async () => {
     toast.add({
       severity: 'success',
       summary: t('common.success'),
-      detail: 'Connessione SMTP testata con successo',
+      detail: t('setup.messages.smtpTestSuccess'),
       life: 3000
     })
   } catch (error) {
     toast.add({
       severity: 'error',
       summary: t('common.error'),
-      detail: 'Error testing SMTP connection',
+      detail: t('setup.messages.smtpTestError'),
       life: 3000
     })
   } finally {
@@ -349,7 +368,7 @@ const initDefaultTemplates = async () => {
     toast.add({
       severity: 'success',
       summary: t('common.success'),
-      detail: 'Template di default inizializzati con successo',
+      detail: t('setup.messages.templatesInitialized'),
       life: 3000
     })
     templatesConfigured.value = true
@@ -359,7 +378,7 @@ const initDefaultTemplates = async () => {
       toast.add({
         severity: 'warn',
         summary: t('common.warning'),
-        detail: 'Template già esistenti per questo tenant',
+        detail: t('setup.messages.templatesAlreadyExist'),
         life: 3000
       })
       templatesConfigured.value = true
@@ -367,7 +386,7 @@ const initDefaultTemplates = async () => {
       toast.add({
         severity: 'error',
         summary: t('common.error'),
-        detail: 'Error initializing templates',
+        detail: t('setup.messages.templatesInitError'),
         life: 3000
       })
     }

@@ -24,5 +24,8 @@
     "unpositioned": "Non posizionati",
     "positionChanged": "Posizione modificata",
     "saveStatus": "Stato salvataggio",
-    "unsavedChanges": "Modifiche non salvate"
+    "unsavedChanges": "Modifiche non salvate",
+    "noAssets": "Nessun asset presente in questa posizione",
+    "floorplanPresent": "Planimetria presente",
+    "floorplanAbsent": "Planimetria assente"
 }

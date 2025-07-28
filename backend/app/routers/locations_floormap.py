@@ -5,6 +5,8 @@ from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 from pathlib import Path
 import os
+from PIL import Image
+import io
 
 from app.database import get_db
 from app.models import User, LocationFloorplan, Location
@@ -25,6 +27,47 @@ def save_upload_file(upload_file: UploadFile, destination: Path) -> None:
     destination.parent.mkdir(parents=True, exist_ok=True)
     with destination.open("wb") as buffer:
         shutil.copyfileobj(upload_file.file, buffer)
+
+def resize_image(image_data: bytes, max_width: int = 1920, max_height: int = 1080) -> bytes:
+    """Resize image to reasonable dimensions while maintaining aspect ratio"""
+    try:
+        # Open image from bytes
+        image = Image.open(io.BytesIO(image_data))
+        
+        # Convert to RGB if necessary (for PNG with transparency)
+        if image.mode in ('RGBA', 'LA', 'P'):
+            # Create white background
+            background = Image.new('RGB', image.size, (255, 255, 255))
+            if image.mode == 'P':
+                image = image.convert('RGBA')
+            background.paste(image, mask=image.split()[-1] if image.mode == 'RGBA' else None)
+            image = background
+        
+        # Calculate new dimensions maintaining aspect ratio
+        width, height = image.size
+        if width <= max_width and height <= max_height:
+            # Image is already within limits, just convert to JPEG
+            output = io.BytesIO()
+            image.save(output, format='JPEG', quality=85, optimize=True)
+            return output.getvalue()
+        
+        # Calculate scaling factor
+        scale = min(max_width / width, max_height / height)
+        new_width = int(width * scale)
+        new_height = int(height * scale)
+        
+        # Resize image
+        resized_image = image.resize((new_width, new_height), Image.Resampling.LANCZOS)
+        
+        # Save as JPEG with good quality
+        output = io.BytesIO()
+        resized_image.save(output, format='JPEG', quality=85, optimize=True)
+        return output.getvalue()
+        
+    except Exception as e:
+        # If resizing fails, return original data
+        print(f"Error resizing image: {e}")
+        return image_data
 
 
 @router.post("", response_model=LocationFloorplanRead)
@@ -68,8 +111,19 @@ def upload_floorplan(
     )
     file_location = UPLOAD_DIR / relative_path
 
-    # Save file to disk
-    save_upload_file(file, file_location)
+    # Read file content
+    file_content = file.file.read()
+    
+    # Resize image if it's an image file
+    if file.content_type.startswith('image/'):
+        resized_content = resize_image(file_content)
+        # Save resized image to disk
+        file_location.parent.mkdir(parents=True, exist_ok=True)
+        with file_location.open("wb") as buffer:
+            buffer.write(resized_content)
+    else:
+        # Save original file to disk
+        save_upload_file(file, file_location)
 
     # Create new floorplan record
     floorplan = LocationFloorplan(

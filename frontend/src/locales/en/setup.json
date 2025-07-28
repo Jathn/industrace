@@ -42,7 +42,15 @@
     "nameRequired": "Template name is required",
     "templateCreated": "Template created successfully",
     "templateUpdated": "Template updated successfully",
-    "saveError": "Error saving template"
+    "saveError": "Error saving template",
+    "initDescription": "Initialize default print templates",
+    "defaultTemplatesInfo": "Default print templates include:",
+    "defaultTemplatesList": [
+      "Complete Asset Sheet",
+      "Compact Asset Summary"
+    ],
+    "defaultTemplate1": "Complete Asset Sheet",
+    "defaultTemplate2": "Compact Asset Summary"
   },
   "printedKit": {
     "title": "Printed Kit",
@@ -68,8 +76,14 @@
         "Complete asset sheets",
         "Contacts and suppliers",
         "Asset documents and photos"
-      ]
-    }
+      ],
+      "item1": "General tenant information",
+      "item2": "List of sites and areas",
+      "item3": "Complete asset sheets",
+      "item4": "Contacts and suppliers",
+      "item5": "Asset documents and photos"
+    },
+    "generationOptions": "Generation options:"
   },
   "systemCheck": {
     "title": "System Check",
@@ -123,5 +137,22 @@
     "invalidEmail": "Invalid email",
     "passwordTooShort": "Password too short (minimum 8 characters)",
     "installationFailed": "Installation failed"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "description": "Configure system notifications"
+  },
+  "security": {
+    "title": "Security",
+    "description": "Security and access settings"
+  },
+  "messages": {
+    "smtpSaved": "SMTP configuration saved",
+    "smtpTestSuccess": "SMTP connection tested successfully",
+    "templatesInitialized": "Default templates initialized successfully",
+    "templatesAlreadyExist": "Templates already exist for this tenant",
+    "smtpSaveError": "Error saving SMTP configuration",
+    "smtpTestError": "Error testing SMTP connection",
+    "templatesInitError": "Error initializing templates"
   }
 } 

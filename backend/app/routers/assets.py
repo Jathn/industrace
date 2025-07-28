@@ -66,6 +66,7 @@ def list_assets(
     status_id: Optional[uuid.UUID] = None,
     site_id: Optional[uuid.UUID] = None,
     area_id: Optional[uuid.UUID] = None,
+    location_id: Optional[uuid.UUID] = None,
     global_search: Optional[str] = None,
     business_criticality: Optional[str] = None,
     risk_score_min: Optional[float] = None,
@@ -93,6 +94,8 @@ def list_assets(
         query = query.filter(Asset.site_id == site_id)
     if area_id:
         query = query.filter(Asset.area_id == area_id)
+    if location_id:
+        query = query.filter(Asset.location_id == location_id)
     if business_criticality:
         query = query.filter(Asset.business_criticality == business_criticality)
     if risk_score_min is not None:
@@ -139,6 +142,39 @@ def list_assets_trash(
         .limit(limit)
         .all()
     )
+
+
+# Get assets by location
+@router.get("/by-location/{location_id}", response_model=List[AssetSchema])
+def get_assets_by_location(
+    location_id: uuid.UUID,
+    skip: int = 0,
+    limit: int = 100,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Get all assets for a specific location"""
+    query = (
+        db.query(Asset)
+        .options(
+            joinedload(Asset.interfaces),
+            joinedload(Asset.site),
+            joinedload(Asset.location),
+            joinedload(Asset.status),
+            joinedload(Asset.manufacturer),
+            joinedload(Asset.asset_type),
+        )
+        .filter(
+            Asset.tenant_id == current_user.tenant_id,
+            Asset.location_id == location_id,
+            Asset.deleted_at == None
+        )
+        .offset(skip)
+        .limit(limit)
+    )
+    
+    assets = query.all()
+    return assets
 
 
 @router.get("/risk-overview", response_model=RiskOverviewResponse)

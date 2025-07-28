@@ -42,7 +42,15 @@
     "nameRequired": "Il nome template è obbligatorio",
     "templateCreated": "Template creato con successo",
     "templateUpdated": "Template aggiornato con successo",
-    "saveError": "Errore nel salvataggio del template"
+    "saveError": "Errore nel salvataggio del template",
+    "initDescription": "Inizializza i template di stampa predefiniti",
+    "defaultTemplatesInfo": "I template di stampa predefiniti includono:",
+    "defaultTemplatesList": [
+      "Scheda Asset completa",
+      "Riepilogo Asset compatto"
+    ],
+    "defaultTemplate1": "Scheda Asset completa",
+    "defaultTemplate2": "Riepilogo Asset compatto"
   },
   "printedKit": {
     "title": "Printed Kit",
@@ -68,8 +76,14 @@
         "Schede complete di tutti gli asset",
         "Contatti e fornitori",
         "Documenti e foto degli asset"
-      ]
-    }
+      ],
+      "item1": "Informazioni generali del tenant",
+      "item2": "Lista degli stabilimenti e aree",
+      "item3": "Schede complete di tutti gli asset",
+      "item4": "Contatti e fornitori",
+      "item5": "Documenti e foto degli asset"
+    },
+    "generationOptions": "Opzioni di generazione:"
   },
   "systemCheck": {
     "title": "Controllo Sistema",
@@ -123,5 +137,22 @@
     "invalidEmail": "Email non valida",
     "passwordTooShort": "Password troppo corta (minimo 8 caratteri)",
     "installationFailed": "Installazione fallita"
+  },
+  "notifications": {
+    "title": "Notifiche",
+    "description": "Configura le notifiche del sistema"
+  },
+  "security": {
+    "title": "Sicurezza",
+    "description": "Impostazioni di sicurezza e accesso"
+  },
+  "messages": {
+    "smtpSaved": "Configurazione SMTP salvata",
+    "smtpTestSuccess": "Connessione SMTP testata con successo",
+    "templatesInitialized": "Template di default inizializzati con successo",
+    "templatesAlreadyExist": "Template già esistenti per questo tenant",
+    "smtpSaveError": "Errore nel salvataggio della configurazione SMTP",
+    "smtpTestError": "Errore nel test della connessione SMTP",
+    "templatesInitError": "Errore nell'inizializzazione dei template"
   }
 } 

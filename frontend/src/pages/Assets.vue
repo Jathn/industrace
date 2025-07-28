@@ -190,6 +190,7 @@ import { useDialog } from '../composables/useDialog'
 import { useConfirm } from '../composables/useConfirm'
 import { useDuplicate } from '../composables/useDuplicate'
 import { usePermissions } from '../composables/usePermissions'
+import { useStatus } from '../composables/useStatus'
 import api from '../api/api'
 
 import Tag from 'primevue/tag'
@@ -251,6 +252,7 @@ const {
 
 const { duplicating, duplicateItem, excludeFunctions } = useDuplicate()
 const { canRead, canWrite, canDelete } = usePermissions()
+const { getStatusSeverity } = useStatus()
 
 // Computed properties per il dialog
 const dialogTitle = computed(() => {

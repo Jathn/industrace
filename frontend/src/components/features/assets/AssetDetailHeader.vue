@@ -44,19 +44,22 @@
         @click="$emit('print')" 
       />
       <Button 
+        v-if="hasFloorplan && canWrite('assets')"
         :label="t('assets.floorplan')" 
         icon="pi pi-map" 
         severity="info"
-        @click="showFloorplanDialog = true" 
-        :disabled="!hasFloorplan"
+        @click="showPositioningDialog = true" 
       />
     </div>
   </div>
   
-  <!-- Floorplan Dialog -->
-  <Dialog v-model:visible="showFloorplanDialog" :header="t('assets.floorplanDialogTitle')" modal style="width: 90vw; max-width: 900px" :closable="true" :dismissableMask="true">
-    <AssetDetailFloorplanTab :assetId="asset.id" :readOnly="!canWrite('assets')" @position-saved="onAssetPositionSaved" />
-  </Dialog>
+  <!-- Floorplan Positioning Dialog -->
+  <FloorplanPositioningDialog
+    v-model:visible="showPositioningDialog"
+    :assetId="asset.id"
+    :locationId="asset.location?.id || null"
+    @position-saved="onAssetPositionSaved"
+  />
 </template>
 
 <script setup>
@@ -65,7 +68,7 @@ import { useI18n } from 'vue-i18n'
 import Button from 'primevue/button'
 import Tag from 'primevue/tag'
 import Dialog from 'primevue/dialog'
-import AssetDetailFloorplanTab from './tabs/AssetDetailFloorplanTab.vue'
+import FloorplanPositioningDialog from './widgets/FloorplanPositioningDialog.vue'
 
 import { computed, ref } from 'vue'
 
@@ -81,7 +84,7 @@ const { t } = useI18n()
 const emit = defineEmits(['back', 'edit', 'print', 'position-saved'])
 
 // State
-const showFloorplanDialog = ref(false)
+const showPositioningDialog = ref(false)
 
 // Computed properties
 const hasFloorplan = computed(() => !!(props.asset?.location?.floorplan?.id))
