@@ -32,7 +32,7 @@
       </div>
       <div class="p-field">
         <label>{{ t('assetConnections.remoteAsset') }}</label>
-        <InputText v-model="remoteAssetSearch" :placeholder="t('assetConnections.searchAssetByName')" class="p-mb-2" />
+        <InputText id="remote_asset_search" v-model="remoteAssetSearch" :placeholder="t('assetConnections.searchAssetByName')" class="p-mb-2" />
         <Dropdown :options="filteredAssetOptions" optionLabel="name" optionValue="id" v-model="newConnection.remote_asset_id" />
       </div>
       <div class="p-field">

@@ -45,7 +45,7 @@
               class="w-full"
             />
             <div class="mt-2 flex align-items-center">
-              <InputText v-model="newProtocol" :placeholder="t('assets.addProtocol')" @keyup.enter="addProtocol" class="mr-2" style="width:200px" />
+              <InputText id="new_protocol" v-model="newProtocol" :placeholder="t('assets.addProtocol')" @keyup.enter="addProtocol" class="mr-2" style="width:200px" />
               <Button label="+" @click="addProtocol" size="small" />
             </div>
             <small class="text-gray-600">

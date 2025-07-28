@@ -38,8 +38,8 @@
       
       <!-- VLAN -->
       <div class="p-field" v-if="bulkField === 'vlan'">
-        <label>{{ t('assets.vlan') }}</label>
-        <InputText v-model="bulkValue" />
+        <label for="bulk_vlan">{{ t('assets.vlan') }}</label>
+        <InputText id="bulk_vlan" v-model="bulkValue" />
       </div>
       
       <!-- Business Criticality -->
@@ -57,8 +57,8 @@
       
       <!-- Altri campi generici -->
       <div class="p-field" v-if="bulkField && !['status_id','site_id','asset_type_id','location_id','manufacturer_id','vlan','business_criticality'].includes(bulkField)">
-        <label>{{ t('assets.value') }}</label>
-        <InputText v-model="bulkValue" />
+        <label for="bulk_generic">{{ t('assets.value') }}</label>
+        <InputText id="bulk_generic" v-model="bulkValue" />
       </div>
       
       <div class="p-field">

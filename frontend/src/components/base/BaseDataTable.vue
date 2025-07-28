@@ -35,6 +35,7 @@
             <span class="p-input-icon-left">
               <i class="pi pi-search" />
               <InputText 
+                id="global_search"
                 v-model="safeFilters.global.value" 
                 :placeholder="t('common.search')" 
                 class="w-12rem"

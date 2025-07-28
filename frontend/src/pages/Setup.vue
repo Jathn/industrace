@@ -89,30 +89,30 @@
       <div class="smtp-form">
         <div class="form-row">
           <div class="form-field">
-            <label>{{ $t('setup.smtp.host') }}</label>
-            <InputText v-model="smtpConfig.host" placeholder="smtp.gmail.com" />
+            <label for="smtp_host">{{ $t('setup.smtp.host') }}</label>
+            <InputText id="smtp_host" v-model="smtpConfig.host" placeholder="smtp.gmail.com" />
           </div>
           <div class="form-field">
-            <label>{{ $t('setup.smtp.port') }}</label>
-            <InputNumber v-model="smtpConfig.port" placeholder="587" />
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-field">
-            <label>{{ $t('setup.smtp.username') }}</label>
-            <InputText v-model="smtpConfig.username" placeholder="user@example.com" />
-          </div>
-          <div class="form-field">
-            <label>{{ $t('setup.smtp.password') }}</label>
-            <Password v-model="smtpConfig.password" :feedback="false" />
+            <label for="smtp_port">{{ $t('setup.smtp.port') }}</label>
+            <InputNumber id="smtp_port" v-model="smtpConfig.port" placeholder="587" />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-field">
-            <label>{{ $t('setup.smtp.fromEmail') }}</label>
-            <InputText v-model="smtpConfig.from_email" placeholder="noreply@example.com" />
+            <label for="smtp_username">{{ $t('setup.smtp.username') }}</label>
+            <InputText id="smtp_username" v-model="smtpConfig.username" placeholder="user@example.com" />
+          </div>
+          <div class="form-field">
+            <label for="smtp_password">{{ $t('setup.smtp.password') }}</label>
+            <Password id="smtp_password" v-model="smtpConfig.password" :feedback="false" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-field">
+            <label for="smtp_from_email">{{ $t('setup.smtp.fromEmail') }}</label>
+            <InputText id="smtp_from_email" v-model="smtpConfig.from_email" placeholder="noreply@example.com" />
           </div>
           <div class="form-field checkbox-field">
             <label class="checkbox-label">

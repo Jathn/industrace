@@ -24,8 +24,8 @@
 
       <div v-else>
         <div v-for="(field, index) in editableFields" :key="index" class="flex gap-2 items-center mb-2">
-          <InputText v-model="field.key" placeholder="Key" class="w-4/12" @input="showSave = true" />
-          <InputText v-model="field.value" placeholder="Value" class="w-6/12" @input="showSave = true" />
+          <InputText :id="`custom_field_key_${index}`" v-model="field.key" placeholder="Key" class="w-4/12" @input="showSave = true" />
+          <InputText :id="`custom_field_value_${index}`" v-model="field.value" placeholder="Value" class="w-6/12" @input="showSave = true" />
           <Button icon="pi pi-trash" severity="danger" @click="removeField(index)" />
         </div>
         <Button :label="t('assets.addField')" icon="pi pi-plus" class="mt-2" @click="addField" />
