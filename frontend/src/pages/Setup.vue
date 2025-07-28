@@ -104,8 +104,8 @@
             <InputText id="smtp_username" v-model="smtpConfig.username" placeholder="user@example.com" />
           </div>
           <div class="form-field">
-            <label for="smtp_password">{{ $t('setup.smtp.password') }}</label>
-            <Password id="smtp_password" v-model="smtpConfig.password" :feedback="false" />
+            <label for="smtp_password_input">{{ $t('setup.smtp.password') }}</label>
+            <Password id="smtp_password" v-model="smtpConfig.password" :feedback="false" inputId="smtp_password_input" />
           </div>
         </div>
 
@@ -116,7 +116,7 @@
           </div>
           <div class="form-field checkbox-field">
             <label class="checkbox-label">
-              <Checkbox v-model="smtpConfig.use_tls" :binary="true" />
+              <Checkbox v-model="smtpConfig.use_tls" :binary="true" inputId="smtp_use_tls" />
               {{ $t('setup.smtp.useTls') }}
             </label>
           </div>
@@ -199,25 +199,25 @@
           <h4>{{ $t('setup.printedKit.generationOptions') }}</h4>
           <div class="option-item">
             <label class="checkbox-label">
-              <Checkbox v-model="kitOptions.includeAssets" :binary="true" />
+              <Checkbox v-model="kitOptions.includeAssets" :binary="true" inputId="kit_include_assets" />
               {{ $t('setup.printedKit.options.includeAssets') }}
             </label>
           </div>
           <div class="option-item">
             <label class="checkbox-label">
-              <Checkbox v-model="kitOptions.includeSites" :binary="true" />
+              <Checkbox v-model="kitOptions.includeSites" :binary="true" inputId="kit_include_sites" />
               {{ $t('setup.printedKit.options.includeSites') }}
             </label>
           </div>
           <div class="option-item">
             <label class="checkbox-label">
-              <Checkbox v-model="kitOptions.includeContacts" :binary="true" />
+              <Checkbox v-model="kitOptions.includeContacts" :binary="true" inputId="kit_include_contacts" />
               {{ $t('setup.printedKit.options.includeContacts') }}
             </label>
           </div>
           <div class="option-item">
             <label class="checkbox-label">
-              <Checkbox v-model="kitOptions.includeSuppliers" :binary="true" />
+              <Checkbox v-model="kitOptions.includeSuppliers" :binary="true" inputId="kit_include_suppliers" />
               {{ $t('setup.printedKit.options.includeSuppliers') }}
             </label>
           </div>

@@ -24,8 +24,8 @@
       </div>
       
       <div class="p-field" v-if="!props.user">
-        <label for="password">{{ t('common.loginPassword') }}</label>
-        <Password id="password" v-model="form.password" :feedback="false" :required="!props.user" toggleMask maxlength="100" />
+        <label for="user_password_input">{{ t('common.loginPassword') }}</label>
+        <Password id="password" v-model="form.password" :feedback="false" :required="!props.user" toggleMask maxlength="100" inputId="user_password_input" />
       </div>
       
       <div class="p-field" v-else-if="canResetPassword">

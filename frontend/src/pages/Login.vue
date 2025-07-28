@@ -50,7 +50,7 @@
             </div>
 
             <div class="form-group">
-              <label for="password" class="form-label">
+              <label for="password_input" class="form-label">
                 <i class="pi pi-lock"></i>
                 {{ $t('common.loginPassword') }}
               </label>
@@ -64,6 +64,7 @@
                   class="form-input"
                   :placeholder="$t('login.passwordPlaceholder')"
                   :class="{ 'p-invalid': passwordError }"
+                  inputId="password_input"
                 />
                 <div class="input-icon">
                   <i class="pi pi-lock"></i>
