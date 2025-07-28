@@ -154,7 +154,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, nextTick } from 'vue'
 import { useI18n } from 'vue-i18n'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
@@ -414,7 +414,7 @@ const isRowSelected = (row) => {
   return selection.value.some(selected => selected && selected.id === row.id)
 }
 
-const toggleSelectAll = (checked) => {
+const toggleSelectAll = async (checked) => {
   try {
     if (checked) {
       // Verifica che props.data sia un array prima di fare lo spread
@@ -427,13 +427,15 @@ const toggleSelectAll = (checked) => {
     } else {
       selection.value = []
     }
+    // Forza il re-render
+    await nextTick()
   } catch (error) {
     console.warn('Error in toggleSelectAll:', error)
     selection.value = []
   }
 }
 
-const toggleRowSelection = (row, checked) => {
+const toggleRowSelection = async (row, checked) => {
   try {
     if (!row || !row.id) return
     
@@ -444,6 +446,8 @@ const toggleRowSelection = (row, checked) => {
     } else {
       selection.value = selection.value.filter(selected => selected && selected.id !== row.id)
     }
+    // Forza il re-render
+    await nextTick()
   } catch (error) {
     console.warn('Error in toggleRowSelection:', error)
   }
