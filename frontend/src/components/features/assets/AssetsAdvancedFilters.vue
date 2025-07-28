@@ -2,8 +2,9 @@
   <Dialog :visible="visible" @update:visible="$emit('update:visible', $event)" :header="t('assets.advancedFilters') || 'Filtri avanzati'" :modal="true" :style="{ width: '400px' }">
     <div class="p-fluid">
       <div class="p-field">
-        <label>{{ t('assetForm.businessCriticality') }}</label>
+        <label for="advanced_business_criticality">{{ t('assetForm.businessCriticality') }}</label>
         <Dropdown
+          id="advanced_business_criticality"
           v-model="localFilters.business_criticality"
           :options="businessCriticalityOptions"
           optionLabel="label"
@@ -13,11 +14,11 @@
         />
       </div>
       <div class="p-field">
-        <label>{{ t('assets.riskScore') }}</label>
+        <label for="advanced_risk_score_min">{{ t('assets.riskScore') }}</label>
         <div class="flex align-items-center gap-2">
-          <InputNumber v-model="localFilters.risk_score_min" :placeholder="t('assets.riskScoreMin')" :min="0" :max="10" mode="decimal" style="width: 80px" />
+          <InputNumber id="advanced_risk_score_min" v-model="localFilters.risk_score_min" :placeholder="t('assets.riskScoreMin')" :min="0" :max="10" mode="decimal" style="width: 80px" />
           <span>-</span>
-          <InputNumber v-model="localFilters.risk_score_max" :placeholder="t('assets.riskScoreMax')" :min="0" :max="10" mode="decimal" style="width: 80px" />
+          <InputNumber id="advanced_risk_score_max" v-model="localFilters.risk_score_max" :placeholder="t('assets.riskScoreMax')" :min="0" :max="10" mode="decimal" style="width: 80px" />
         </div>
       </div>
       <div class="p-field flex gap-2 mt-3">

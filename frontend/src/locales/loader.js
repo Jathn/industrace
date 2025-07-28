@@ -171,7 +171,7 @@ const messages = {
   }
 }
 
-// Get user's preferred language from localStorage
+// Get user's preferred language from localStorage or browser
 const getUserLanguage = () => {
   if (typeof localStorage !== 'undefined') {
     const savedLang = localStorage.getItem('user-lang')
@@ -180,7 +180,15 @@ const getUserLanguage = () => {
     }
   }
   
-  // Default to English (changed from Italian)
+  // Try to detect browser language
+  if (typeof navigator !== 'undefined' && navigator.language) {
+    const browserLang = navigator.language.split('-')[0] // Get primary language code
+    if (messages[browserLang]) {
+      return browserLang
+    }
+  }
+  
+  // Default to English
   return 'en'
 }
 

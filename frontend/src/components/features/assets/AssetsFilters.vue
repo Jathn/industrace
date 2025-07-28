@@ -1,6 +1,7 @@
 <template>
   <div class="filters">
     <Dropdown 
+      id="filter_status"
       v-model="filters.status_id.value" 
       :options="assetStatusOptions" 
       optionLabel="name" 
@@ -10,6 +11,7 @@
       style="min-width: 150px" 
     />
     <Dropdown 
+      id="filter_site"
       v-model="filters.site_id.value" 
       :options="sites" 
       optionLabel="name" 
@@ -19,6 +21,7 @@
       style="min-width: 150px" 
     />
     <Dropdown 
+      id="filter_area"
       v-model="filters.area_id.value" 
       :options="areas" 
       optionLabel="name" 

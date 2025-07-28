@@ -18,8 +18,8 @@
         <InputNumber id="order" v-model="form.order" :min="0" />
       </div>
       <div class="p-field-checkbox">
-        <Checkbox id="active" v-model="form.active" :binary="true" />
-        <label for="active">{{ t('common.active') }}</label>
+        <Checkbox id="active" v-model="form.active" :binary="true" inputId="status_active" />
+        <label for="status_active">{{ t('common.active') }}</label>
       </div>
       <div class="flex justify-content-end gap-2 mt-4">
         <Button :label="t('common.cancel')" class="p-button-text" @click="emit('cancel')" />

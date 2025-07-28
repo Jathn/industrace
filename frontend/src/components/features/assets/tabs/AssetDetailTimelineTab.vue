@@ -30,8 +30,9 @@
     <div class="timeline-filters mb-4">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div class="field">
-          <label class="block text-sm font-medium mb-2">{{ t('assetTimeline.action') }}</label>
+          <label for="timeline_action" class="block text-sm font-medium mb-2">{{ t('assetTimeline.action') }}</label>
           <Dropdown 
+            id="timeline_action"
             v-model="filters.action" 
             :options="actionOptions" 
             optionLabel="label" 
@@ -43,8 +44,9 @@
         </div>
         
         <div class="field">
-          <label class="block text-sm font-medium mb-2">{{ t('assetTimeline.user') }}</label>
+          <label for="timeline_user" class="block text-sm font-medium mb-2">{{ t('assetTimeline.user') }}</label>
           <Dropdown 
+            id="timeline_user"
             v-model="filters.user_id" 
             :options="userOptions" 
             optionLabel="label" 
@@ -56,8 +58,9 @@
         </div>
         
         <div class="field">
-          <label class="block text-sm font-medium mb-2">{{ t('assetTimeline.dateRange') }}</label>
+          <label for="timeline_date_range" class="block text-sm font-medium mb-2">{{ t('assetTimeline.dateRange') }}</label>
           <Calendar 
+            id="timeline_date_range"
             v-model="filters.dateRange" 
             selectionMode="range" 
             :placeholder="t('assetTimeline.selectDateRange')"
