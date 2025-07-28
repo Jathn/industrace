@@ -58,6 +58,7 @@
   "actions": {
     "addAsset": "Add Asset",
     "viewAllAssets": "View All Assets",
+    "recalculateRiskScores": "Recalculate Risk Scores",
     "generateReport": "Generate Report",
     "exportData": "Export Data",
     "viewAlerts": "View Alerts",

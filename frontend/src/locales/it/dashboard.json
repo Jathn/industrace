@@ -26,7 +26,7 @@
     "assetsByStatus": "Asset per Stato",
     "assetsBySite": "Asset per Sito",
     "riskScoreDistribution": "Distribuzione Risk Score",
-    "businessCriticality": "Criticalità Business",
+    "businessCriticality": "Criticità Business",
     "assetGrowthTrend": "Trend Crescita Asset",
     "monthlyGrowth": "Crescita Mensile",
     "weeklyActivity": "Attività Settimanale"
@@ -46,7 +46,7 @@
     "site": "Sito",
     "status": "Stato",
     "riskScore": "Risk Score",
-    "businessCriticality": "Criticalità",
+    "businessCriticality": "Criticità",
     "created": "Creato",
     "updated": "Aggiornato",
     "lastActivity": "Ultima Attività",
@@ -58,6 +58,7 @@
   "actions": {
     "addAsset": "Aggiungi Asset",
     "viewAllAssets": "Vedi Tutti gli Asset",
+    "recalculateRiskScores": "Ricalcola Risk Score",
     "generateReport": "Genera Report",
     "exportData": "Esporta Dati",
     "viewAlerts": "Vedi Avvisi",

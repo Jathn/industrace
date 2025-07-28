@@ -13,6 +13,13 @@
           @click="$router.push('/assets')"
           class="p-button-outlined"
         />
+        <Button 
+          :label="t('dashboard.actions.recalculateRiskScores')" 
+          icon="pi pi-refresh" 
+          @click="recalculateRiskScores"
+          :loading="recalculatingRiskScores"
+          class="p-button-outlined p-button-secondary"
+        />
       </div>
     </div>
 
@@ -77,7 +84,7 @@
             />
           </div>
           <div v-else class="no-data">
-            {{ t('dashboard.noData') }}
+            {{ t('dashboard.messages.noData') }}
           </div>
         </div>
 
@@ -96,7 +103,7 @@
             />
           </div>
           <div v-else class="no-data">
-            {{ t('dashboard.noData') }}
+            {{ t('dashboard.messages.noData') }}
           </div>
         </div>
       </div>
@@ -112,7 +119,7 @@
             {{ t('dashboard.tables.topRiskyAssets') }}
           </div>
           <div v-if="riskyAssets.length === 0" class="no-data">
-            {{ t('dashboard.noData') }}
+            {{ t('dashboard.messages.noData') }}
           </div>
           <DataTable 
             v-else
@@ -138,10 +145,7 @@
             </Column>
             <Column field="business_criticality" :header="t('dashboard.columns.businessCriticality')" sortable>
               <template #body="{ data }">
-                <Tag 
-                  :value="data.business_criticality" 
-                  :severity="getCriticalitySeverity(data.business_criticality)"
-                />
+                <CriticalityBadge :value="data.business_criticality" />
               </template>
             </Column>
             <Column field="asset_type_name" :header="t('dashboard.columns.type')" />
@@ -156,7 +160,7 @@
             {{ t('dashboard.tables.latestAssets') }}
           </div>
           <div v-if="recentAssets.length === 0" class="no-data">
-            {{ t('dashboard.noData') }}
+            {{ t('dashboard.messages.noData') }}
           </div>
           <DataTable 
             v-else
@@ -214,6 +218,7 @@
 import { ref, onMounted, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
+import { useToast } from 'primevue/usetoast'
 import { Doughnut, Bar } from 'vue-chartjs'
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement } from 'chart.js'
 
@@ -224,16 +229,19 @@ import Column from 'primevue/column'
 import Button from 'primevue/button'
 import Tag from 'primevue/tag'
 import Card from 'primevue/card'
+import CriticalityBadge from '../components/common/CriticalityBadge.vue'
 import api from '../api/api'
 
 const { t } = useI18n()
 const router = useRouter()
+const toast = useToast()
 
 // Reactive data
 const stats = ref({})
 const assetTypes = ref([])
 const recentAssets = ref([])
 const riskyAssets = ref([])
+const recalculatingRiskScores = ref(false)
 
 // Chart data
 const assetTypeChartData = ref({ labels: [], datasets: [] })
@@ -283,6 +291,36 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString()
 }
 
+// Funzione per ricalcolare i risk score
+const recalculateRiskScores = async () => {
+  recalculatingRiskScores.value = true
+  try {
+    const response = await api.recalculateAllRiskScores()
+    console.log('Risk scores ricalcolati:', response.data)
+    
+    // Ricarica i dati della dashboard
+    await loadDashboardData()
+    
+    // Mostra messaggio di successo
+    toast.add({
+      severity: 'success',
+      summary: t('common.success'),
+      detail: response.data.message || 'Risk scores aggiornati con successo!',
+      life: 3000
+    })
+  } catch (error) {
+    console.error('Errore durante il ricalcolo dei risk score:', error)
+    toast.add({
+      severity: 'error',
+      summary: t('common.error'),
+      detail: 'Errore durante il ricalcolo dei risk score',
+      life: 3000
+    })
+  } finally {
+    recalculatingRiskScores.value = false
+  }
+}
+
 // Watcher per reagire ai cambiamenti dei dati
 watch(() => stats.value, (newStats) => {
   if (newStats && (newStats.type_stats || newStats.status_stats)) {
@@ -290,8 +328,8 @@ watch(() => stats.value, (newStats) => {
   }
 }, { deep: true })
 
-// Load data
-onMounted(async () => {
+// Funzione per caricare i dati della dashboard
+const loadDashboardData = async () => {
   try {
     // Carica statistiche
     const statsRes = await api.getDashboardStats()
@@ -310,6 +348,11 @@ onMounted(async () => {
   } catch (error) {
     console.error('Error loading dashboard data:', error.response?.data || error  )
   }
+}
+
+// Load data
+onMounted(async () => {
+  await loadDashboardData()
 })
 
 const prepareChartData = () => {

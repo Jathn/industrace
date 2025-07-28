@@ -172,7 +172,7 @@ def get_risky_assets(
         .filter(
             and_(
                 Asset.tenant_id == current_user.tenant_id,
-                Asset.risk_score >= 7
+                Asset.risk_score >= 4
             )
         )
         .order_by(Asset.risk_score.desc())
