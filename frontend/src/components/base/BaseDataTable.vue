@@ -400,41 +400,57 @@ watch(selection, (newSelection) => {
 
 // Funzioni per selezione personalizzata accessibile
 const isAllSelected = computed(() => {
-  return Array.isArray(props.data) && props.data.length > 0 && selection.value.length === props.data.length
+  const data = props.data || []
+  return Array.isArray(data) && data.length > 0 && selection.value.length === data.length
 })
 
 const isIndeterminate = computed(() => {
-  return Array.isArray(props.data) && selection.value.length > 0 && selection.value.length < props.data.length
+  const data = props.data || []
+  return Array.isArray(data) && selection.value.length > 0 && selection.value.length < data.length
 })
 
 const isRowSelected = (row) => {
-  return selection.value.some(selected => selected.id === row.id)
+  if (!row || !row.id) return false
+  return selection.value.some(selected => selected && selected.id === row.id)
 }
 
 const toggleSelectAll = (checked) => {
-  if (checked) {
-    // Verifica che props.data sia un array prima di fare lo spread
-    if (Array.isArray(props.data)) {
-      selection.value = [...props.data]
+  try {
+    if (checked) {
+      // Verifica che props.data sia un array prima di fare lo spread
+      const data = props.data || []
+      if (Array.isArray(data) && data.length > 0) {
+        selection.value = [...data]
+      } else {
+        selection.value = []
+      }
     } else {
       selection.value = []
     }
-  } else {
+  } catch (error) {
+    console.warn('Error in toggleSelectAll:', error)
     selection.value = []
   }
 }
 
 const toggleRowSelection = (row, checked) => {
-  if (checked) {
-    if (!isRowSelected(row)) {
-      selection.value.push(row)
+  try {
+    if (!row || !row.id) return
+    
+    if (checked) {
+      if (!isRowSelected(row)) {
+        selection.value.push(row)
+      }
+    } else {
+      selection.value = selection.value.filter(selected => selected && selected.id !== row.id)
     }
-  } else {
-    selection.value = selection.value.filter(selected => selected.id !== row.id)
+  } catch (error) {
+    console.warn('Error in toggleRowSelection:', error)
   }
 }
 
 const getRowLabel = (row) => {
+  if (!row) return 'riga'
   // Prova a ottenere un'etichetta significativa per la riga
   return row.name || row.title || row.id || 'riga'
 }
@@ -443,7 +459,7 @@ const getRowLabel = (row) => {
 onMounted(() => {
   loadSavedColumns()
   // If no columns are selected (first opening), select all
-  if (!selectedColumns.value.length) {
+  if (!selectedColumns.value.length && Array.isArray(props.columns)) {
     selectedColumns.value = [...props.columns];
   }
 })
