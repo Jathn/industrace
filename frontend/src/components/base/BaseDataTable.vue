@@ -70,30 +70,12 @@
         </div>
       </template>
       
-      <!-- Colonna di selezione personalizzata per accessibilità -->
+      <!-- Colonna di selezione -->
       <Column 
         v-if="selectionMode" 
+        selectionMode="multiple" 
         headerStyle="width: 3rem"
-        :header="t('common.selectAll')"
-      >
-        <template #header>
-          <Checkbox 
-            :modelValue="isAllSelected"
-            @update:modelValue="toggleSelectAll"
-            :indeterminate="isIndeterminate"
-            :aria-label="t('common.selectAll')"
-            inputId="select_all_checkbox"
-          />
-        </template>
-        <template #body="slotProps">
-          <Checkbox 
-            :modelValue="isRowSelected(slotProps.data)"
-            @update:modelValue="(checked) => toggleRowSelection(slotProps.data, checked)"
-            :aria-label="`${t('common.select')} ${getRowLabel(slotProps.data)}`"
-            :inputId="`row_select_${slotProps.data.id || slotProps.index}`"
-          />
-        </template>
-      </Column>
+      />
       
       <!-- Colonne dinamiche -->
       <template v-for="col in visibleColumns" :key="col.field">
@@ -154,7 +136,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted, nextTick } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
@@ -162,7 +144,6 @@ import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import MultiSelect from 'primevue/multiselect'
 import OverlayPanel from 'primevue/overlaypanel'
-import Checkbox from 'primevue/checkbox'
 import { useTableHeight } from '@/composables/useTableHeight'
 
 const { t } = useI18n()
@@ -398,66 +379,7 @@ watch(selection, (newSelection) => {
   emit('selection-change', newSelection)
 }, { deep: true })
 
-// Funzioni per selezione personalizzata accessibile
-const isAllSelected = computed(() => {
-  const data = props.data || []
-  return Array.isArray(data) && data.length > 0 && selection.value.length === data.length
-})
 
-const isIndeterminate = computed(() => {
-  const data = props.data || []
-  return Array.isArray(data) && selection.value.length > 0 && selection.value.length < data.length
-})
-
-const isRowSelected = (row) => {
-  if (!row || !row.id) return false
-  return selection.value.some(selected => selected && selected.id === row.id)
-}
-
-const toggleSelectAll = async (checked) => {
-  try {
-    if (checked) {
-      // Verifica che props.data sia un array prima di fare lo spread
-      const data = props.data || []
-      if (Array.isArray(data) && data.length > 0) {
-        selection.value = [...data]
-      } else {
-        selection.value = []
-      }
-    } else {
-      selection.value = []
-    }
-    // Forza il re-render
-    await nextTick()
-  } catch (error) {
-    console.warn('Error in toggleSelectAll:', error)
-    selection.value = []
-  }
-}
-
-const toggleRowSelection = async (row, checked) => {
-  try {
-    if (!row || !row.id) return
-    
-    if (checked) {
-      if (!isRowSelected(row)) {
-        selection.value.push(row)
-      }
-    } else {
-      selection.value = selection.value.filter(selected => selected && selected.id !== row.id)
-    }
-    // Forza il re-render
-    await nextTick()
-  } catch (error) {
-    console.warn('Error in toggleRowSelection:', error)
-  }
-}
-
-const getRowLabel = (row) => {
-  if (!row) return 'riga'
-  // Prova a ottenere un'etichetta significativa per la riga
-  return row.name || row.title || row.id || 'riga'
-}
 
 // Lifecycle
 onMounted(() => {

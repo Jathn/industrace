@@ -23,35 +23,35 @@
 ## 📸 Screenshots & Demo
 
 ### 🏠 Dashboard Overview
-![Dashboard](docs/images/dashboard-overview.png)
+![Dashboard](docs/images/readme/dashboard.png)
 *Main dashboard showing asset overview, risk scores, and system status*
 
 ### 📊 Asset Management
-![Asset Management](docs/images/asset-management.gif)
+![Asset Management](docs/images/readme/asset-management.png)
 *Complete asset lifecycle management with detailed information and connections*
 
 ### 🌐 Network Topology
-![Network Topology](docs/images/network-topology.gif)
+![Network Topology](docs/images/readme/network-topology.png)
 *Interactive network visualization showing asset connections and communications*
 
 ### 🔍 Asset Details
-![Asset Details](docs/images/asset-details.png)
+![Asset Details](docs/images/readme/asset-details.png)
 *Detailed asset view with interfaces, connections, and documentation*
 
 ### 👥 User Management
-![User Management](docs/images/user-management.gif)
+![User Management](docs/images/readme/user-management.png)
 *Role-based access control with granular permissions management*
 
 ### 📋 Audit Trail
-![Audit Trail](docs/images/audit-trail.png)
+![Audit Trail](docs/images/readme/audit-trail.png)
 *Complete activity logging and change tracking for compliance*
 
 ### 🗺️ Floor Plan Integration
-![Floor Plan](docs/images/floor-plan.gif)
+![Floor Plan](docs/images/readme/floor-plan.png)
 *Visual asset placement on floor plans with interactive mapping*
 
 ### 📱 Responsive Design
-![Mobile View](docs/images/mobile-view.png)
+![Mobile View](docs/images/readme/mobile-view.png)
 *Fully responsive interface that works on desktop, tablet, and mobile*
 
 ## 🏗️ Architecture
