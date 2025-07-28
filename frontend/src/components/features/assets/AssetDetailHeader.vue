@@ -15,11 +15,10 @@
         <span class="type">{{ asset.asset_type?.name || t('common.na') }}</span>
         <span class="site">{{ asset.site?.name || t('common.na') }}</span>
         <span class="area" v-if="asset.area_name">{{ asset.area_name }}</span>
-        <Tag
+        <CriticalityBadge
           v-if="asset.business_criticality"
-          :value="`${t('assets.businessCriticality')}: ${getCriticalityLabel(asset.business_criticality)}`"
-          :style="{ background: getCriticalityColor(asset.business_criticality), color: '#fff', border: 'none' }"
-          class="criticality-badge"
+          :value="asset.business_criticality"
+          :showText="true"
         />
         <Tag
           v-if="riskBreakdown && riskBreakdown.final_score !== null"
@@ -68,6 +67,7 @@ import { useI18n } from 'vue-i18n'
 import Button from 'primevue/button'
 import Tag from 'primevue/tag'
 import Dialog from 'primevue/dialog'
+import CriticalityBadge from '../../common/CriticalityBadge.vue'
 import FloorplanPositioningDialog from './widgets/FloorplanPositioningDialog.vue'
 
 import { computed, ref } from 'vue'
@@ -75,9 +75,7 @@ import { computed, ref } from 'vue'
 const props = defineProps({
   asset: { type: Object, required: true },
   riskBreakdown: { type: Object, default: null },
-  canWrite: { type: Function, required: true },
-  getCriticalityLabel: { type: Function, required: true },
-  getCriticalityColor: { type: Function, required: true }
+  canWrite: { type: Function, required: true }
 })
 
 const { t } = useI18n()

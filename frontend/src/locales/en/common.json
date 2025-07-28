@@ -419,7 +419,10 @@
   "moveToTrash": "Move to Trash",
   "footer": {
     "powered_by": "Powered by",
-    "visit_besafe": "BeSafe"
+    "copyright": "© {year} BeSafe. AGPL v3 License.",
+    "github": "GitHub",
+    "report_bug": "Report Bug",
+    "license": "License"
   },
   "status": "Status",
   "name": "Name",

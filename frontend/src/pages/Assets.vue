@@ -29,6 +29,9 @@
       :selectionMode="canWrite('assets') ? 'multiple' : null"
       :storageKey="'assets'"
       :showExport="false"
+      :autoHeight="true"
+      :heightOffsetTop="300"
+      :heightOffsetBottom="120"
       @selection-change="selectedAssets = $event"
       @sort="onSort"
     >
@@ -63,7 +66,14 @@
       </template>
 
       <template #body-business_criticality="{ data }">
-        <span v-if="data.business_criticality">
+        <span v-if="data.business_criticality" :style="{ 
+          background: getCriticalityColor(data.business_criticality), 
+          color: '#fff', 
+          padding: '0.2rem 0.5rem', 
+          borderRadius: '4px',
+          fontSize: '0.875rem',
+          fontWeight: '500'
+        }">
           {{ getBusinessCriticalityLabel(data.business_criticality) }}
         </span>
         <span v-else>-</span>
@@ -197,6 +207,7 @@ import Tag from 'primevue/tag'
 import AssetForm from '../components/forms/AssetForm.vue'
 import BaseDataTable from '../components/base/BaseDataTable.vue'
 import BaseDialog from '../components/base/BaseDialog.vue'
+
 import BaseConfirmDialog from '../components/base/BaseConfirmDialog.vue'
 import AssetImportDialog from '../components/dialogs/AssetImportDialog.vue'
 import AssetsHeader from '../components/features/assets/AssetsHeader.vue'
@@ -699,6 +710,20 @@ function getBusinessCriticalityLabel(value) {
   }
 }
 
+function getCriticalityColor(value) {
+  switch ((value || '').toLowerCase()) {
+    case 'low': return '#28a745'      // Verde
+    case 'medium': return '#ffc107'   // Giallo
+    case 'high': return '#fd7e14'     // Arancione
+    case 'critical': return '#dc3545' // Rosso
+    default: return '#6c757d'         // Grigio
+  }
+}
+
+
+
+
+
 // Funzione locale per mostrare il dialog di conferma svuota cestino
 function confirmEmptyTrash() {
   confirmEmptyTrashFn(emptyTrash)
@@ -723,4 +748,6 @@ function confirmEmptyTrash() {
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
+
+
 </style>

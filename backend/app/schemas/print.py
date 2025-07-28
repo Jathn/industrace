@@ -1,13 +1,18 @@
-from pydantic import BaseModel, Field
-from typing import Optional, Dict, Any, List
+from pydantic import BaseModel, Field, validator
+from typing import Optional, Dict, Any, List, Union
 from datetime import datetime
 import uuid
 
 
 class PrintGenerateRequest(BaseModel):
     asset_id: uuid.UUID
-    template_id: str  # Può essere ID o key del template
+    template_id: Union[str, int]  # Può essere ID (int) o key (str) del template
     options: Optional[Dict[str, Any]] = Field(default_factory=dict)
+    
+    @validator('template_id', pre=True)
+    def convert_template_id(cls, v):
+        # Converte sempre a stringa per compatibilità con il codice esistente
+        return str(v)
 
 
 class PrintGenerateResponse(BaseModel):

@@ -146,6 +146,9 @@
   },
   "footer": {
     "powered_by": "Powered by",
-    "visit_besafe": "Visita BeSafe"
+    "copyright": "© {year} BeSafe. Licenza AGPL v3.",
+    "github": "GitHub",
+    "report_bug": "Segnala Bug",
+    "license": "Licenza"
   }
 } 

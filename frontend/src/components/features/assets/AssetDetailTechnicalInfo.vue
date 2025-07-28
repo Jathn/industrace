@@ -8,7 +8,7 @@
       <div><span class="label">{{ t('assets.remoteAccess') }}:</span> <span class="value">{{ asset.remote_access ? t('common.yes') : t('common.no') }}</span></div>
       <div><span class="label">{{ t('assets.remoteAccessType') }}:</span> <span class="value">{{ asset.remote_access_type ? getRemoteAccessTypeLabel(asset.remote_access_type) : t('common.na') }}</span></div>
       <div><span class="label">{{ t('assets.physicalAccessEase') }}:</span> <span class="value">{{ asset.physical_access_ease ? getPhysicalAccessLabel(asset.physical_access_ease) : t('common.na') }}</span></div>
-      <div><span class="label">{{ t('assets.businessCriticality') }}:</span> <span class="value">{{ asset.business_criticality ? getBusinessCriticalityLabel(asset.business_criticality) : t('common.na') }}</span></div>
+      <div><span class="label">{{ t('assets.businessCriticality') }}:</span> <span class="value"><CriticalityBadge :value="asset.business_criticality" /></span></div>
       <div v-if="asset.protocols && asset.protocols.length">
         <span class="label">{{ t('assets.protocols') }}:</span>
         <span class="value">
@@ -30,12 +30,12 @@
 <script setup>
 import { useI18n } from 'vue-i18n'
 import { useDateFormatter } from '../../../composables/useDateFormatter'
+import CriticalityBadge from '../../common/CriticalityBadge.vue'
 
 const props = defineProps({
   asset: { type: Object, required: true },
   getRemoteAccessTypeLabel: { type: Function, required: true },
-  getPhysicalAccessLabel: { type: Function, required: true },
-  getBusinessCriticalityLabel: { type: Function, required: true }
+  getPhysicalAccessLabel: { type: Function, required: true }
 })
 const { t } = useI18n()
 const { formatDate } = useDateFormatter()

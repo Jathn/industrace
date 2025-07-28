@@ -65,7 +65,7 @@ export function useStatus() {
     // Fallback basato sul nome se non c'è colore o non è stato trovato
     const statusName = status.name?.toLowerCase() || ''
     
-    // Mappa nomi comuni a severity
+    // Mappa nomi comuni a severity - corrispondenza esatta
     const nameToSeverityMap = {
       'active': 'success',
       'attivo': 'success',
@@ -92,6 +92,12 @@ export function useStatus() {
       'in magazzino': 'info'
     }
     
+    // Prima cerca corrispondenza esatta
+    if (nameToSeverityMap[statusName]) {
+      return nameToSeverityMap[statusName]
+    }
+    
+    // Poi cerca corrispondenze parziali
     for (const [nameKey, severity] of Object.entries(nameToSeverityMap)) {
       if (statusName.includes(nameKey)) {
         return severity

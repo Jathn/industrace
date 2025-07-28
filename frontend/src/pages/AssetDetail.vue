@@ -9,8 +9,6 @@
       :asset="asset"
       :riskBreakdown="riskTabRef?.riskBreakdown"
       :canWrite="canWrite"
-      :getCriticalityLabel="getCriticalityLabel"
-      :getCriticalityColor="getCriticalityColor"
       @edit="showEditDialog = true"
       @print="openPrintDialog"
       @position-saved="onAssetPositionSaved"
@@ -147,7 +145,6 @@ import AssetCustomFields from '../components/features/assets/components/AssetCus
 import PrintDialog from '../components/print/PrintDialog.vue'
 import AssetForm from '../components/forms/AssetForm.vue'
 import { usePermissions } from '../composables/usePermissions'
-import { useCriticality } from '../composables/useCriticality'
 import { useDateFormatter } from '../composables/useDateFormatter'
 import api from '../api/api'
 import TabView from 'primevue/tabview'
@@ -176,7 +173,7 @@ const toast = useToast()
 const confirm = useConfirm()
 const { t } = useI18n()
 const { canWrite, canDelete } = usePermissions()
-const { getCriticalityColor, getCriticalityLabel } = useCriticality()
+
 const { formatDate } = useDateFormatter()
 // Rimuovo tutte le funzioni, ref e computed relativi al floorplan
 

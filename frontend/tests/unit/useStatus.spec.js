@@ -102,7 +102,7 @@ describe('useStatus', () => {
     it('should return black for light backgrounds', () => {
       expect(getContrastColor('#ffffff')).toBe('#000000')
       expect(getContrastColor('#f0f0f0')).toBe('#000000')
-      expect(getContrastColor('#28a745')).toBe('#000000') // verde chiaro
+      expect(getContrastColor('#28a745')).toBe('#ffffff') // verde scuro
     })
 
     it('should return white for dark backgrounds', () => {

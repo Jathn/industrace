@@ -21,7 +21,7 @@
       <router-view />
     </div>
     <GlobalSearchSpotlight />
-    <BaseFooter />
+    <BaseFooter v-if="auth.isAuthenticated" />
   </div>
 </template>
 
@@ -94,14 +94,18 @@ onMounted(async () => {
 <style scoped>
 .app-container {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 .layout {
   display: flex;
-  min-height: 100vh;
+  flex: 1;
+  min-height: 0;
 }
 .main-content {
   flex: 1;
   padding: 2rem;
+  overflow-y: auto;
 }
 
 .logout-item {

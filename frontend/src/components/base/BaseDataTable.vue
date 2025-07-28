@@ -4,7 +4,10 @@
   - Fornisce funzionalità comuni: filtri, ordinamento, paginazione, esportazione
 -->
 <template>
-  <div class="base-data-table">
+  <div class="base-data-table" :class="{ 
+    'auto-height': autoHeight,
+    'needs-scroll': needsScroll 
+  }">
     <DataTable 
       :value="dataWithOriginal" 
       :loading="loading"
@@ -18,8 +21,8 @@
       :resizableColumns="resizableColumns"
       :columnResizeMode="columnResizeMode"
       :showGridlines="showGridlines"
-      :scrollable="scrollable"
-      :scrollHeight="scrollHeight"
+      :scrollable="needsScroll"
+      :scrollHeight="finalScrollHeight"
       :exportFilename="exportFilename"
       ref="tableRef"
       v-model:selection="selection"
@@ -93,6 +96,9 @@
           <template #body="slotProps" v-else-if="col.field === 'risk_score'">
             <slot name="body-risk_score" :data="slotProps.data.__original || slotProps.data" />
           </template>
+          <template #body="slotProps" v-else-if="col.field === 'business_criticality'">
+            <slot name="body-business_criticality" :data="slotProps.data.__original || slotProps.data" />
+          </template>
           <template #body="slotProps" v-else-if="col.field === 'is_active'">
             <slot name="body-is_active" :data="slotProps.data.__original || slotProps.data" />
           </template>
@@ -137,6 +143,7 @@ import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import MultiSelect from 'primevue/multiselect'
 import OverlayPanel from 'primevue/overlaypanel'
+import { useTableHeight } from '@/composables/useTableHeight'
 
 const { t } = useI18n()
 
@@ -172,11 +179,11 @@ const props = defineProps({
   },
   rows: {
     type: Number,
-    default: 10
+    default: 15
   },
   rowsPerPageOptions: {
     type: Array,
-    default: () => [5, 10, 25, 50]
+    default: () => [10, 15, 25, 50]
   },
   resizableColumns: {
     type: Boolean,
@@ -192,11 +199,11 @@ const props = defineProps({
   },
   scrollable: {
     type: Boolean,
-    default: true
+    default: false
   },
   scrollHeight: {
     type: String,
-    default: '60vh'
+    default: '80vh'
   },
   exportFilename: {
     type: String,
@@ -217,6 +224,22 @@ const props = defineProps({
   storageKey: {
     type: String,
     default: null
+  },
+  autoHeight: {
+    type: Boolean,
+    default: false
+  },
+  heightOffsetTop: {
+    type: Number,
+    default: 200
+  },
+  heightOffsetBottom: {
+    type: Number,
+    default: 100
+  },
+  forceScroll: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -229,6 +252,12 @@ const columnPanel = ref()
 const selection = ref([])
 const selectedColumns = ref([])
 
+// Calcolo altezza automatica
+const { tableHeight: autoTableHeight } = useTableHeight({
+  offsetTop: props.heightOffsetTop,
+  offsetBottom: props.heightOffsetBottom
+})
+
 // Computed
 const allColumns = computed(() => props.columns)
 
@@ -239,6 +268,46 @@ const visibleColumns = computed(() => {
   return props.columns.filter(col => 
     selectedColumns.value.some(selected => selected.field === col.field)
   )
+})
+
+// Determina se lo scroll è necessario
+const needsScroll = computed(() => {
+  // Se forceScroll è abilitato, forza lo scroll
+  if (props.forceScroll) return true
+  
+  // Se autoHeight è abilitato, calcoliamo dinamicamente
+  if (props.autoHeight) {
+    const availableHeight = window.innerHeight - props.heightOffsetTop - props.heightOffsetBottom
+    
+    // Calcolo più realistico basato su righe visibili
+    const visibleRows = Math.floor(availableHeight / 50) // ~50px per riga
+    const currentRows = props.rows || 15
+    
+    // Se le righe correnti sono più delle righe visibili, serve scroll
+    if (currentRows > visibleRows) {
+      return true
+    }
+    
+    // Altrimenti, calcola se i dati attuali necessitano scroll
+    const headerHeight = 60 // Altezza header tabella
+    const paginatorHeight = 60 // Altezza paginatore
+    const estimatedTableHeight = props.data.length * 50 + headerHeight + paginatorHeight
+    
+    // Se la tabella ha molte colonne, aumenta l'altezza stimata
+    const columnMultiplier = props.columns.length > 10 ? 1.3 : 1.0
+    const adjustedHeight = estimatedTableHeight * columnMultiplier
+    
+    return adjustedHeight > availableHeight
+  }
+  
+  // Se scrollable è esplicitamente impostato, rispettiamo il valore
+  return props.scrollable
+})
+
+// Altezza finale della tabella
+const finalScrollHeight = computed(() => {
+  if (!needsScroll.value) return null
+  return props.autoHeight ? autoTableHeight.value : props.scrollHeight
 })
 
 // Gestione sicura dei filtri
@@ -332,6 +401,16 @@ defineExpose({
 
 :deep(.p-datatable) {
   font-size: 0.875rem;
+}
+
+/* Rimuove la limitazione di altezza di PrimeVue quando autoHeight è abilitato */
+.auto-height :deep(.p-datatable-wrapper) {
+  max-height: none !important;
+}
+
+/* Quando autoHeight è abilitato e non serve scroll, rimuovi overflow */
+.auto-height:not(.needs-scroll) :deep(.p-datatable-wrapper) {
+  overflow: visible !important;
 }
 
 :deep(.p-datatable .p-datatable-header) {
