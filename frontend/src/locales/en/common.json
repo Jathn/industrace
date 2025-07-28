@@ -98,6 +98,7 @@
   "uiActionsMenuDelete": "Delete",
   "uiActionsMenuRestore": "Restore",
   "uiActionsMenuUpdate": "Update",
+  "language": "Language",
   "toast": {
     "success": "Success",
     "error": "Error",

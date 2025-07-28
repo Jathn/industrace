@@ -23,9 +23,10 @@
       </div>
     </div>
     <div class="sidebar-lang" v-if="!collapsed">
+      <label for="sidebar_language_select" class="sr-only">{{ t('common.language') }}</label>
       <span class="lang-flag" v-if="locale === 'it'">🇮🇹</span>
       <span class="lang-flag" v-else>🇬🇧</span>
-      <select v-model="locale" @change="changeLocale" class="lang-select">
+      <select id="sidebar_language_select" v-model="locale" @change="changeLocale" class="lang-select" :aria-label="t('common.language')">
         <option value="it">Italiano</option>
         <option value="en">English</option>
       </select>
@@ -247,6 +248,19 @@ function changeLocale(e) {
 .logout-link:hover {
   background: #2d323c;
   color: #fff;
+}
+
+/* Screen reader only class */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 .modern-sidebar.collapsed .app-title,
