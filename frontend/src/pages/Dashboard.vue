@@ -149,6 +149,7 @@
               </template>
             </Column>
             <Column field="asset_type_name" :header="t('dashboard.columns.type')" />
+            <Column field="status_name" :header="t('dashboard.columns.status')" />
             <Column field="site_name" :header="t('dashboard.columns.site')" />
           </DataTable>
         </div>
@@ -176,8 +177,9 @@
                 </router-link>
               </template>
             </Column>
-            <Column field="asset_type_name" :header="t('dashboard.columns.type')" />
-            <Column field="site_name" :header="t('dashboard.columns.site')" />
+            <Column field="asset_type.name" :header="t('dashboard.columns.type')" />
+            <Column field="status.name" :header="t('dashboard.columns.status')" />
+            <Column field="site.name" :header="t('dashboard.columns.site')" />
             <Column field="created_at" :header="t('dashboard.columns.created')" sortable>
               <template #body="{ data }">
                 {{ formatDate(data.created_at) }}
@@ -190,11 +192,11 @@
 
     <!-- Sezione avvisi e notifiche -->
     <div class="alerts-section">
-      <Card>
-        <template #title>
+      <div class="simple-card">
+        <div class="card-title">
           <i class="pi pi-bell"></i>
           {{ t('dashboard.alerts') }}
-        </template>
+        </div>
         <div class="alerts-content">
           <div v-if="stats.assets_at_risk > 0" class="alert-item warning">
             <i class="pi pi-exclamation-triangle"></i>
@@ -209,7 +211,7 @@
             <span>{{ t('dashboard.messages.allSystemsOperational') }}</span>
           </div>
         </div>
-      </Card>
+      </div>
     </div>
   </div>
 </template>

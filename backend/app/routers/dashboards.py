@@ -40,25 +40,25 @@ def get_dashboard_stats(
         db.query(Asset).filter(Asset.tenant_id == current_user.tenant_id).count()
     )
     
-    # Asset critici (business_criticality >= 4)
+    # Asset critici (business_criticality = 'critical' o 'high')
     critical_assets = (
         db.query(Asset)
         .filter(
             and_(
                 Asset.tenant_id == current_user.tenant_id,
-                Asset.business_criticality >= '4'
+                Asset.business_criticality.in_(['critical', 'high'])
             )
         )
         .count()
     )
     
-    # Asset a rischio (risk_score >= 7)
+    # Asset a rischio (risk_score >= 5)
     assets_at_risk = (
         db.query(Asset)
         .filter(
             and_(
                 Asset.tenant_id == current_user.tenant_id,
-                Asset.risk_score >= 7
+                Asset.risk_score >= 5
             )
         )
         .count()
@@ -167,12 +167,13 @@ def get_risky_assets(
         .options(
             joinedload(Asset.interfaces),
             joinedload(Asset.asset_type),
-            joinedload(Asset.site)
+            joinedload(Asset.site),
+            joinedload(Asset.status)
         )
         .filter(
             and_(
                 Asset.tenant_id == current_user.tenant_id,
-                Asset.risk_score >= 4
+                Asset.risk_score >= 5
             )
         )
         .order_by(Asset.risk_score.desc())
@@ -187,6 +188,7 @@ def get_risky_assets(
             "risk_score": asset.risk_score,
             "business_criticality": asset.business_criticality,
             "asset_type_name": asset.asset_type.name if asset.asset_type else "N/A",
+            "status_name": asset.status.name if asset.status else "N/A",
             "site_name": asset.site.name if asset.site else "N/A",
             "manufacturer_name": asset.manufacturer.name if asset.manufacturer else "N/A",
             "ip_address": asset.interfaces[0].ip_address if asset.interfaces else None,
