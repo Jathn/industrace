@@ -100,6 +100,10 @@
           <template #body="slotProps" v-else-if="col.field === 'business_criticality'">
             <slot name="body-business_criticality" :data="slotProps.data.__original || slotProps.data" />
           </template>
+          <template #body="slotProps" v-else-if="col.field === 'name'">
+            <slot name="body-name" :data="slotProps.data.__original || slotProps.data" v-if="$slots['body-name']" />
+            <span v-else>{{ slotProps.data.name }}</span>
+          </template>
           <template #body="slotProps" v-else-if="col.field === 'is_active'">
             <slot name="body-is_active" :data="slotProps.data.__original || slotProps.data" />
           </template>

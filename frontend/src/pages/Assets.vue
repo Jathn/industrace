@@ -86,6 +86,12 @@
         <span v-else>-</span>
       </template>
 
+      <template #body-name="{ data }">
+        <router-link :to="`/assets/${data.id}`" class="asset-link">
+          {{ data.name }}
+        </router-link>
+      </template>
+
       <template #body-actions="{ data }">
         <div class="flex gap-2">
           <Button 
@@ -749,5 +755,16 @@ function confirmEmptyTrash() {
   margin-bottom: 1.5rem;
 }
 
+.asset-link {
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.asset-link:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
 
 </style>
