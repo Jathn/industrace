@@ -7,6 +7,8 @@
 
 **Industrace** is a comprehensive Industrial Asset Management System designed for managing and monitoring industrial equipment, networks, and infrastructure. Built with FastAPI backend and Vue.js frontend, it provides a modern, scalable solution for industrial environments.
 
+[![Release](https://img.shields.io/badge/Release-v1.0.0-blue.svg)](https://github.com/industrace/industrace/releases/tag/v1.0.0)
+
 ## 🌟 Key Features
 
 - **Asset Management**: Complete lifecycle management of industrial assets
@@ -206,6 +208,35 @@ See the [LICENSE](LICENSE) file for details.
 - **Documentation**: [docs/](docs/)
 - **Issues**: [GitHub Issues](https://github.com/industrace/industrace/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/industrace/industrace/discussions)
+
+## 📋 Changelog
+
+### [v1.0.0] - 2024-12-19
+#### 🎉 Initial Release
+- **Complete Asset Management System**: Full lifecycle management for industrial assets
+- **Multi-tenant Architecture**: Support for multiple organizations with data isolation
+- **Role-based Access Control**: Granular permissions system (Admin, Editor, Viewer)
+- **Network Topology Visualization**: Interactive network mapping with asset connections
+- **Risk Assessment Engine**: Advanced risk scoring algorithm for industrial assets
+- **Document Management**: Upload and manage asset photos and documents
+- **Audit Trail**: Complete activity logging and change tracking
+- **Import/Export System**: Excel/CSV import with preview and validation
+- **Print System**: Generate PDF reports with QR codes
+- **PCAP Analysis**: Network traffic analysis and protocol detection
+- **Floor Plan Integration**: Visual asset placement on floor plans
+- **Responsive Design**: Works on desktop, tablet, and mobile
+- **Internationalization**: Full Italian and English language support
+- **RESTful API**: Complete API with OpenAPI documentation
+- **Docker Support**: Easy deployment with Docker Compose
+
+#### 🔧 Technical Features
+- FastAPI backend with PostgreSQL database
+- Vue.js 3 frontend with PrimeVue components
+- JWT authentication with secure cookies
+- Real-time dashboard with charts and metrics
+- Comprehensive error handling and validation
+- Automated testing framework
+- Production-ready Docker configuration
 
 ## 🗺️ Roadmap
 
