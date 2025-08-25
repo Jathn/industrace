@@ -7,6 +7,26 @@
 
 **Industrace** is a comprehensive Industrial Asset Management System designed for managing and monitoring industrial equipment, networks, and infrastructure. Built with FastAPI backend and Vue.js frontend, it provides a modern, scalable solution for industrial environments.
 
+It was born from a simple observation: most asset management tools are designed for IT, while the industrial world requires different logic — mapping systems against the Purdue model, assessing risk with ICS-specific parameters, and documenting operational infrastructure in a structured way.
+
+👉 Industrace is meant to be a starting point: easy to deploy, preloaded with demo data, and most importantly open to contributions and real-world use cases.
+We don’t claim to cover everything from day one, but we believe many organizations — large and small — face similar needs.
+
+## 🤖 Built with Human Expertise + AI Support
+
+Industrace was developed combining hands-on expertise in cybersecurity with the support of AI tools throughout the development process.
+
+This means two things:
+
+🛠️ The project was built faster and with broader perspectives, leveraging AI to explore solutions and speed up coding.
+
+🌍 The code and documentation are designed to be clear, structured, and accessible — a direct result of the “AI-assisted” approach.
+
+We like to think of Industrace as an experiment in human + AI co-creation, where the open source community can now take the lead to validate, extend, and adapt it to real-world industrial environments.
+
+Last thing..
+Born in Italy, Industrace combines European attention to industrial processes with a global open-source mindset.
+
 [![Release](https://img.shields.io/badge/Release-v1.0.0-blue.svg)](https://github.com/industrace/industrace/releases/tag/v1.0.0)
 
 ## 🌟 Key Features
@@ -245,11 +265,6 @@ See our [Roadmap](docs/roadmap.md) for planned features and improvements.
 ## Author and Support
 
 - **Author**: Maurizio Bertaboni
-- **Company**: BeSafe S.r.l.
-- **Website**: https://besafe.it
+- **Patronage**: The project is supported by BeSafe S.r.l., focusing on the Pro edition and enterprise services
 - **Industrace Site**: https://besafe.it/industrace
 - **Contact**: industrace@besafe.it
-
----
-
-**Industrace** - Industrial Asset Management Made Simple 
