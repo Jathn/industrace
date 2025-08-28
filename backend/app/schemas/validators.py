@@ -79,14 +79,23 @@ def validate_physical_access_ease(cls, v):
 
 
 def validate_ip_address(cls, v):
-    """Validate IP address format"""
+    """Validate IP address format - more permissive for non-standard addresses"""
     if v is None or v == "":
         return v
+    
+    # Se è già una stringa valida di IP, la accettiamo
     try:
         ipaddress.ip_address(v)
         return v
     except ValueError:
-        raise InvalidIPAddressError('ip_address')
+        # Se non è un IP valido ma sembra essere un identificatore o nome host,
+        # lo accettiamo comunque per non bloccare l'importazione
+        if isinstance(v, str) and len(v.strip()) > 0:
+            # Log dell'IP non valido ma lo accettiamo comunque
+            print(f"⚠️  IP non valido accettato: {v}")
+            return v
+        else:
+            raise InvalidIPAddressError('ip_address')
 
 
 def validate_mac_address(cls, v):

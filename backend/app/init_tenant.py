@@ -5,6 +5,10 @@ from app.database import SessionLocal
 from app.models import Tenant, User, Role
 from app.services.auth import get_password_hash
 from app.services.init_tenant_roles import init_tenant_roles, get_default_admin_role_id
+from app.init_asset_types import setup_asset_types
+from app.init_asset_statuses import setup_asset_statuses
+from app.init_print_template import init_default_templates
+from app.init_manufacturers import seed_manufacturers
 
 
 def create_tenant_with_admin(
@@ -42,6 +46,15 @@ def create_tenant_with_admin(
         db.commit()
         
         print(f"✅ Admin user created with ID: {admin_user.id}")
+        
+        # 5. Initialize asset types, statuses, manufacturers and print templates
+        print("🏷️ Initializing asset types, statuses, manufacturers and templates...")
+        setup_asset_types(tenant.id)
+        setup_asset_statuses(tenant.id)
+        seed_manufacturers(tenant.id)
+        init_default_templates(tenant.id)
+        print("✅ Asset types, statuses, manufacturers and templates initialized")
+        
         return tenant, admin_user
     except Exception as e:
         db.rollback()

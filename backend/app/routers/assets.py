@@ -382,7 +382,7 @@ def import_assets_xlsx_preview(
         asset_type_id = None
         manufacturer_id = None
         status_id = None
-        # Validation of site_code and asset_type
+                    # Validation of site_code and asset_type
         if not missing:
             from app.crud.sites import get_site_by_code
 
@@ -401,7 +401,7 @@ def import_assets_xlsx_preview(
             asset_type = (
                 db.query(AssetType)
                 .filter(
-                    AssetType.name == asset_type_name,
+                    AssetType.name.ilike(asset_type_name),
                     (AssetType.tenant_id == current_user.tenant_id)
                     | (AssetType.tenant_id == None),
                 )
@@ -632,7 +632,7 @@ def import_assets_xlsx_confirm(
             asset_type = (
                 db.query(AssetType)
                 .filter(
-                    AssetType.name == asset_type_name,
+                    AssetType.name.ilike(asset_type_name),
                     (AssetType.tenant_id == current_user.tenant_id)
                     | (AssetType.tenant_id == None),
                 )

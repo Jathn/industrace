@@ -83,10 +83,11 @@ def setup_system():
     init_default_templates(tenant_id=tenant_id)
 
     # 5. Manufacturers ICS/OT
-    seed_manufacturers()
+    seed_manufacturers(tenant_id=tenant_id)
 
-    setup_asset_statuses()
-    setup_asset_types()
+    # 6. Asset types and statuses
+    setup_asset_statuses(tenant_id=tenant_id)
+    setup_asset_types(tenant_id=tenant_id)
 
     # Add demo data if in development environment
     from app.config import settings
