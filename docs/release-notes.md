@@ -2,7 +2,7 @@
 
 ## Version 1.0.0 - Initial Release
 
-**Release Date**: January 15, 2024
+**Release Date**: August 20, 2025
 
 ### Overview
 
@@ -12,7 +12,6 @@ Industrace v1.0.0 represents the first stable release of the Configuration Manag
 
 - **License**: GNU Affero General Public License v3.0 (AGPL-3.0)
 - **Author**: Maurizio Bertaboni
-- **Company**: BeSafe S.r.l.
 - **Website**: https://besafe.it/industrace
 - **Contact**: industrace@besafe.it
 
@@ -274,6 +273,6 @@ Thanks to all contributors and the open-source community for making this release
 ---
 
 **Industrace** - Configuration Management Database for Industrial Control Systems  
-**Author**: Maurizio Bertaboni (BeSafe S.r.l.)  
+**Author**: Maurizio Bertaboni
 **Website**: https://besafe.it/industrace  
 **Contact**: industrace@besafe.it 

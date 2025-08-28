@@ -290,4 +290,4 @@ After successful installation:
 
 ---
 
-**Author**: Maurizio Bertaboni - BeSafe S.r.l. (https://besafe.it) 
+**Author**: Maurizio Bertaboni

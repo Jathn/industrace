@@ -59,6 +59,19 @@ There are many ways to contribute to Industrace:
    - Backend API: http://localhost:8000
    - Adminer (Database): http://localhost:8080
 
+### Tenant Management
+
+When creating a new tenant, the system automatically initializes:
+
+- **Default Roles**: admin, editor, viewer with appropriate permissions
+- **Admin User**: First user with admin privileges
+- **Tenant Isolation**: Complete data separation between tenants
+
+**Example:**
+```bash
+make create-tenant TENANT_NAME="My Company" TENANT_SLUG="my-company" ADMIN_EMAIL="admin@mycompany.com"
+```
+
 ### Useful Make Commands
 
 ```bash

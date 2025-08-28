@@ -17,6 +17,11 @@ help:
 	@echo "  make test      - Run tests"
 	@echo "  make logs      - Show logs"
 	@echo "  make stop      - Stop all containers"
+	@echo "  make create-tenant - Create new tenant (see usage below)"
+	@echo "  make create-tenant-default - Create tenant with default values"
+	@echo ""
+	@echo "🏗️  Tenant Management:"
+	@echo "  make create-tenant TENANT_NAME=\"My Company\" TENANT_SLUG=\"my-company\" ADMIN_EMAIL=\"admin@mycompany.com\" ADMIN_PASSWORD=\"pass\"""
 	@echo ""
 
 # Initialize system with demo data
@@ -147,4 +152,20 @@ info:
 	@echo "Default credentials:"
 	@echo "Admin:   admin@example.com / admin123"
 	@echo "Editor:  editor@example.com / editor123"
-	@echo "Viewer:  viewer@example.com / viewer123" 
+	@echo "Viewer:  viewer@example.com / viewer123"
+
+# Create new tenant
+create-tenant:
+	@echo "🏗️  Creating new tenant..."
+	@echo "Usage: make create-tenant TENANT_NAME=\"My Company\" TENANT_SLUG=\"my-company\" ADMIN_EMAIL=\"admin@mycompany.com\""
+	@if [ -z "$(TENANT_NAME)" ] || [ -z "$(TENANT_SLUG)" ] || [ -z "$(ADMIN_EMAIL)" ]; then \
+		echo "❌ Please provide TENANT_NAME, TENANT_SLUG, and ADMIN_EMAIL parameters"; \
+		echo "Example: make create-tenant TENANT_NAME=\"My Company\" TENANT_SLUG=\"my-company\" ADMIN_EMAIL=\"admin@mycompany.com\""; \
+		exit 1; \
+	fi
+	docker-compose -f docker-compose.dev.yml exec backend python -m app.init_tenant "$(TENANT_NAME)" "$(TENANT_SLUG)" "$(ADMIN_EMAIL)" "$(ADMIN_PASSWORD)" "$(ADMIN_NAME)"
+
+# Create tenant with default values
+create-tenant-default:
+	@echo "🏗️  Creating tenant with default values..."
+	docker-compose -f docker-compose.dev.yml exec backend python -m app.init_tenant "Nuovo Tenant" "nuovo-tenant" "admin@example.com" 
