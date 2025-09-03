@@ -231,7 +231,7 @@ See the [LICENSE](LICENSE) file for details.
 
 ## 📋 Changelog
 
-### [v1.0.0] - 2024-12-19
+### [v1.0.0] - august 2025
 #### 🎉 Initial Release
 - **Complete Asset Management System**: Full lifecycle management for industrial assets
 - **Multi-tenant Architecture**: Support for multiple organizations with data isolation
