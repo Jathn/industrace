@@ -148,8 +148,8 @@
     "notes": "Note aggiuntive sul fornitore"
   },
   "footer": {
-    "powered_by": "Powered by",
-    "copyright": "© {year} BeSafe. Licenza AGPL v3.",
+    "powered_by": "Patrocinato da",
+    "copyright": "© {year} Industrace. Licenza AGPL v3.",
     "github": "GitHub",
     "report_bug": "Segnala Bug",
     "license": "Licenza"

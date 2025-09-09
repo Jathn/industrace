@@ -26,6 +26,7 @@ def init_tenant_roles(tenant_id: uuid.UUID, db: Session = None):
                 "permissions": {
                     "assets": 3,
                     "sites": 3,
+                    "areas": 3,
                     "locations": 3,
                     "suppliers": 3,
                     "contacts": 3,
@@ -49,6 +50,7 @@ def init_tenant_roles(tenant_id: uuid.UUID, db: Session = None):
                 "permissions": {
                     "assets": 2,
                     "sites": 2,
+                    "areas": 2,
                     "locations": 2,
                     "suppliers": 2,
                     "contacts": 2,
@@ -72,6 +74,7 @@ def init_tenant_roles(tenant_id: uuid.UUID, db: Session = None):
                 "permissions": {
                     "assets": 1,
                     "sites": 1,
+                    "areas": 1,
                     "locations": 1,
                     "suppliers": 1,
                     "contacts": 1,

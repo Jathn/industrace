@@ -143,6 +143,7 @@
   "riskScoreMin": "Risk Score Min",
   "riskScoreMax": "Risk Score Max",
   "location": "Location",
+  "area": "Area",
   "riskScore": "Risk Score",
   "status": "Status",
   "type": "Type",

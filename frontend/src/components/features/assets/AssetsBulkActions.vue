@@ -24,10 +24,16 @@
         <Dropdown v-model="bulkValue" :options="assetTypes" optionLabel="name" optionValue="id" :placeholder="t('assets.type')" />
       </div>
       
+      <!-- Area -->
+      <div class="p-field" v-if="bulkField === 'area_id'">
+        <label>{{ t('assets.area') }}</label>
+        <Dropdown v-model="bulkValue" :options="areas" optionLabel="name" optionValue="id" :placeholder="t('assets.area')" showClear />
+      </div>
+      
       <!-- Location -->
       <div class="p-field" v-if="bulkField === 'location_id'">
         <label>{{ t('assets.location') }}</label>
-        <Dropdown v-model="bulkValue" :options="locations" optionLabel="name" optionValue="id" :placeholder="t('assets.location')" />
+        <Dropdown v-model="bulkValue" :options="locations" optionLabel="name" optionValue="id" :placeholder="t('assets.location')" showClear />
       </div>
       
       <!-- Manufacturer -->
@@ -56,7 +62,7 @@
       </div>
       
       <!-- Altri campi generici -->
-      <div class="p-field" v-if="bulkField && !['status_id','site_id','asset_type_id','location_id','manufacturer_id','vlan','business_criticality'].includes(bulkField)">
+      <div class="p-field" v-if="bulkField && !['status_id','site_id','area_id','asset_type_id','location_id','manufacturer_id','vlan','business_criticality'].includes(bulkField)">
         <label for="bulk_generic">{{ t('assets.value') }}</label>
         <InputText id="bulk_generic" v-model="bulkValue" />
       </div>
@@ -82,6 +88,7 @@ const props = defineProps({
   assetStatusOptions: { type: Array, default: () => [] },
   sites: { type: Array, default: () => [] },
   assetTypes: { type: Array, default: () => [] },
+  areas: { type: Array, default: () => [] },
   locations: { type: Array, default: () => [] },
   manufacturers: { type: Array, default: () => [] }
 })
@@ -96,6 +103,7 @@ const bulkValue = ref(null)
 const bulkFieldOptions = [
   { label: t('assets.status'), value: 'status_id' },
   { label: t('assets.site'), value: 'site_id' },
+  { label: t('assets.area'), value: 'area_id' },
   { label: t('assets.location'), value: 'location_id' },
   { label: t('assets.type'), value: 'asset_type_id' },
   { label: t('assets.manufacturer'), value: 'manufacturer_id' },

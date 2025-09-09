@@ -101,7 +101,7 @@ export function usePermissions() {
   const refreshUserPermissions = async () => {
     try {
       await authStore.fetchUser()
-      console.log('🔄 Permessi utente aggiornati')
+      console.log('🔄 Permessi utente aggiornati:', userPermissions.value)
     } catch (error) {
       console.error('❌ Errore durante l\'aggiornamento dei permessi:', error)
     }

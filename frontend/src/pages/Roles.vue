@@ -21,6 +21,13 @@
           severity="info"
           @click="testPermissions" 
         />
+        <!-- Refresh Permissions -->
+        <Button 
+          icon="pi pi-refresh" 
+          label="Refresh Permissions" 
+          severity="warning"
+          @click="refreshPermissions" 
+        />
       </div>
     </div>
 
@@ -110,7 +117,7 @@ import Tag from 'primevue/tag'
 
 const { t } = useI18n()
 const router = useRouter()
-const { canWrite, canDelete } = usePermissions()
+const { canWrite, canDelete, refreshUserPermissions } = usePermissions()
 const toast = useToast()
 
 // Composables
@@ -265,6 +272,25 @@ async function testPermissions() {
     showToast: false, // Disabilitiamo il toast automatico
     errorContext: t('roles.testPermissionsError')
   })
+}
+
+async function refreshPermissions() {
+  try {
+    await refreshUserPermissions()
+    toast.add({
+      severity: 'success',
+      summary: 'Permessi Aggiornati',
+      detail: 'I permessi utente sono stati aggiornati. Ricarica la pagina per vedere le modifiche.',
+      life: 5000
+    })
+  } catch (error) {
+    toast.add({
+      severity: 'error',
+      summary: 'Errore',
+      detail: 'Errore durante l\'aggiornamento dei permessi',
+      life: 3000
+    })
+  }
 }
 
 function updateFilter(filterName, value) {

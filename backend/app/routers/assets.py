@@ -863,6 +863,7 @@ def bulk_update_assets(
             "manufacturer_id": "produttore",
             "asset_status_id": "stato",
             "site_id": "sito",
+            "area_id": "area",
             "location_id": "posizione",
             "asset_type_id": "tipo",
             "risk_score": "risk score",

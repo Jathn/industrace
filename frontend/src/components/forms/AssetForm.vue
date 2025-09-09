@@ -1,6 +1,6 @@
 
 <template>
-  <div v-if="sites.length && manufacturers.length && assetTypes.length && assetStatusOptions.length && allLocations.length">
+  <div v-if="sites.length && manufacturers.length && assetTypes.length && assetStatusOptions.length">
     <BaseForm 
       :is-submitting="isSubmitting"
       :is-valid="isValid"

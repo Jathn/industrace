@@ -207,25 +207,50 @@ async function fetchAssetStatuses() {
 const assetContacts = ref([])
 
 async function fetchSites() {
-  const response = await api.getSites()
-  sites.value = response.data
+  try {
+    const response = await api.getSites()
+    sites.value = response.data
+  } catch (e) {
+    console.error('Error fetching sites:', e)
+    sites.value = []
+  }
 }
 async function fetchAssetTypes() {
-  const response = await api.getAssetTypes()
-  assetTypes.value = response.data
+  try {
+    const response = await api.getAssetTypes()
+    assetTypes.value = response.data
+  } catch (e) {
+    console.error('Error fetching asset types:', e)
+    assetTypes.value = []
+  }
 }
 async function fetchLocations() {
-  const response = await api.getLocations()
-  allLocations.value = response.data
+  try {
+    const response = await api.getLocations()
+    allLocations.value = response.data
+  } catch (e) {
+    console.error('Error fetching locations:', e)
+    allLocations.value = []
+  }
 }
 
 async function fetchAreas() {
-  const response = await api.getAreas()
-  allAreas.value = response.data
+  try {
+    const response = await api.getAreas()
+    allAreas.value = response.data
+  } catch (e) {
+    console.error('Error fetching areas:', e)
+    allAreas.value = []
+  }
 }
 async function fetchManufacturers() {
-  const response = await api.getManufacturers()
-  manufacturers.value = response.data
+  try {
+    const response = await api.getManufacturers()
+    manufacturers.value = response.data
+  } catch (e) {
+    console.error('Error fetching manufacturers:', e)
+    manufacturers.value = []
+  }
 }
 
 

@@ -7,13 +7,7 @@ const api = axios.create({
 })
 
 api.interceptors.request.use(config => {
-  // console.log('DEBUG: API Request:', config.method?.toUpperCase(), config.url)
-  // console.log('DEBUG: Request headers:', config.headers)
-  // console.log('DEBUG: With credentials:', config.withCredentials)
-//  const token = localStorage.getItem('token')
-//  if (token) {
-//    config.headers.Authorization = `Bearer ${token}`
-//  }
+  // Usa i cookie per l'autenticazione web (withCredentials: true)
   return config
 })
 

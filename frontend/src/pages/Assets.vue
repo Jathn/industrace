@@ -183,6 +183,7 @@
       :assetStatusOptions="assetStatusOptions"
       :sites="sites"
       :assetTypes="assetTypes"
+      :areas="allAreas"
       :locations="locations"
       :manufacturers="manufacturers"
       @bulkUpdate="onBulkUpdate"

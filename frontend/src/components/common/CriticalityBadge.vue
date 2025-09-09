@@ -14,8 +14,8 @@ const { t } = useI18n()
 
 const props = defineProps({
   value: {
-    type: String,
-    required: true
+    type: [String, null],
+    default: null
   },
   showIcon: {
     type: Boolean,
