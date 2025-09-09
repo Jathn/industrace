@@ -37,6 +37,9 @@ export default {
   getAssets(params = {}) {
     return api.get('/assets', { params })
   },
+  getAssetsForNetworkMap() {
+    return api.get('/assets/for-network-map')
+  },
   getAssetsByLocation(locationId, params = {}) {
     return api.get(`/assets/by-location/${locationId}`, { params })
   },

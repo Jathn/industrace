@@ -177,6 +177,98 @@ def get_assets_by_location(
     return assets
 
 
+@router.get("/for-network-map")
+def get_assets_for_network_map(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Get all assets for network map visualization (no limit, no validation)"""
+    query = (
+        db.query(Asset)
+        .options(
+            joinedload(Asset.interfaces),
+            joinedload(Asset.site),
+            joinedload(Asset.location),
+            joinedload(Asset.status),
+            joinedload(Asset.manufacturer),
+            joinedload(Asset.asset_type),
+        )
+        .filter(Asset.tenant_id == current_user.tenant_id, Asset.deleted_at == None)
+    )
+    
+    assets = query.all()
+    result = []
+    for asset in assets:
+        # Converti manualmente senza validazione
+        asset_dict = {
+            "id": str(asset.id),
+            "name": asset.name,
+            "tag": asset.tag,
+            "serial_number": asset.serial_number,
+            "model": asset.model,
+            "manufacturer_id": str(asset.manufacturer_id) if asset.manufacturer_id else None,
+            "firmware_version": asset.firmware_version,
+            "description": asset.description,
+            "custom_fields": asset.custom_fields or {},
+            "map_x": asset.map_x,
+            "map_y": asset.map_y,
+            "created_at": asset.created_at,
+            "updated_at": asset.updated_at,
+            "status_id": str(asset.status_id) if asset.status_id else None,
+            "installation_date": asset.installation_date,
+            "business_criticality": asset.business_criticality,
+            "protocols": asset.protocols or [],
+            "site_id": str(asset.site_id) if asset.site_id else None,
+            "asset_type_id": str(asset.asset_type_id) if asset.asset_type_id else None,
+            "location_id": str(asset.location_id) if asset.location_id else None,
+            "area_id": str(asset.area_id) if asset.area_id else None,
+            "impact_value": asset.impact_value,
+            "purdue_level": asset.purdue_level,
+            "exposure_level": asset.exposure_level,
+            "update_status": asset.update_status,
+            "risk_score": asset.risk_score,
+            "last_risk_assessment": asset.last_risk_assessment,
+            "remote_access": asset.remote_access,
+            "remote_access_type": asset.remote_access_type,
+            "last_update_date": asset.last_update_date,
+            "physical_access_ease": asset.physical_access_ease,
+            "interfaces": [],
+            "manufacturer": {
+                "id": str(asset.manufacturer.id),
+                "name": asset.manufacturer.name
+            } if asset.manufacturer else None,
+            "site": {
+                "id": str(asset.site.id),
+                "name": asset.site.name
+            } if asset.site else None,
+            "asset_type": {
+                "id": str(asset.asset_type.id),
+                "name": asset.asset_type.name
+            } if asset.asset_type else None,
+            "location": {
+                "id": str(asset.location.id),
+                "name": asset.location.name
+            } if asset.location else None,
+            "status": {
+                "id": str(asset.status.id),
+                "name": asset.status.name,
+                "color": asset.status.color
+            } if asset.status else None,
+        }
+        
+        # Aggiungi area info se presente
+        if asset.area_id:
+            from app.models.area import Area
+            area = db.query(Area).filter(Area.id == asset.area_id).first()
+            if area:
+                asset_dict["area_name"] = area.name
+                asset_dict["area_code"] = area.code
+        
+        result.append(asset_dict)
+    
+    return result
+
+
 @router.get("/risk-overview", response_model=RiskOverviewResponse)
 def get_risk_overview(
     current_user: User = Depends(get_current_user), db: Session = Depends(get_db)

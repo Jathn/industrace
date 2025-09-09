@@ -460,7 +460,7 @@ async function fetchData() {
   loading.value = true
   try {
     const [assetsRes, connectionsRes, sitesRes, assetTypesRes] = await Promise.all([
-      api.getAssets({ include_interfaces: true }),
+      api.getAssetsForNetworkMap(),
       api.getAllConnections(),
       api.getSites(),
       api.getAssetTypes()
