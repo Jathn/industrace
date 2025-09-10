@@ -1,6 +1,6 @@
 # 🎉 Industrace v1.0.0 - Initial Release
 
-**Release Date**: December 19, 2024  
+**Release Date**: August 2025  
 **Version**: 1.0.0  
 **Status**: Production Ready
 
@@ -185,19 +185,6 @@ The system comes pre-populated with comprehensive demo data:
 
 Complete documentation is available:
 
-- [Quick Start Guide](docs/QUICK_START.md) - Get up and running in 5 minutes
-- [Installation Guide](docs/installation.md) - Detailed installation instructions
-- [User Manual](docs/user-manual.md) - How to use the application
-- [API Documentation](docs/api-documentation.md) - Complete API reference
-- [Development Guide](docs/development.md) - Development setup and guidelines
-- [Administration Guide](docs/administration.md) - System administration
-- [Security Guide](docs/security.md) - Security best practices
-- [Troubleshooting](docs/troubleshooting.md) - Common issues and solutions
-
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
 ## 📄 License
 
 This project is licensed under the **GNU Affero General Public License v3.0 (AGPL-3.0)**.
@@ -206,17 +193,7 @@ This project is licensed under the **GNU Affero General Public License v3.0 (AGP
 
 - **Documentation**: [docs/](docs/)
 - **Issues**: [GitHub Issues](https://github.com/industrace/industrace/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/industrace/industrace/discussions)
 - **Contact**: industrace@besafe.it
-
-## 🗺️ Roadmap
-
-Future releases will include:
-
-- **v1.1.0**: Advanced reporting and analytics
-- **v1.2.0**: Mobile application
-- **v1.3.0**: Integration with external systems
-- **v2.0.0**: AI-powered asset monitoring and predictive maintenance
 
 ---
 
