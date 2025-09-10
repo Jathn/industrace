@@ -20,6 +20,18 @@
       @showAdvancedFilters="showAdvancedFilters = true"
     />
 
+    <!-- Indicatore conteggio totale -->
+    <div class="flex justify-content-between align-items-center mb-3">
+      <div class="text-sm text-600">
+        <i class="pi pi-info-circle mr-2"></i>
+        {{ t('assets.totalAssets', { count: totalAssets }) }}
+      </div>
+      <div class="text-sm text-600" v-if="filteredAssets.length !== totalAssets">
+        <i class="pi pi-filter mr-2"></i>
+        {{ t('assets.filteredAssets', { filtered: filteredAssets.length, total: totalAssets }) }}
+      </div>
+    </div>
+
     <BaseDataTable
       :data="assetsWithIP"
       :loading="loading"
@@ -283,6 +295,7 @@ const dialogMode = computed(() => {
 
 // Data
 const assets = ref([])
+const totalAssets = ref(0)
 const sites = ref([])
 const manufacturers = ref([])
 const assetTypes = ref([])
@@ -372,7 +385,17 @@ async function fetchAssets() {
     } else {
       response = await api.getAssets(params)
     }
-    assets.value = response.data
+    // Gestisci la nuova struttura della risposta con paginazione
+    if (response.data && response.data.data) {
+      assets.value = response.data.data
+      // Aggiungi informazioni di paginazione se disponibili
+      if (response.data.total !== undefined) {
+        totalAssets.value = response.data.total
+      }
+    } else {
+      // Fallback per la vecchia struttura
+      assets.value = response.data || []
+    }
     return response
   }, {
     errorContext: t('assets.fetchError'),

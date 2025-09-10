@@ -3,6 +3,7 @@ from typing import List, Optional
 from datetime import datetime
 
 from fastapi import APIRouter, Depends, Request, UploadFile, File, Form
+from pydantic import BaseModel
 from sqlalchemy.orm import Session, joinedload
 from sqlalchemy import func
 import pandas as pd
@@ -58,8 +59,15 @@ def create_asset(
     return crud_assets.create_asset(db, AssetCreate(**data), current_user.tenant_id)
 
 
+# Schema per la risposta paginata
+class PaginatedAssetsResponse(BaseModel):
+    data: List[AssetSchema]
+    total: int
+    skip: int
+    limit: int
+
 # List assets (with optional filters)
-@router.get("", response_model=List[AssetSchema])
+@router.get("", response_model=PaginatedAssetsResponse)
 def list_assets(
     skip: int = 0,
     limit: int = 100,
@@ -74,6 +82,15 @@ def list_assets(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
+    # Calcola il limite dinamico basato sul numero totale di asset
+    total_assets = db.query(Asset).filter(
+        Asset.tenant_id == current_user.tenant_id, 
+        Asset.deleted_at == None
+    ).count()
+    
+    # Usa sempre il totale + margine per vedere tutti gli asset
+    limit = total_assets + 50  # Margine di sicurezza
+    
     query = (
         db.query(Asset)
         .options(
@@ -110,6 +127,9 @@ def list_assets(
 
         query = query.filter(or_(Asset.name.ilike(search_term)))
 
+    # Conta il totale degli asset (prima di applicare skip/limit)
+    total_count = query.count()
+    
     assets = query.offset(skip).limit(limit).all()
     if assets:
         # Aggiungi i campi area_name e area_code a ogni asset
@@ -123,8 +143,20 @@ def list_assets(
                     asset_dict["area_name"] = area.name
                     asset_dict["area_code"] = area.code
             result.append(asset_dict)
-        return result
-    return []
+        
+        # Restituisci sia gli asset che il conteggio totale
+        return {
+            "data": result,
+            "total": total_count,
+            "skip": skip,
+            "limit": limit
+        }
+    return {
+        "data": [],
+        "total": total_count,
+        "skip": skip,
+        "limit": limit
+    }
 
 
 # Trash: lista asset eliminati
@@ -443,6 +475,15 @@ def import_assets_xlsx_preview(
     from app.models.asset_interface import AssetInterface
     import os
 
+    def _validate_business_criticality(value):
+        """Valida e pulisce il valore di business_criticality"""
+        if not value or str(value).strip() in ["[NULL]", "NULL", ""]:
+            return None
+        clean_value = str(value).strip().lower()
+        if clean_value in ["low", "medium", "high", "critical"]:
+            return clean_value
+        return None
+
     try:
         filename = file.filename.lower()
         if filename.endswith(".csv"):
@@ -666,6 +707,15 @@ def import_assets_xlsx_preview(
 
 @router.post("/import/xlsx/confirm")
 @audit_log_action("import_assets_xlsx_confirm", "Asset", model_class=Asset)
+def _validate_business_criticality(value):
+    """Valida e pulisce il valore di business_criticality"""
+    if not value or str(value).strip() in ["[NULL]", "NULL", ""]:
+        return None
+    clean_value = str(value).strip().lower()
+    if clean_value in ["low", "medium", "high", "critical"]:
+        return clean_value
+    return None
+
 def import_assets_xlsx_confirm(
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
@@ -844,7 +894,7 @@ def import_assets_xlsx_confirm(
                 asset.model = row.get("model")
                 asset.firmware_version = row.get("firmware_version")
                 asset.description = row.get("description")
-                asset.business_criticality = row.get("business_criticality")
+                asset.business_criticality = _validate_business_criticality(row.get("business_criticality"))
                 asset.physical_access_ease = row.get("physical_access_ease")
                 asset.purdue_level = purdue_level
                 asset.installation_date = installation_date
@@ -905,7 +955,7 @@ def import_assets_xlsx_confirm(
                     model=row.get("model"),
                     firmware_version=row.get("firmware_version"),
                     description=row.get("description"),
-                    business_criticality=row.get("business_criticality"),
+                    business_criticality=_validate_business_criticality(row.get("business_criticality")),
                     physical_access_ease=row.get("physical_access_ease"),
                     purdue_level=purdue_level,
                     installation_date=installation_date,
