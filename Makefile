@@ -269,11 +269,16 @@ custom-certs-start:
 # Stop custom certificates deployment
 custom-certs-stop:
 	@echo "🛑 Stopping custom certificates deployment..."
+<<<<<<< HEAD
 	docker-compose -f docker-compose.custom-certs.yml --env-file custom-certs.env down
+=======
+	docker-compose -f docker-compose.custom-certs.yml down
+>>>>>>> 1951557ba3a5e9d4daabfa91a49acece3d64df60
 
 # Show custom certificates logs
 custom-certs-logs:
 	@echo "📋 Showing custom certificates logs..."
+<<<<<<< HEAD
 	docker-compose -f docker-compose.custom-certs.yml --env-file custom-certs.env logs -f
 
 # Nginx custom certificates commands
@@ -302,3 +307,6 @@ nginx-certs-stop:
 nginx-certs-logs:
 	@echo "📋 Showing nginx custom certificates logs..."
 	docker-compose -f docker-compose.nginx-custom-certs.yml --env-file custom-certs.env logs -f 
+=======
+	docker-compose -f docker-compose.custom-certs.yml logs -f 
+>>>>>>> 1951557ba3a5e9d4daabfa91a49acece3d64df60
