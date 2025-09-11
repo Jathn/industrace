@@ -75,6 +75,12 @@ test-certs/
 # Custom certificates configuration (contains local paths)
 custom-certs.env
 
+# Test certificates (contain private keys)
+test-certs/
+*.key
+*.pem
+*.crt
+
 # Documentation temporary files
 docs/images/temp/
 docs/images/*.tmp
