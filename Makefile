@@ -20,6 +20,12 @@ help:
 	@echo "  make create-tenant - Create new tenant (see usage below)"
 	@echo "  make create-tenant-default - Create tenant with default values"
 	@echo ""
+	@echo "🔐 Custom Certificates:"
+	@echo "  make custom-certs-setup - Setup custom certificates deployment"
+	@echo "  make custom-certs-start - Start with custom certificates"
+	@echo "  make custom-certs-stop  - Stop custom certificates deployment"
+	@echo "  make custom-certs-logs  - Show custom certificates logs"
+	@echo ""
 	@echo "🏗️  Tenant Management:"
 	@echo "  make create-tenant TENANT_NAME=\"My Company\" TENANT_SLUG=\"my-company\" ADMIN_EMAIL=\"admin@mycompany.com\" ADMIN_PASSWORD=\"pass\"""
 	@echo ""
@@ -168,4 +174,42 @@ create-tenant:
 # Create tenant with default values
 create-tenant-default:
 	@echo "🏗️  Creating tenant with default values..."
-	docker-compose -f docker-compose.dev.yml exec backend python -m app.init_tenant "Nuovo Tenant" "nuovo-tenant" "admin@example.com" 
+	docker-compose -f docker-compose.dev.yml exec backend python -m app.init_tenant "Nuovo Tenant" "nuovo-tenant" "admin@example.com"
+
+# Custom Certificates Commands
+# ============================
+
+# Setup custom certificates deployment
+custom-certs-setup:
+	@echo "🔐 Setting up custom certificates deployment..."
+	@if [ ! -f "custom-certs.env" ]; then \
+		echo "❌ custom-certs.env not found!"; \
+		echo "📋 Please copy custom-certs.env.example to custom-certs.env and configure it:"; \
+		echo "   cp custom-certs.env.example custom-certs.env"; \
+		echo "   nano custom-certs.env"; \
+		exit 1; \
+	fi
+	@echo "✅ Running setup validation..."
+	./setup-custom-certs.sh
+
+# Start with custom certificates
+custom-certs-start:
+	@echo "🚀 Starting Industrace with custom certificates..."
+	@if [ ! -f "custom-certs.env" ]; then \
+		echo "❌ custom-certs.env not found!"; \
+		echo "📋 Please run 'make custom-certs-setup' first"; \
+		exit 1; \
+	fi
+	docker-compose -f docker-compose.custom-certs.yml --env-file custom-certs.env up -d
+	@echo "✅ Services started with custom certificates!"
+	@echo "🌐 Access your application at: https://$(grep DOMAIN custom-certs.env | cut -d= -f2)"
+
+# Stop custom certificates deployment
+custom-certs-stop:
+	@echo "🛑 Stopping custom certificates deployment..."
+	docker-compose -f docker-compose.custom-certs.yml down
+
+# Show custom certificates logs
+custom-certs-logs:
+	@echo "📋 Showing custom certificates logs..."
+	docker-compose -f docker-compose.custom-certs.yml logs -f 

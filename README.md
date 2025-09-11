@@ -168,6 +168,7 @@ Complete documentation is available in the [docs](docs/) directory:
 - [Development Guide](docs/development.md) - Development setup and guidelines
 - [Administration Guide](docs/administration.md) - System administration
 - [Security Guide](docs/security.md) - Security best practices
+- [Custom Certificates](docs/custom-certificates.md) - Deploy with internal CA certificates
 - [Troubleshooting](docs/troubleshooting.md) - Common issues and solutions
 
 ## 🔧 Development
