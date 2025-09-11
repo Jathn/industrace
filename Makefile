@@ -12,16 +12,24 @@ help:
 	@echo "  make init      - Initialize system with demo data (clean start)"
 	@echo "  make demo      - Add demo data to existing system"
 	@echo "  make clean     - Clean system completely"
-	@echo "  make dev       - Start development environment"
-	@echo "  make prod      - Start production environment"
+	@echo "  make dev       - Start development environment (localhost:5173/8000)"
+	@echo "  make prod      - Start production environment (HTTPS with Traefik)"
 	@echo "  make test      - Run tests"
 	@echo "  make logs      - Show logs"
 	@echo "  make stop      - Stop all containers"
+	@echo "  make config    - Show configuration information"
+	@echo "  make traefik   - Show Traefik dashboard information"
 	@echo "  make create-tenant - Create new tenant (see usage below)"
 	@echo "  make create-tenant-default - Create tenant with default values"
 	@echo ""
+	@echo "🔐 Custom Certificates:"
+	@echo "  make custom-certs-setup - Setup custom certificates deployment"
+	@echo "  make custom-certs-start - Start with custom certificates"
+	@echo "  make custom-certs-stop  - Stop custom certificates deployment"
+	@echo "  make custom-certs-logs  - Show custom certificates logs"
+	@echo ""
 	@echo "🏗️  Tenant Management:"
-	@echo "  make create-tenant TENANT_NAME=\"My Company\" TENANT_SLUG=\"my-company\" ADMIN_EMAIL=\"admin@mycompany.com\" ADMIN_PASSWORD=\"pass\"""
+	@echo "  make create-tenant TENANT_NAME=\"My Company\" TENANT_SLUG=\"my-company\" ADMIN_EMAIL=\"admin@mycompany.com\" ADMIN_PASSWORD=\"pass\""
 	@echo ""
 
 # Initialize system with demo data
@@ -48,6 +56,8 @@ clean:
 	docker-compose -f docker-compose.dev.yml down -v
 	docker-compose down -v
 	docker system prune -f
+	@echo "🧹 Cleaning temporary files..."
+	@rm -f .env.dev .env.prod .env.custom
 	@echo "✅ System cleaned successfully"
 
 # Clean everything including images
@@ -61,12 +71,24 @@ clean-all:
 # Start development environment
 dev:
 	@echo "🔧 Starting development environment..."
-	docker-compose -f docker-compose.dev.yml up -d
+	@echo "📝 Setting CORS for development (localhost:5173)..."
+	@echo "CORS_ORIGINS=http://localhost:5173,http://localhost:3000,http://localhost:8080" > .env.dev
+	@echo "VITE_API_URL=http://localhost:8000" >> .env.dev
+	docker-compose -f docker-compose.dev.yml --env-file .env.dev up -d
+	@echo "✅ Development environment started!"
+	@echo "🌐 Frontend: http://localhost:5173"
+	@echo "🌐 Backend:  http://localhost:8000"
 
 # Start production environment
 prod:
 	@echo "🚀 Starting production environment..."
-	docker-compose up -d
+	@echo "📝 Setting CORS for production (HTTPS)..."
+	@echo "CORS_ORIGINS=https://industrace.local,https://www.industrace.local" > .env.prod
+	@echo "SECURE_COOKIES=true" >> .env.prod
+	@echo "SAME_SITE_COOKIES=strict" >> .env.prod
+	docker-compose --env-file .env.prod up -d
+	@echo "✅ Production environment started!"
+	@echo "🌐 Access your application at: https://industrace.local"
 
 # Run tests
 test:
@@ -154,6 +176,52 @@ info:
 	@echo "Editor:  editor@example.com / editor123"
 	@echo "Viewer:  viewer@example.com / viewer123"
 
+# Show configuration info
+config:
+	@echo "⚙️  Configuration Information:"
+	@echo "============================="
+	@echo ""
+	@echo "🔧 Development (make dev):"
+	@echo "  - CORS: http://localhost:5173, http://localhost:3000, http://localhost:8080"
+	@echo "  - API URL: http://localhost:8000"
+	@echo "  - Cookies: Insecure (development)"
+	@echo "  - Proxy: Vite dev server"
+	@echo ""
+	@echo "🚀 Production (make prod):"
+	@echo "  - CORS: https://industrace.local, https://www.industrace.local"
+	@echo "  - API URL: https://industrace.local (via Traefik)"
+	@echo "  - Cookies: Secure, SameSite=strict"
+	@echo "  - Proxy: Traefik + Let's Encrypt"
+	@echo "  - Dashboard: http://localhost:8080"
+	@echo ""
+	@echo "🔐 Custom Certs (make custom-certs-start):"
+	@echo "  - CORS: https://[DOMAIN], https://www.[DOMAIN]"
+	@echo "  - API URL: https://[DOMAIN] (via nginx)"
+	@echo "  - Cookies: Secure, SameSite=strict"
+	@echo "  - Proxy: Nginx + Custom certificates"
+	@echo ""
+	@if [ -f "custom-certs.env" ]; then \
+		DOMAIN=$$(grep DOMAIN custom-certs.env | cut -d= -f2); \
+		echo "📋 Current custom domain: $$DOMAIN"; \
+	fi
+
+# Show Traefik dashboard info
+traefik:
+	@echo "🦌 Traefik Information:"
+	@echo "======================"
+	@echo "Dashboard: http://localhost:8080"
+	@echo "Services: http://localhost:8080/api/http/services"
+	@echo "Routers: http://localhost:8080/api/http/routers"
+	@echo ""
+	@echo "🔍 Checking Traefik status..."
+	@if docker ps | grep -q traefik; then \
+		echo "✅ Traefik is running"; \
+		echo "🌐 Access dashboard at: http://localhost:8080"; \
+	else \
+		echo "❌ Traefik is not running"; \
+		echo "💡 Start with: make prod"; \
+	fi
+
 # Create new tenant
 create-tenant:
 	@echo "🏗️  Creating new tenant..."
@@ -168,4 +236,69 @@ create-tenant:
 # Create tenant with default values
 create-tenant-default:
 	@echo "🏗️  Creating tenant with default values..."
-	docker-compose -f docker-compose.dev.yml exec backend python -m app.init_tenant "Nuovo Tenant" "nuovo-tenant" "admin@example.com" 
+	docker-compose -f docker-compose.dev.yml exec backend python -m app.init_tenant "Nuovo Tenant" "nuovo-tenant" "admin@example.com"
+
+# Custom Certificates Commands
+# ============================
+
+# Setup custom certificates deployment
+custom-certs-setup:
+	@echo "🔐 Setting up custom certificates deployment..."
+	@if [ ! -f "custom-certs.env" ]; then \
+		echo "❌ custom-certs.env not found!"; \
+		echo "📋 Please copy custom-certs.env.example to custom-certs.env and configure it:"; \
+		echo "   cp custom-certs.env.example custom-certs.env"; \
+		echo "   nano custom-certs.env"; \
+		exit 1; \
+	fi
+	@echo "✅ Running setup validation..."
+	./setup-custom-certs.sh
+
+# Start with custom certificates
+custom-certs-start:
+	@echo "🚀 Starting Industrace with custom certificates..."
+	@if [ ! -f "custom-certs.env" ]; then \
+		echo "❌ custom-certs.env not found!"; \
+		echo "📋 Please run 'make custom-certs-setup' first"; \
+		exit 1; \
+	fi
+	docker-compose -f docker-compose.custom-certs.yml --env-file custom-certs.env up -d
+	@echo "✅ Services started with custom certificates!"
+	@echo "🌐 Access your application at: https://$(grep DOMAIN custom-certs.env | cut -d= -f2)"
+
+# Stop custom certificates deployment
+custom-certs-stop:
+	@echo "🛑 Stopping custom certificates deployment..."
+	docker-compose -f docker-compose.custom-certs.yml --env-file custom-certs.env down
+
+# Show custom certificates logs
+custom-certs-logs:
+	@echo "📋 Showing custom certificates logs..."
+	docker-compose -f docker-compose.custom-certs.yml --env-file custom-certs.env logs -f
+
+# Nginx custom certificates commands
+nginx-certs-setup:
+	@echo "🔐 Setting up nginx custom certificates deployment..."
+	@if [ ! -f custom-certs.env ]; then \
+		echo "❌ Error: custom-certs.env not found. Please copy from custom-certs.env.example and configure."; \
+		exit 1; \
+	fi
+	./setup-custom-certs.sh
+
+nginx-certs-start:
+	@echo "🚀 Starting Industrace with nginx custom certificates..."
+	@if [ ! -f custom-certs.env ]; then \
+		echo "❌ Error: custom-certs.env not found. Please copy from custom-certs.env.example and configure."; \
+		exit 1; \
+	fi
+	docker-compose -f docker-compose.nginx-custom-certs.yml --env-file custom-certs.env up -d
+	@echo "✅ Services started with nginx custom certificates!"
+	@echo "🌐 Access your application at: https://$(grep DOMAIN custom-certs.env | cut -d= -f2)"
+
+nginx-certs-stop:
+	@echo "🛑 Stopping nginx custom certificates deployment..."
+	docker-compose -f docker-compose.nginx-custom-certs.yml --env-file custom-certs.env down
+
+nginx-certs-logs:
+	@echo "📋 Showing nginx custom certificates logs..."
+	docker-compose -f docker-compose.nginx-custom-certs.yml --env-file custom-certs.env logs -f 

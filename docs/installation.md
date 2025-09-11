@@ -31,23 +31,39 @@ git clone https://github.com/industrace/industrace.git
 cd industrace
 ```
 
-#### Step 2: Configure Environment
-```bash
-# Copy environment template
-cp production.env.example .env
+#### Step 2: Choose Your Deployment Type
 
-# Edit configuration (optional)
-nano .env
-```
-
-#### Step 3: Initialize the System
+##### **Development** (Recommended for first time)
 ```bash
-# Initialize system with demo data (recommended for first time)
+# Initialize system with demo data
 make init
 
-# Or for production deployment
+# Or just start development environment
+make dev
+```
+- **Frontend**: http://localhost:5173
+- **Backend**: http://localhost:8000/docs
+- **Features**: Hot-reload, debug mode, automatic demo data
+
+##### **Production** (HTTPS with Traefik)
+```bash
+# Start production with Traefik + Let's Encrypt
 make prod
 ```
+- **Application**: https://industrace.local
+- **Traefik Dashboard**: http://localhost:8080
+- **Features**: SSL certificates, optimized builds, production security
+
+##### **Custom Certificates** (HTTPS with Nginx)
+```bash
+# Setup custom certificates
+make custom-certs-setup
+
+# Start with custom certificates
+make custom-certs-start
+```
+- **Application**: https://yourdomain.com
+- **Features**: Custom SSL certificates, production security
 
 #### Step 4: Verify Installation
 ```bash

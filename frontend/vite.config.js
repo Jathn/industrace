@@ -12,9 +12,11 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5173,
+    allowedHosts: ['industrace.local', 'www.industrace.local', 'localhost']
   },
   build: {
-    chunkSizeWarningLimit: 1000
+    chunkSizeWarningLimit: 1000,
+    assetsDir: 'static'
   },
   optimizeDeps: {
     include: ['vis-network']

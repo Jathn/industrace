@@ -17,6 +17,12 @@ Industrace v1.0.0 represents the first stable release of the Configuration Manag
 
 ### Key Features
 
+#### Multi-Deployment Support
+- **Development**: Vite dev server with hot-reload
+- **Production**: Traefik + Let's Encrypt for automatic SSL
+- **Custom Certificates**: Nginx + custom SSL certificates
+- **Automatic Configuration**: CORS, cookies, and security settings
+
 #### Multi-Tenant Architecture
 - Complete tenant isolation with secure data separation
 - Tenant-specific user and role management

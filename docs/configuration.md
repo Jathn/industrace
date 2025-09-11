@@ -4,16 +4,41 @@ This guide explains how to configure Industrace for different environments and u
 
 ## Environment Configuration
 
+### Deployment Types
+
+Industrace supports three deployment scenarios with automatic configuration:
+
+#### **Development** (Recommended for first time)
+- **Frontend**: http://localhost:5173 (Vite dev server)
+- **Backend**: http://localhost:8000 (FastAPI)
+- **CORS**: Configurato per localhost
+- **Cookies**: Insecure (development)
+- **Proxy**: Vite dev server
+
+#### **Production** (HTTPS with Traefik)
+- **Frontend**: https://industrace.local (Traefik)
+- **Backend**: https://industrace.local/api (Traefik proxy)
+- **CORS**: Configurato per dominio di produzione
+- **Cookies**: Secure, SameSite=strict
+- **Proxy**: Traefik + Let's Encrypt
+
+#### **Custom Certificates** (HTTPS with Nginx)
+- **Frontend**: https://yourdomain.com (nginx)
+- **Backend**: https://yourdomain.com/api (nginx proxy)
+- **CORS**: Configurato per dominio personalizzato
+- **Cookies**: Secure, SameSite=strict
+- **Proxy**: Nginx + Custom certificates
+
 ### Environment Variables
 
-Industrace uses environment variables for configuration. Copy the template and customize it:
+Industrace uses environment variables for configuration. The system automatically manages these based on your deployment type:
 
 ```bash
-# Copy template
-cp production.env.example production.env
+# Show current configuration
+make config
 
-# Edit configuration
-nano production.env
+# Show Traefik information
+make traefik
 ```
 
 ### Core Configuration

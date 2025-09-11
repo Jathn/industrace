@@ -3,7 +3,7 @@
     <div class="footer-content">
       <div class="footer-section">
         <div class="footer-brand">
-          <img src="@/assets/logo_besafe.png" alt="BeSafe logo" class="besafe-logo" />
+          <img src="@/static/logo_besafe.png" alt="BeSafe logo" class="besafe-logo" />
           <div class="brand-info">
             <span class="powered-by">{{ $t('common.footer.powered_by') }}</span>
             <a :href="appConfig.links.website" target="_blank" rel="noopener" class="besafe-link">

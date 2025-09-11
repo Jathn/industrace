@@ -339,11 +339,11 @@ const loadDashboardData = async () => {
 
     // Carica asset a rischio
     const riskyRes = await api.getRiskyAssets(5)
-    riskyAssets.value = riskyRes.data
+    riskyAssets.value = Array.isArray(riskyRes.data) ? riskyRes.data : []
 
     // Carica ultimi asset
     const recentRes = await api.getAssets({ limit: 5 })
-    recentAssets.value = recentRes.data
+    recentAssets.value = Array.isArray(recentRes.data) ? recentRes.data : []
 
     // Prepara dati per i grafici
     prepareChartData()
@@ -362,7 +362,7 @@ const prepareChartData = () => {
   chartKey.value++
   
   // Grafico asset per tipo
-  if (stats.value.type_stats && stats.value.type_stats.length > 0) {
+  if (stats.value.type_stats && Array.isArray(stats.value.type_stats) && stats.value.type_stats.length > 0) {
     // Filtra solo i tipi con asset_count > 0
     const validTypes = stats.value.type_stats.filter(t => t.asset_count > 0)
     
@@ -383,10 +383,12 @@ const prepareChartData = () => {
     } else {
       assetTypeChartData.value = { labels: [], datasets: [] }
     }
+  } else {
+    assetTypeChartData.value = { labels: [], datasets: [] }
   }
 
   // Grafico asset per stato
-  if (stats.value.status_stats && stats.value.status_stats.length > 0) {
+  if (stats.value.status_stats && Array.isArray(stats.value.status_stats) && stats.value.status_stats.length > 0) {
     statusChartData.value = {
       labels: stats.value.status_stats.map(s => s.name),
       datasets: [{
@@ -397,6 +399,8 @@ const prepareChartData = () => {
         borderColor: '#fff'
       }]
     }
+  } else {
+    statusChartData.value = { labels: [], datasets: [] }
   }
 }
 </script>

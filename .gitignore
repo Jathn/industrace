@@ -64,6 +64,17 @@ logs/
 # Uploads (test data)
 uploads/
 
+# Test certificates
+test-certs/
+
+# Temporary environment files
+.env.dev
+.env.prod
+.env.custom
+
+# Custom certificates configuration (contains local paths)
+custom-certs.env
+
 # Documentation temporary files
 docs/images/temp/
 docs/images/*.tmp

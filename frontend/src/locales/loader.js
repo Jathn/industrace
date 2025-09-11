@@ -85,9 +85,25 @@ import itAssetDetail from './it/assetDetail.json'
 import itRiskBreakdown from './it/riskBreakdown.json'
 import itAssetForm from './it/assetForm.json'
 
-// Load all translation files with namespace structure
+// Helper function to flatten nested objects
+const flattenObject = (obj, prefix = '') => {
+  const flattened = {}
+  for (const key in obj) {
+    if (obj.hasOwnProperty(key)) {
+      const newKey = prefix ? `${prefix}.${key}` : key
+      if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
+        Object.assign(flattened, flattenObject(obj[key], newKey))
+      } else {
+        flattened[newKey] = obj[key]
+      }
+    }
+  }
+  return flattened
+}
+
+// Load all translation files with flattened structure
 const messages = {
-  en: {
+  en: flattenObject({
     common: enCommon,
     assets: enAssets,
     users: enUsers,
@@ -125,10 +141,9 @@ const messages = {
     print: enPrint,
     login: enLogin,
     networkMap: enNetworkMap,
-    floorplanPositioning: enFloorplanPositioning,
-    suppliers: enSuppliers
-  },
-  it: {
+    floorplanPositioning: enFloorplanPositioning
+  }),
+  it: flattenObject({
     common: itCommon,
     assets: itAssets,
     users: itUsers,
@@ -166,9 +181,8 @@ const messages = {
     print: itPrint,
     login: itLogin,
     networkMap: itNetworkMap,
-    floorplanPositioning: itFloorplanPositioning,
-    suppliers: itSuppliers
-  }
+    floorplanPositioning: itFloorplanPositioning
+  })
 }
 
 // Get user's preferred language from localStorage or browser
@@ -188,9 +202,10 @@ const getUserLanguage = () => {
     }
   }
   
-  // Default to English
-  return 'en'
+  // Default to Italian for this project
+  return 'it'
 }
+
 
 // Create i18n instance
 export const i18n = createI18n({

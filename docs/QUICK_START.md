@@ -6,7 +6,8 @@
 
 - Docker and Docker Compose installed
 - Git installed
-- Port 80 available on your system
+- Port 80 and 443 available on your system (for production)
+- Port 5173 and 8000 available on your system (for development)
 
 ## Quick Installation
 
@@ -17,72 +18,74 @@ git clone https://github.com/industrace/industrace.git
 cd industrace
 ```
 
-### 2. Configure Environment
+### 2. Choose Your Deployment Type
 
-Copy the example configuration file:
+Industrace supports three deployment scenarios:
 
+#### **Development** (Recommended for first time)
+- **Frontend**: http://localhost:5173 (Vite dev server)
+- **Backend**: http://localhost:8000 (FastAPI)
+- **Features**: Hot-reload, debug mode, automatic demo data
+- **No configuration needed!**
+
+#### **Production** (HTTPS with Traefik)
+- **Frontend**: https://industrace.local (Traefik + Let's Encrypt)
+- **Backend**: https://industrace.local/api (Traefik proxy)
+- **Features**: SSL certificates, optimized builds, production security
+- **Requires**: Domain configuration
+
+#### **Custom Certificates** (HTTPS with Nginx)
+- **Frontend**: https://yourdomain.com (Nginx + custom certificates)
+- **Backend**: https://yourdomain.com/api (Nginx proxy)
+- **Features**: Custom SSL certificates, production security
+- **Requires**: Custom certificates and domain configuration
+
+### 3. Start the System
+
+#### **Development** (Recommended for first time)
 ```bash
-cp production.env.example .env
-```
-
-### 3. Edit Configuration (2 minutes)
-
-Open `.env` and modify **only** these lines:
-
-```bash
-# === MODIFY THESE LINES ===
-DB_PASSWORD=your_secure_password_here
-
-# JWT Configuration
-SECRET_KEY=your-super-secure-secret-key-change-this-in-production
-
-# Your server domain (required)
-DOMAIN=yourdomain.com
-# or for local testing:
-# DOMAIN=localhost
-
-# Email for first admin (required)
-ADMIN_EMAIL=admin@yourdomain.com
-
-# === END MODIFICATIONS ===
-```
-
-**Note**: Replace `yourdomain.com` with your actual domain or use `localhost` for local testing.
-
-**Important**: After creating the `.env` file, you'll also need to update the domain references in `docker-compose.prod.yml` to match your actual domain.
-
-### 3.5. Update Docker Compose (if using custom domain)
-
-If you're using a custom domain (not localhost), you need to update the domain references in `docker-compose.prod.yml`:
-
-```bash
-# Replace all occurrences of 'yourdomain.com' with your actual domain
-sed -i 's/yourdomain.com/your-actual-domain.com/g' docker-compose.prod.yml
-```
-
-### 4. Start the System
-
-**For local development (recommended for first time):**
-```bash
+# Initialize with demo data
 make init
+
+# Or just start development environment
+make dev
 ```
 
-**For production deployment:**
+#### **Production** (HTTPS with Traefik)
 ```bash
+# Start production with Traefik + Let's Encrypt
 make prod
+```
+
+#### **Custom Certificates** (HTTPS with Nginx)
+```bash
+# Setup custom certificates
+make custom-certs-setup
+
+# Start with custom certificates
+make custom-certs-start
 ```
 
 ### Configuration Differences
 
-- **Development** (`make init`): Direct port access, no SSL, hot reload, automatic demo data
-- **Production** (`make prod`): Traefik reverse proxy, SSL certificates, optimized builds
+- **Development** (`make dev`): Vite dev server, direct port access, hot reload, automatic demo data
+- **Production** (`make prod`): Traefik reverse proxy, Let's Encrypt SSL, optimized builds
+- **Custom Certs** (`make custom-certs-start`): Nginx reverse proxy, custom SSL certificates
 
-### 5. Verify Installation
+### 4. Verify Installation
 
 Open your browser and go to:
-- **http://localhost:5173** (for local development - Frontend)
-- **http://localhost:8000/docs** (for local development - API Documentation)
-- **http://yourdomain.com** (for production deployment)
+
+#### **Development**
+- **Frontend**: http://localhost:5173
+- **Backend API**: http://localhost:8000/docs
+
+#### **Production**
+- **Application**: https://industrace.local
+- **Traefik Dashboard**: http://localhost:8080
+
+#### **Custom Certificates**
+- **Application**: https://yourdomain.com
 
 ## First Access
 
@@ -110,11 +113,13 @@ Open your browser and go to:
 
 ```
 industrace/
-├── .env                    # ← MODIFY HERE (copy from production.env.example)
-├── docker-compose.prod.yml # ← DON'T TOUCH
-├── Makefile               # ← NEW: Simplified commands
-├── backend/                # ← DON'T TOUCH
-└── frontend/               # ← DON'T TOUCH
+├── Makefile                    # ← NEW: Simplified commands
+├── docker-compose.yml          # ← Production (Traefik)
+├── docker-compose.dev.yml      # ← Development
+├── docker-compose.custom-certs.yml # ← Custom certificates
+├── custom-certs.env            # ← Custom certificates config
+├── backend/                    # ← Backend application
+└── frontend/                   # ← Frontend application
 ```
 
 ## Useful Commands
@@ -145,7 +150,7 @@ make status
 
 ### Production Commands
 ```bash
-# Start production system
+# Start production system (Traefik + Let's Encrypt)
 make prod
 
 # Stop production system
@@ -164,6 +169,21 @@ make build
 make rebuild
 ```
 
+### Custom Certificates Commands
+```bash
+# Setup custom certificates
+make custom-certs-setup
+
+# Start with custom certificates
+make custom-certs-start
+
+# Stop custom certificates deployment
+make custom-certs-stop
+
+# View custom certificates logs
+make custom-certs-logs
+```
+
 ### Additional Commands
 ```bash
 # Add demo data to existing system
@@ -180,6 +200,12 @@ make migrate
 
 # Reset database
 make reset-db
+
+# Show configuration information
+make config
+
+# Show Traefik dashboard information
+make traefik
 
 # Show all available commands
 make help

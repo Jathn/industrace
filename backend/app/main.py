@@ -362,7 +362,7 @@ def read_root():
     return {"message": "Industrace API", "version": "1.0.0"}
 
 
-@app.get("/api/health")
+@app.get("/health")
 def health_check():
     """Health check endpoint"""
     from datetime import datetime
@@ -374,7 +374,7 @@ def health_check():
     }
 
 
-@app.post("/api/admin/seed-demo-data")
+@app.post("/admin/seed-demo-data")
 def seed_demo_data_endpoint(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)

@@ -3,7 +3,7 @@
     <div class="setup-container">
       <!-- Header -->
       <div class="setup-header">
-        <img src="@/assets/logo.png" alt="Industrace" class="logo" />
+        <img src="@/static/logo.png" alt="Industrace" class="logo" />
         <h1>{{ t('setup.welcome') }}</h1>
         <p>{{ t('setup.description') }}</p>
       </div>

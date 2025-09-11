@@ -6,10 +6,17 @@ This roadmap outlines the development path for Industrace, the Configuration Man
 
 ## Current Priorities
 
+### Multi-Deployment Support ✅
+- **Development**: Vite dev server with hot-reload
+- **Production**: Traefik + Let's Encrypt for automatic SSL
+- **Custom Certificates**: Nginx + custom SSL certificates
+- **Automatic Configuration**: CORS, cookies, and security settings
+
 ### Documentation and Support
 - Complete user documentation
 - Installation and configuration guides
 - FAQ and troubleshooting
+- Multi-deployment documentation
 
 ### Security Enhancements
 - Multi-Factor Authentication (MFA) implementation

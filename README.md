@@ -93,10 +93,12 @@ Born in Italy, Industrace combines European attention to industrial processes wi
 - Docker and Docker Compose
 - 4GB RAM minimum (8GB recommended)
 - 20GB disk space minimum
+- Port 80 and 443 available (for production)
+- Port 5173 and 8000 available (for development)
 
 ### Installation
 
-#### Option 1: Automatic Initialization (Recommended)
+#### **Development** (Recommended for first time)
 ```bash
 # Clone the repository
 git clone https://github.com/industrace/industrace.git
@@ -107,6 +109,27 @@ make init
 
 # Access the application
 open http://localhost:5173
+```
+
+#### **Production** (HTTPS with Traefik)
+```bash
+# Start production with Traefik + Let's Encrypt
+make prod
+
+# Access the application
+open https://industrace.local
+```
+
+#### **Custom Certificates** (HTTPS with Nginx)
+```bash
+# Setup custom certificates
+make custom-certs-setup
+
+# Start with custom certificates
+make custom-certs-start
+
+# Access the application
+open https://yourdomain.com
 ```
 
 #### Option 2: Manual Setup
@@ -168,6 +191,7 @@ Complete documentation is available in the [docs](docs/) directory:
 - [Development Guide](docs/development.md) - Development setup and guidelines
 - [Administration Guide](docs/administration.md) - System administration
 - [Security Guide](docs/security.md) - Security best practices
+- [Custom Certificates](docs/custom-certificates.md) - Deploy with internal CA certificates
 - [Troubleshooting](docs/troubleshooting.md) - Common issues and solutions
 
 ## 🔧 Development

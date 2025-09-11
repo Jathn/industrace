@@ -8,7 +8,7 @@
 <template>
   <nav :class="['modern-sidebar', { collapsed }]">
     <div class="sidebar-header">
-      <img src="/src/assets/industrace_square.png" alt="Industrace" class="logo" v-if="!collapsed" />
+      <img src="/src/static/industrace_square.png" alt="Industrace" class="logo" v-if="!collapsed" />
       <button class="collapse-btn" @click="collapsed = !collapsed">
         <i :class="collapsed ? 'pi pi-angle-right' : 'pi pi-angle-left'"></i>
       </button>

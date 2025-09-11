@@ -4,11 +4,25 @@ Industrace provides a comprehensive REST API built with FastAPI and OpenAPI stan
 
 ## API Overview
 
+### Development Environment
 - **Base URL**: `http://localhost:8000`
 - **OpenAPI Documentation**: `http://localhost:8000/docs`
 - **ReDoc Documentation**: `http://localhost:8000/redoc`
 - **OpenAPI JSON**: `http://localhost:8000/openapi.json`
-- **Version**: 1.0.0
+
+### Production Environment
+- **Base URL**: `https://industrace.local/api`
+- **OpenAPI Documentation**: `https://industrace.local/api/docs`
+- **ReDoc Documentation**: `https://industrace.local/api/redoc`
+- **OpenAPI JSON**: `https://industrace.local/api/openapi.json`
+
+### Custom Certificates Environment
+- **Base URL**: `https://yourdomain.com/api`
+- **OpenAPI Documentation**: `https://yourdomain.com/api/docs`
+- **ReDoc Documentation**: `https://yourdomain.com/api/redoc`
+- **OpenAPI JSON**: `https://yourdomain.com/api/openapi.json`
+
+**Version**: 1.0.0
 
 ## Authentication
 

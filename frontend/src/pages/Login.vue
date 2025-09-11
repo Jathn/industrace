@@ -11,7 +11,7 @@
       <!-- Logo e titolo -->
       <div class="login-brand">
         <div class="logo-container">
-          <img src="/src/assets/logo_black.png" alt="Industrace" class="login-logo" />
+          <img src="/src/static/logo_black.png" alt="Industrace" class="login-logo" />
           <div class="logo-glow"></div>
         </div>
         <h1 class="brand-title">{{ $t('common.loginTitle') }}</h1>
@@ -129,6 +129,7 @@ const toast = useToast()
 const authStore = useAuthStore()
 const router = useRouter()
 const { t } = useI18n()
+
 
 // Validazione form
 const isFormValid = computed(() => {

@@ -21,14 +21,14 @@ import router from './router'
 import 'primevue/resources/themes/saga-blue/theme.css'
 import 'primevue/resources/primevue.min.css'
 import 'primeicons/primeicons.css'
-import './assets/main.css'
+import './static/main.css'
 import '@vueup/vue-quill/dist/vue-quill.snow.css';
 
 const app = createApp(App)
 const pinia = createPinia()
 pinia.use(piniaPersistedState)
 
-import i18n from './locales/loader.js'
+import { i18n } from './locales/loader.js'
 
 app.use(createPinia())
 app.use(router)

@@ -159,5 +159,7 @@
     "medium": "Medium",
     "high": "High",
     "critical": "Critical"
-  }
+  },
+  "totalAssets": "Total assets: {count}",
+  "filteredAssets": "Filtered assets: {filtered} of {total}"
 }
