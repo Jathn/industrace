@@ -12,7 +12,8 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     port: 5173,
-    allowedHosts: ['industrace.local', 'www.industrace.local', 'localhost']
+    allowedHosts: ['industrace.local', 'www.industrace.local', 'localhost'],
+    hmr: false
   },
   build: {
     chunkSizeWarningLimit: 1000,

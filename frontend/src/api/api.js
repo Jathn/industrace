@@ -93,7 +93,7 @@ export default {
   },
 
   createLocation(formData) {
-    return api.post(`/locations/`, formData)
+    return api.post(`/locations`, formData)
   },
   uploadFloorplan(locationId, formData) {
     return api.post(`/locations/${locationId}/floorplan`, formData)
