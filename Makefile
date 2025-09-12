@@ -269,44 +269,9 @@ custom-certs-start:
 # Stop custom certificates deployment
 custom-certs-stop:
 	@echo "🛑 Stopping custom certificates deployment..."
-<<<<<<< HEAD
 	docker-compose -f docker-compose.custom-certs.yml --env-file custom-certs.env down
-=======
-	docker-compose -f docker-compose.custom-certs.yml down
->>>>>>> 1951557ba3a5e9d4daabfa91a49acece3d64df60
 
 # Show custom certificates logs
 custom-certs-logs:
 	@echo "📋 Showing custom certificates logs..."
-<<<<<<< HEAD
 	docker-compose -f docker-compose.custom-certs.yml --env-file custom-certs.env logs -f
-
-# Nginx custom certificates commands
-nginx-certs-setup:
-	@echo "🔐 Setting up nginx custom certificates deployment..."
-	@if [ ! -f custom-certs.env ]; then \
-		echo "❌ Error: custom-certs.env not found. Please copy from custom-certs.env.example and configure."; \
-		exit 1; \
-	fi
-	./setup-custom-certs.sh
-
-nginx-certs-start:
-	@echo "🚀 Starting Industrace with nginx custom certificates..."
-	@if [ ! -f custom-certs.env ]; then \
-		echo "❌ Error: custom-certs.env not found. Please copy from custom-certs.env.example and configure."; \
-		exit 1; \
-	fi
-	docker-compose -f docker-compose.nginx-custom-certs.yml --env-file custom-certs.env up -d
-	@echo "✅ Services started with nginx custom certificates!"
-	@echo "🌐 Access your application at: https://$(grep DOMAIN custom-certs.env | cut -d= -f2)"
-
-nginx-certs-stop:
-	@echo "🛑 Stopping nginx custom certificates deployment..."
-	docker-compose -f docker-compose.nginx-custom-certs.yml --env-file custom-certs.env down
-
-nginx-certs-logs:
-	@echo "📋 Showing nginx custom certificates logs..."
-	docker-compose -f docker-compose.nginx-custom-certs.yml --env-file custom-certs.env logs -f 
-=======
-	docker-compose -f docker-compose.custom-certs.yml logs -f 
->>>>>>> 1951557ba3a5e9d4daabfa91a49acece3d64df60
