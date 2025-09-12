@@ -30,6 +30,9 @@ help:
 	@echo ""
 	@echo "🏗️  Tenant Management:"
 	@echo "  make create-tenant TENANT_NAME=\"My Company\" TENANT_SLUG=\"my-company\" ADMIN_EMAIL=\"admin@mycompany.com\" ADMIN_PASSWORD=\"pass\""
+	@echo "  make reset-admin-password TENANT_SLUG=\"my-company\" ADMIN_EMAIL=\"admin@mycompany.com\""
+	@echo "  make list-tenants - List all available tenants"
+	@echo "  make list-admins TENANT_SLUG=\"my-company\" - List admin users in tenant"
 	@echo ""
 
 # Initialize system with demo data
@@ -231,12 +234,23 @@ create-tenant:
 		echo "Example: make create-tenant TENANT_NAME=\"My Company\" TENANT_SLUG=\"my-company\" ADMIN_EMAIL=\"admin@mycompany.com\""; \
 		exit 1; \
 	fi
-	docker-compose -f docker-compose.dev.yml exec backend python -m app.init_tenant "$(TENANT_NAME)" "$(TENANT_SLUG)" "$(ADMIN_EMAIL)" "$(ADMIN_PASSWORD)" "$(ADMIN_NAME)"
+	@if [ -z "$(ADMIN_PASSWORD)" ]; then \
+		echo "🔐 No password provided, generating secure password..."; \
+		PASSWORD=$$(openssl rand -base64 12 | tr -d "=+/" | cut -c1-12); \
+		echo "Generated password: $$PASSWORD"; \
+		docker-compose -f docker-compose.dev.yml exec backend python -m app.init_tenant "$(TENANT_NAME)" "$(TENANT_SLUG)" "$(ADMIN_EMAIL)" "$$PASSWORD" "$(ADMIN_NAME)"; \
+	else \
+		echo "🔐 Using provided password..."; \
+		docker-compose -f docker-compose.dev.yml exec backend python -m app.init_tenant "$(TENANT_NAME)" "$(TENANT_SLUG)" "$(ADMIN_EMAIL)" "$(ADMIN_PASSWORD)" "$(ADMIN_NAME)"; \
+	fi
 
 # Create tenant with default values
 create-tenant-default:
 	@echo "🏗️  Creating tenant with default values..."
-	docker-compose -f docker-compose.dev.yml exec backend python -m app.init_tenant "Nuovo Tenant" "nuovo-tenant" "admin@example.com"
+	@echo "🔐 Generating secure password..."
+	@PASSWORD=$$(openssl rand -base64 12 | tr -d "=+/" | cut -c1-12); \
+	echo "Generated password: $$PASSWORD"; \
+	docker-compose -f docker-compose.dev.yml exec backend python -m app.init_tenant "Nuovo Tenant" "nuovo-tenant" "admin@example.com" "$$PASSWORD"
 
 # Custom Certificates Commands
 # ============================
@@ -275,3 +289,36 @@ custom-certs-stop:
 custom-certs-logs:
 	@echo "📋 Showing custom certificates logs..."
 	docker-compose -f docker-compose.custom-certs.yml --env-file custom-certs.env logs -f
+
+# Reset admin password
+reset-admin-password:
+	@echo "🔐 Resetting admin password..."
+	@if [ -z "$(TENANT_SLUG)" ] || [ -z "$(ADMIN_EMAIL)" ]; then \
+		echo "❌ Please provide TENANT_SLUG and ADMIN_EMAIL parameters"; \
+		echo "Example: make reset-admin-password TENANT_SLUG=\"my-company\" ADMIN_EMAIL=\"admin@mycompany.com\""; \
+		exit 1; \
+	fi
+	@if [ -z "$(NEW_PASSWORD)" ]; then \
+		echo "🔐 No new password provided, generating secure password..."; \
+		PASSWORD=$$(openssl rand -base64 12 | tr -d "=+/" | cut -c1-12); \
+		echo "Generated password: $$PASSWORD"; \
+		docker-compose -f docker-compose.dev.yml exec backend python -m app.reset_admin_password "$(TENANT_SLUG)" "$(ADMIN_EMAIL)" "$$PASSWORD"; \
+	else \
+		echo "🔐 Using provided password..."; \
+		docker-compose -f docker-compose.dev.yml exec backend python -m app.reset_admin_password "$(TENANT_SLUG)" "$(ADMIN_EMAIL)" "$(NEW_PASSWORD)"; \
+	fi
+
+# List all tenants
+list-tenants:
+	@echo "🏢 Listing all tenants..."
+	docker-compose -f docker-compose.dev.yml exec backend python -m app.reset_admin_password list-tenants
+
+# List admin users in a tenant
+list-admins:
+	@echo "👤 Listing admin users in tenant..."
+	@if [ -z "$(TENANT_SLUG)" ]; then \
+		echo "❌ Please provide TENANT_SLUG parameter"; \
+		echo "Example: make list-admins TENANT_SLUG=\"my-company\""; \
+		exit 1; \
+	fi
+	docker-compose -f docker-compose.dev.yml exec backend python -m app.reset_admin_password list-admins "$(TENANT_SLUG)"
