@@ -1,6 +1,8 @@
-# backend/app/reset_admin_password.py
+# backend/app/reset_password.py
 
 import sys
+import secrets
+import string
 from app.database import SessionLocal
 from app.models import User, Tenant
 from app.services.auth import get_password_hash
@@ -41,8 +43,6 @@ def reset_admin_password(tenant_slug, admin_email, new_password=None):
         
         # 3. Generate new password if not provided
         if not new_password:
-            import secrets
-            import string
             # Generate a secure 12-character password
             alphabet = string.ascii_letters + string.digits + "!@#$%^&*"
             new_password = ''.join(secrets.choice(alphabet) for _ in range(12))
@@ -112,17 +112,17 @@ def list_admin_users(tenant_slug):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 3:
+    if len(sys.argv) < 2:
         print("Usage:")
-        print("  python reset_admin_password.py <tenant_slug> <admin_email> [new_password]")
-        print("  python reset_admin_password.py list-tenants")
-        print("  python reset_admin_password.py list-admins <tenant_slug>")
+        print("  python reset_password.py reset <tenant_slug> <admin_email> [new_password]")
+        print("  python reset_password.py list-tenants")
+        print("  python reset_password.py list-admins <tenant_slug>")
         print("")
         print("Examples:")
-        print("  python reset_admin_password.py my-company admin@mycompany.com")
-        print("  python reset_admin_password.py my-company admin@mycompany.com MyNewPassword123")
-        print("  python reset_admin_password.py list-tenants")
-        print("  python reset_admin_password.py list-admins my-company")
+        print("  python reset_password.py reset my-company admin@mycompany.com")
+        print("  python reset_password.py reset my-company admin@mycompany.com MyNewPassword123")
+        print("  python reset_password.py list-tenants")
+        print("  python reset_password.py list-admins my-company")
         sys.exit(1)
     
     command = sys.argv[1]
@@ -135,11 +135,13 @@ if __name__ == "__main__":
             sys.exit(1)
         tenant_slug = sys.argv[2]
         list_admin_users(tenant_slug)
-    else:
-        # Reset password command
-        tenant_slug = sys.argv[1]
-        admin_email = sys.argv[2]
-        new_password = sys.argv[3] if len(sys.argv) > 3 else None
+    elif command == "reset":
+        if len(sys.argv) < 4:
+            print("❌ Please provide tenant_slug and admin_email")
+            sys.exit(1)
+        tenant_slug = sys.argv[2]
+        admin_email = sys.argv[3]
+        new_password = sys.argv[4] if len(sys.argv) > 4 else None
         
         success, message, password = reset_admin_password(tenant_slug, admin_email, new_password)
         print(message)
@@ -147,3 +149,6 @@ if __name__ == "__main__":
         if success and password:
             print(f"🔐 New password: {password}")
             print(f"💾 Save this password securely!")
+    else:
+        print(f"❌ Unknown command: {command}")
+        sys.exit(1)

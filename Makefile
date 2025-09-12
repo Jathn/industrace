@@ -300,18 +300,16 @@ reset-admin-password:
 	fi
 	@if [ -z "$(NEW_PASSWORD)" ]; then \
 		echo "🔐 No new password provided, generating secure password..."; \
-		PASSWORD=$$(openssl rand -base64 12 | tr -d "=+/" | cut -c1-12); \
-		echo "Generated password: $$PASSWORD"; \
-		docker-compose -f docker-compose.dev.yml exec backend python -m app.reset_admin_password "$(TENANT_SLUG)" "$(ADMIN_EMAIL)" "$$PASSWORD"; \
+		docker-compose -f docker-compose.dev.yml exec backend python app/reset_password.py reset "$(TENANT_SLUG)" "$(ADMIN_EMAIL)"; \
 	else \
 		echo "🔐 Using provided password..."; \
-		docker-compose -f docker-compose.dev.yml exec backend python -m app.reset_admin_password "$(TENANT_SLUG)" "$(ADMIN_EMAIL)" "$(NEW_PASSWORD)"; \
+		docker-compose -f docker-compose.dev.yml exec backend python app/reset_password.py reset "$(TENANT_SLUG)" "$(ADMIN_EMAIL)" "$(NEW_PASSWORD)"; \
 	fi
 
 # List all tenants
 list-tenants:
 	@echo "🏢 Listing all tenants..."
-	docker-compose -f docker-compose.dev.yml exec backend python -m app.reset_admin_password list-tenants
+	docker-compose -f docker-compose.dev.yml exec backend python app/reset_password.py list-tenants
 
 # List admin users in a tenant
 list-admins:
@@ -321,4 +319,4 @@ list-admins:
 		echo "Example: make list-admins TENANT_SLUG=\"my-company\""; \
 		exit 1; \
 	fi
-	docker-compose -f docker-compose.dev.yml exec backend python -m app.reset_admin_password list-admins "$(TENANT_SLUG)"
+	docker-compose -f docker-compose.dev.yml exec backend python app/reset_password.py list-admins "$(TENANT_SLUG)"
