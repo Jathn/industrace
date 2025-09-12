@@ -71,13 +71,13 @@
     </div>
     <template #footer>
       <Button :label="t('common.cancel')" class="p-button-text" @click="$emit('close')" />
-      <Button :label="t('suppliers.supplierImport.confirm')" :disabled="!file || loading || (previewResult && previewResult.errors && previewResult.errors.length)" @click="confirmImport" />
+      <Button :label="t('suppliers.supplierImport.confirm')" :disabled="isConfirmDisabled" @click="confirmImport" />
     </template>
   </Dialog>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import Dialog from 'primevue/dialog'
 import Button from 'primevue/button'
@@ -113,6 +113,11 @@ const loading = ref(false)
 const error = ref('')
 const previewResult = ref(null)
 
+// Computed property per determinare se il pulsante deve essere disabilitato
+const isConfirmDisabled = computed(() => {
+  return !file.value || loading.value || (error.value && error.value.length > 0) || (previewResult.value && previewResult.value.errors && previewResult.value.errors.length > 0)
+})
+
 async function onFileChange(e) {
   error.value = ''
   previewResult.value = null
@@ -123,7 +128,15 @@ async function onFileChange(e) {
   try {
     const { data } = await api.previewSupplierImportXlsx(f)
     previewResult.value = data
-    error.value = (data.errors && data.errors.length) ? data.errors.map(e => `${t('supplierImport.row')} ${e.row}: ${e.error}`).join('\n') : ''
+    
+    // Gestisci errori di parsing del file
+    if (data.error) {
+      error.value = data.error
+    } else if (data.errors && data.errors.length) {
+      error.value = data.errors.map(e => `${t('supplierImport.row')} ${e.row}: ${e.error}`).join('\n')
+    } else {
+      error.value = ''
+    }
   } catch (e) {
     error.value = t('supplierImport.readError')
   }

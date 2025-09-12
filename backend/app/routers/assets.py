@@ -705,8 +705,6 @@ def import_assets_xlsx_preview(
     )
 
 
-@router.post("/import/xlsx/confirm")
-@audit_log_action("import_assets_xlsx_confirm", "Asset", model_class=Asset)
 def _validate_business_criticality(value):
     """Valida e pulisce il valore di business_criticality"""
     if not value or str(value).strip() in ["[NULL]", "NULL", ""]:
@@ -716,7 +714,9 @@ def _validate_business_criticality(value):
         return clean_value
     return None
 
+@router.post("/import/xlsx/confirm")
 def import_assets_xlsx_confirm(
+    request: Request,
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),

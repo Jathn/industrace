@@ -254,6 +254,29 @@ ls -la test-certs/
 docker-compose -f docker-compose.custom-certs.yml restart nginx
 ```
 
+### SPA Routing Issues
+
+#### F5 Refresh Returns JSON Instead of Page
+**Symptoms**: When refreshing the page (F5) on routes like `/assets`, `/sites`, etc., you get a JSON response instead of the Vue.js page.
+
+**Root Cause**: Nginx is routing browser requests to the backend API instead of the frontend SPA.
+
+**Solution**:
+```bash
+# Test the fix with the recommended method
+make custom-certs-start
+
+# Verify the fix works
+curl -k -I https://industrace.local/assets
+# Should return: Content-Type: text/html (not application/json)
+
+# Test API calls still work
+curl -k -H "Accept: application/json" -I https://industrace.local/assets
+# Should return: Content-Type: application/json
+```
+
+**Note**: This issue is automatically resolved in the current nginx configuration, which intelligently distinguishes between API calls and browser requests.
+
 ### General Issues
 
 #### Services Not Starting
