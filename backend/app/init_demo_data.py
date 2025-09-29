@@ -40,9 +40,28 @@ def seed_demo_data_python():
     editor_role = db.query(Role).filter_by(name="editor").first()
     viewer_role = db.query(Role).filter_by(name="viewer").first()
     
+    # Initialize asset types, statuses and manufacturers if they don't exist
+    from app.init_asset_types import setup_asset_types
+    from app.init_asset_statuses import setup_asset_statuses
+    from app.init_manufacturers import seed_manufacturers
+    
+    setup_asset_types(tenant.id)
+    setup_asset_statuses(tenant.id)
+    seed_manufacturers(tenant.id)
+    
     # Get asset types and statuses
     asset_types = db.query(AssetType).all()
     asset_statuses = db.query(AssetStatus).all()
+    
+    # Ensure we have at least one asset type and status
+    if not asset_types:
+        print("❌ No asset types found. Cannot create assets.")
+        db.close()
+        return
+    if not asset_statuses:
+        print("❌ No asset statuses found. Cannot create assets.")
+        db.close()
+        return
     
     # Create demo sites
     sites_data = [
@@ -321,7 +340,7 @@ def seed_demo_data_python():
             "name": "Quality Control Robot",
             "tag": "ROBOT-QC1",
             "description": "ABB IRB 1200 robot for quality inspection",
-            "asset_type": "Robot",
+            "asset_type": "Actuator",
             "manufacturer": "ABB",
             "model": "IRB 1200",
             "serial_number": "SN-ROBOT-QC1-001",
@@ -335,8 +354,8 @@ def seed_demo_data_python():
             "name": "Network Switch A",
             "tag": "SW-A1",
             "description": "Cisco Catalyst switch for production network",
-            "asset_type": "Network Device",
-            "manufacturer": "Cisco",
+            "asset_type": "Switch",
+            "manufacturer": "Siemens",
             "model": "Catalyst 2960",
             "serial_number": "SN-SW-A1-001",
             "location": "Control Room",
@@ -353,7 +372,7 @@ def seed_demo_data_python():
             "manufacturer": "Honeywell",
             "model": "T775",
             "serial_number": "SN-SENSOR-TEMP1-001",
-            "location": "Assembly Line A",
+            "location": "Control Panel A1",
             "risk_score": 3.0,
             "business_criticality": "low",
             "remote_access_type": "none",
@@ -364,7 +383,7 @@ def seed_demo_data_python():
             "tag": "SRV-PROD1",
             "description": "Production data collection and analysis server",
             "asset_type": "Server",
-            "manufacturer": "Dell",
+            "manufacturer": "Siemens",
             "model": "PowerEdge R740",
             "serial_number": "SN-SRV-PROD1-001",
             "location": "Control Room",
@@ -377,7 +396,7 @@ def seed_demo_data_python():
             "name": "Safety System Controller",
             "tag": "SAFETY-CTRL1",
             "description": "Emergency stop and safety monitoring system",
-            "asset_type": "Safety System",
+            "asset_type": "PLC",
             "manufacturer": "Schneider Electric",
             "model": "Modicon M580",
             "serial_number": "SN-SAFETY-CTRL1-001",
@@ -394,16 +413,33 @@ def seed_demo_data_python():
         existing_asset = db.query(Asset).filter_by(tag=asset_data["tag"], tenant_id=tenant.id).first()
         if not existing_asset:
             # Find the asset type
-            asset_type = next((at for at in asset_types if at.name.lower() == asset_data["asset_type"].lower()), asset_types[0] if asset_types else None)
+            asset_type = next((at for at in asset_types if at.name.lower() == asset_data["asset_type"].lower()), None)
+            if not asset_type and asset_types:
+                asset_type = asset_types[0]
+                print(f"⚠️  Asset type '{asset_data['asset_type']}' not found, using '{asset_type.name}' for asset '{asset_data['name']}'")
             
             # Find the manufacturer
-            manufacturer = next((m for m in manufacturers if m.name.lower() in asset_data["manufacturer"].lower()), manufacturers[0] if manufacturers else None)
+            manufacturer = next((m for m in manufacturers if m.name.lower() in asset_data["manufacturer"].lower()), None)
+            if not manufacturer and manufacturers:
+                manufacturer = manufacturers[0]
+                print(f"⚠️  Manufacturer '{asset_data['manufacturer']}' not found, using '{manufacturer.name}' for asset '{asset_data['name']}'")
             
             # Find the location
-            location = next((l for l in locations if l.name == asset_data["location"]), locations[0] if locations else None)
+            location = next((l for l in locations if l.name == asset_data["location"]), None)
+            if not location and locations:
+                location = locations[0]
+                print(f"⚠️  Location '{asset_data['location']}' not found, using '{location.name}' for asset '{asset_data['name']}'")
             
             # Get a random asset status
             asset_status = random.choice(asset_statuses) if asset_statuses else None
+            
+            # Ensure we have all required fields
+            if not asset_type:
+                print(f"❌ No asset type available for asset '{asset_data['name']}'. Skipping.")
+                continue
+            if not asset_status:
+                print(f"❌ No asset status available for asset '{asset_data['name']}'. Skipping.")
+                continue
             
             asset = Asset(
                 id=uuid.uuid4(),
@@ -411,14 +447,14 @@ def seed_demo_data_python():
                 name=asset_data["name"],
                 tag=asset_data["tag"],
                 description=asset_data["description"],
-                asset_type_id=asset_type.id if asset_type else None,
+                asset_type_id=asset_type.id,
                 manufacturer_id=manufacturer.id if manufacturer else None,
                 location_id=location.id if location else None,
                 site_id=location.site_id if location else None,
                 area_id=location.area_id if location else None,
                 model=asset_data["model"],
                 serial_number=asset_data["serial_number"],
-                status_id=asset_status.id if asset_status else None,
+                status_id=asset_status.id,
                 risk_score=asset_data["risk_score"],
                 business_criticality=asset_data["business_criticality"],
                 remote_access_type=asset_data["remote_access_type"],
