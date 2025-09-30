@@ -121,7 +121,7 @@ open https://localhost
 # This is normal for local development. Click 'Advanced' and 'Proceed'
 ```
 
-#### **Production Cloud** (HTTPS with Traefik + Let's Encrypt)
+#### **Production Cloud** (BETA mode - HTTPS with Traefik + Let's Encrypt) 
 ```bash
 # Start production with Traefik + Let's Encrypt
 make prod-cloud
@@ -130,7 +130,7 @@ make prod-cloud
 open https://industrace.local
 ```
 
-#### **Custom Certificates** (HTTPS with Nginx)
+#### **Custom Certificates** (BETA mode - HTTPS with Nginx)
 ```bash
 # Setup custom certificates
 make custom-certs-setup
@@ -209,9 +209,6 @@ Complete documentation is available in the [docs](docs/) directory:
 git clone https://github.com/industrace/industrace.git
 cd industrace
 
-# Start development environment
-make dev
-
 # Run tests
 make test
 
@@ -253,7 +250,6 @@ See the [LICENSE](LICENSE) file for details.
 
 - **Documentation**: [docs/](docs/)
 - **Issues**: [GitHub Issues](https://github.com/industrace/industrace/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/industrace/industrace/discussions)
 
 ## 📋 Changelog
 
