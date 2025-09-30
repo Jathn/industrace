@@ -33,22 +33,19 @@ cd industrace
 
 #### Step 2: Choose Your Deployment Type
 
-##### **Development** (Recommended for first time)
+##### **Production Local** (Recommended for first time)
 ```bash
-# Initialize system with demo data
-make init
-
-# Or just start development environment
-make dev
+# Start production with Nginx + self-signed certificates + auto-init DB
+make prod
 ```
-- **Frontend**: http://localhost:5173
-- **Backend**: http://localhost:8000/docs
-- **Features**: Hot-reload, debug mode, automatic demo data
+- **Application**: https://localhost
+- **Backend API**: https://localhost/api/docs
+- **Features**: SSL certificates, optimized builds, automatic demo data
 
-##### **Production** (HTTPS with Traefik)
+##### **Production Cloud** (HTTPS with Traefik)
 ```bash
 # Start production with Traefik + Let's Encrypt
-make prod
+make prod-cloud
 ```
 - **Application**: https://industrace.local
 - **Traefik Dashboard**: http://localhost:8080
@@ -75,11 +72,19 @@ make logs
 ```
 
 #### Step 5: Access the Application
-- **Frontend**: http://localhost:5173
-- **Backend API**: http://localhost:8000
-- **API Documentation**: http://localhost:8000/docs
 
-### Method 2: Development Setup
+##### **Production Local**
+- **Application**: https://localhost
+- **Backend API**: https://localhost/api/docs
+
+##### **Production Cloud**
+- **Application**: https://industrace.local
+- **Traefik Dashboard**: http://localhost:8080
+
+##### **Custom Certificates**
+- **Application**: https://yourdomain.com
+
+### Method 2: Development Setup (Advanced)
 
 #### Prerequisites
 - Python 3.9+
@@ -118,7 +123,7 @@ After installation, you can log in with:
 - **Password**: admin123
 
 ### Demo Data
-The system automatically populates with comprehensive demo data:
+The system automatically populates with comprehensive demo data when using `make prod` or `make prod-cloud`:
 - 3 Sites (Production Plant, R&D Center, Distribution Warehouse)
 - 12 Areas (Assembly Lines, Labs, Control Rooms, etc.)
 - 19 Locations (Control Panels, Quality Stations, etc.)
@@ -132,9 +137,8 @@ The system automatically populates with comprehensive demo data:
 
 ### Basic Commands
 ```bash
-make init      # Initialize system with demo data
-make dev       # Start development environment
-make prod      # Start production environment
+make prod      # Start production environment (Nginx + self-signed certificates + auto-init DB)
+make prod-cloud # Start production environment (Traefik + Let's Encrypt)
 make stop      # Stop all services
 make status    # Show service status
 make logs      # View logs
@@ -167,7 +171,7 @@ make info      # Show system information
 
 If you prefer to use Docker commands directly:
 
-### Development Environment
+### Development Environment (Advanced)
 ```bash
 # Start development environment
 docker-compose -f docker-compose.dev.yml up -d
@@ -182,9 +186,9 @@ docker-compose -f docker-compose.dev.yml logs -f
 docker-compose -f docker-compose.dev.yml restart
 ```
 
-### Production Environment
+### Production Local Environment
 ```bash
-# Start production system
+# Start production system (Nginx + self-signed certificates)
 docker-compose -f docker-compose.prod.yml up -d
 
 # Stop production system
@@ -195,6 +199,21 @@ docker-compose -f docker-compose.prod.yml logs -f
 
 # Restart production system
 docker-compose -f docker-compose.prod.yml restart
+```
+
+### Production Cloud Environment
+```bash
+# Start production system (Traefik + Let's Encrypt)
+docker-compose up -d
+
+# Stop production system
+docker-compose down
+
+# View production logs
+docker-compose logs -f
+
+# Restart production system
+docker-compose restart
 ```
 
 ## Troubleshooting
@@ -208,7 +227,7 @@ make logs
 
 # Clean and restart
 make clean
-make init
+make prod
 ```
 
 #### Demo data not loading
@@ -218,14 +237,14 @@ make demo
 
 # Or clean and reinitialize
 make clean
-make init
+make prod
 ```
 
 #### Port conflicts
 ```bash
 # Check what's using the ports
-sudo lsof -i :5173
-sudo lsof -i :8000
+sudo lsof -i :80
+sudo lsof -i :443
 sudo lsof -i :5432
 
 # Stop conflicting services

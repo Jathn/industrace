@@ -224,7 +224,7 @@ async function saveLocation(data) {
 }
 
 const getFloorplanThumbnailUrl = (floorplan) => {
-  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+  const baseUrl = '/api'
   return `${baseUrl}/locations/${floorplan.location_id}/floorplan/${floorplan.id}`
 }
 

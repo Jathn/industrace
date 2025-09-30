@@ -135,14 +135,14 @@ git clone <repository-url>
 cd industrace
 
 # Start application
-docker-compose up -d
+make prod
 
 # Access application
-open http://localhost:5173
+open https://localhost
 ```
 
 #### Default Credentials
-- **URL**: http://localhost:5173
+- **URL**: https://localhost
 - **Email**: admin@example.com
 - **Password**: admin123
 

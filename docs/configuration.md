@@ -6,16 +6,16 @@ This guide explains how to configure Industrace for different environments and u
 
 ### Deployment Types
 
-Industrace supports three deployment scenarios with automatic configuration:
+Industrace supports two main deployment scenarios with automatic configuration:
 
-#### **Development** (Recommended for first time)
-- **Frontend**: http://localhost:5173 (Vite dev server)
-- **Backend**: http://localhost:8000 (FastAPI)
-- **CORS**: Configurato per localhost
-- **Cookies**: Insecure (development)
-- **Proxy**: Vite dev server
+#### **Production Local** (Recommended for first time)
+- **Frontend**: https://localhost (Nginx + self-signed certificates)
+- **Backend**: https://localhost/api (Nginx proxy)
+- **CORS**: Configurato per localhost e industrace.local
+- **Cookies**: Secure, SameSite=strict
+- **Proxy**: Nginx + self-signed certificates
 
-#### **Production** (HTTPS with Traefik)
+#### **Production Cloud** (HTTPS with Traefik)
 - **Frontend**: https://industrace.local (Traefik)
 - **Backend**: https://industrace.local/api (Traefik proxy)
 - **CORS**: Configurato per dominio di produzione
@@ -130,14 +130,17 @@ LOG_LEVEL=DEBUG
 
 ### CORS Settings
 ```bash
-# Development CORS
-CORS_ORIGINS=http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173
+# Production Local CORS
+CORS_ORIGINS=https://localhost,https://127.0.0.1,https://industrace.local
+
+# Production Cloud CORS
+CORS_ORIGINS=https://industrace.local,https://www.industrace.local
 ```
 
-### Hot Reload
+### Development CORS (Advanced)
 ```bash
-# Enable hot reload for development
-RELOAD=true
+# Development CORS (for docker-compose.dev.yml)
+CORS_ORIGINS=http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173
 ```
 
 ## Production Configuration
@@ -388,7 +391,8 @@ export DEBUG=true
 export LOG_LEVEL=DEBUG
 
 # Check configuration at runtime
-curl http://localhost:8000/health
+curl https://localhost/api/health  # Production Local
+curl https://industrace.local/api/health  # Production Cloud
 ```
 
 ## Best Practices

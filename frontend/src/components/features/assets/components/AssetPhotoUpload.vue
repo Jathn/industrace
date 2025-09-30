@@ -78,7 +78,7 @@ const deletePhoto = async (photoId) => {
 
 
 const getPhotoUrl = (photo) => {
-  return `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/assets/${props.assetId}/photos/${photo.id}`
+  return `/api/assets/${props.assetId}/photos/${photo.id}`
 }
 
 onMounted(fetchPhotos)

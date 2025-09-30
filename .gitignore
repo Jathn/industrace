@@ -70,6 +70,7 @@ test-certs/
 # Temporary environment files
 .env.dev
 .env.prod
+.env.prod-cloud
 .env.custom
 
 # Custom certificates configuration (contains local paths)

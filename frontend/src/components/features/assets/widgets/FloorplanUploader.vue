@@ -34,7 +34,7 @@ const floorplanUrl = computed(() => {
   
   // If it's an object, construct the URL
   if (props.floorplan && props.floorplan.file_path) {
-    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+    const baseUrl = '/api'
     return `${baseUrl}/locations/${props.locationId}/floorplan/${props.floorplan.id}`
   }
   

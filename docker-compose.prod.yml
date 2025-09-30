@@ -1,46 +1,33 @@
 version: '3.8'
 
 services:
-  traefik:
-    image: traefik:v2.10
-    command:
-      - "--api.insecure=false"
-      - "--api.dashboard=true"
-      - "--providers.docker=true"
-      - "--entrypoints.web.address=:80"
-      - "--entrypoints.websecure.address=:443"
-      - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
-      - "--certificatesresolvers.letsencrypt.acme.tlschallenge=true"
-      - "--certificatesresolvers.letsencrypt.acme.email=admin@yourdomain.com"
-      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+  nginx:
+    image: nginx:alpine
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro"
-      - "./letsencrypt:/letsencrypt"
+      - "./nginx/nginx.prod.conf:/etc/nginx/nginx.conf:ro"
+      - "./nginx/ssl:/etc/nginx/ssl:ro"
+    depends_on:
+      - backend
+      - frontend
     networks:
       - industrace-network
+    restart: unless-stopped
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.traefik.rule=Host(`traefik.yourdomain.com`)"
-      - "traefik.http.routers.traefik.entrypoints=websecure"
-      - "traefik.http.routers.traefik.tls.certresolver=letsencrypt"
-      - "traefik.http.services.traefik.loadbalancer.server.port=8080"
+      - "traefik.enable=false"
 
   db:
     image: postgres:15
     environment:
       POSTGRES_USER: industrace_user
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_PASSWORD: secure_password_123
       POSTGRES_DB: industrace
     volumes:
       - industrace_postgres_data:/var/lib/postgresql/data
     networks:
       - industrace-network
-    labels:
-      - "traefik.enable=false"
     expose:
       - "5432"
     restart: unless-stopped
@@ -52,10 +39,10 @@ services:
       - ./uploads:/app/uploads
       - ./logs:/app/logs
     environment:
-      - DATABASE_URL=postgresql://industrace_user:${DB_PASSWORD}@db:5432/industrace
+      - DATABASE_URL=postgresql://industrace_user:secure_password_123@db:5432/industrace
       - SECRET_KEY=${SECRET_KEY}
       - ACCESS_TOKEN_EXPIRE_MINUTES=30
-      - CORS_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
+      - CORS_ORIGINS=https://localhost,https://127.0.0.1,https://industrace.local
       - ENVIRONMENT=production
       - DEBUG=false
       - SECURE_COOKIES=true
@@ -64,37 +51,20 @@ services:
       - db
     networks:
       - industrace-network
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.backend.rule=Host(`yourdomain.com`) && (PathPrefix(`/health`) || PathPrefix(`/login`) || PathPrefix(`/logout`) || PathPrefix(`/refresh`) || PathPrefix(`/admin`) || PathPrefix(`/users`) || PathPrefix(`/assets`) || PathPrefix(`/suppliers`) || PathPrefix(`/manufacturers`) || PathPrefix(`/locations`) || PathPrefix(`/areas`) || PathPrefix(`/sites`) || PathPrefix(`/contacts`) || PathPrefix(`/roles`) || PathPrefix(`/tenants`) || PathPrefix(`/dashboards`) || PathPrefix(`/search`) || PathPrefix(`/print`) || PathPrefix(`/api-keys`) || PathPrefix(`/external`) || PathPrefix(`/setup`) || PathPrefix(`/asset-photos`) || PathPrefix(`/asset-documents`) || PathPrefix(`/asset-types`) || PathPrefix(`/asset-interfaces`) || PathPrefix(`/asset-connections`) || PathPrefix(`/connections`) || PathPrefix(`/locations-floormap`) || PathPrefix(`/pcap`) || PathPrefix(`/asset-statuses`) || PathPrefix(`/smtp-config`) || PathPrefix(`/audit-logs`))"
-      - "traefik.http.routers.backend.entrypoints=websecure"
-      - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.backend.priority=100"
-      - "traefik.http.services.backend.loadbalancer.server.port=8000"
-      - "traefik.http.middlewares.backend-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
-      - "traefik.http.routers.backend.middlewares=backend-headers"
+    expose:
+      - "8000"
     restart: unless-stopped
 
   frontend:
-    build: ./frontend
-    command: npm run build && npx serve -s dist -l 5173
-    volumes:
-      - ./uploads:/app/uploads
-    environment:
-      - VITE_API_URL=https://yourdomain.com/api
+    build: 
+      context: ./frontend
+      dockerfile: Dockerfile
     depends_on:
       - backend
     networks:
       - industrace-network
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`yourdomain.com`) && !PathPrefix(`/health`) && !PathPrefix(`/login`) && !PathPrefix(`/logout`) && !PathPrefix(`/refresh`) && !PathPrefix(`/admin`) && !PathPrefix(`/users`) && !PathPrefix(`/assets`) && !PathPrefix(`/suppliers`) && !PathPrefix(`/manufacturers`) && !PathPrefix(`/locations`) && !PathPrefix(`/areas`) && !PathPrefix(`/sites`) && !PathPrefix(`/contacts`) && !PathPrefix(`/roles`) && !PathPrefix(`/tenants`) && !PathPrefix(`/dashboards`) && !PathPrefix(`/search`) && !PathPrefix(`/print`) && !PathPrefix(`/api-keys`) && !PathPrefix(`/external`) && !PathPrefix(`/setup`) && !PathPrefix(`/asset-photos`) && !PathPrefix(`/asset-documents`) && !PathPrefix(`/asset-types`) && !PathPrefix(`/asset-interfaces`) && !PathPrefix(`/asset-connections`) && !PathPrefix(`/connections`) && !PathPrefix(`/locations-floormap`) && !PathPrefix(`/pcap`) && !PathPrefix(`/asset-statuses`) && !PathPrefix(`/smtp-config`) && !PathPrefix(`/audit-logs`)"
-      - "traefik.http.routers.frontend.entrypoints=websecure"
-      - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.frontend.priority=10"
-      - "traefik.http.services.frontend.loadbalancer.server.port=5173"
-      - "traefik.http.middlewares.frontend-headers.headers.customrequestheaders.X-Forwarded-Proto=https"
-      - "traefik.http.routers.frontend.middlewares=frontend-headers"
+    expose:
+      - "80"
     restart: unless-stopped
 
 volumes:
@@ -102,4 +72,4 @@ volumes:
 
 networks:
   industrace-network:
-    driver: bridge 
+    driver: bridge

@@ -11,13 +11,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Future features and improvements
 
 ### Changed
-- Changes in existing functionality
+- **Simplified Setup Process**
+  - Removed `make init` and `make dev` commands
+  - `make prod` now includes automatic database initialization and demo data seeding
+  - `make prod-cloud` for cloud deployment with Traefik + Let's Encrypt
+  - Streamlined deployment to two main scenarios: Production Local and Production Cloud
+  - Updated all documentation to reflect the new simplified setup
 
 ### Deprecated
 - Features that will be removed in upcoming releases
 
 ### Removed
-- Features that have been removed
+- `make init` command (functionality integrated into `make prod`)
+- `make dev` command (use `docker-compose -f docker-compose.dev.yml` for development)
+- `INITIALIZATION_GUIDE.md` (content integrated into other documentation)
+- `docs/deployment-configurations.md` (simplified deployment scenarios)
 
 ### Fixed
 - Bug fixes
@@ -25,7 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - Security vulnerability fixes
 
-## [1.0.0] - 2024-12-19
+## [1.0.0] - 2025 august
 
 ### 🎉 Initial Release
 
@@ -170,4 +178,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History
 
-- **v1.0.0** (2024-12-19): Initial release with complete asset management system
+- **v1.0.0** (August 2025): Initial release with complete asset management system

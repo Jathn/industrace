@@ -113,7 +113,7 @@ const deleteDoc = async (docId) => {
 
 const downloadDoc = async (doc) => {
   try {
-    const url = `${import.meta.env.VITE_API_URL || 'http://localhost:8000'}/assets/${props.assetId}/documents/${doc.id}`
+    const url = `/api/assets/${props.assetId}/documents/${doc.id}`
 
     const link = document.createElement('a')
     link.href = url

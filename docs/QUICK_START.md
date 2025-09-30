@@ -7,7 +7,6 @@
 - Docker and Docker Compose installed
 - Git installed
 - Port 80 and 443 available on your system (for production)
-- Port 5173 and 8000 available on your system (for development)
 
 ## Quick Installation
 
@@ -20,15 +19,15 @@ cd industrace
 
 ### 2. Choose Your Deployment Type
 
-Industrace supports three deployment scenarios:
+Industrace supports two main deployment scenarios:
 
-#### **Development** (Recommended for first time)
-- **Frontend**: http://localhost:5173 (Vite dev server)
-- **Backend**: http://localhost:8000 (FastAPI)
-- **Features**: Hot-reload, debug mode, automatic demo data
+#### **Production Local** (Recommended for first time)
+- **Frontend**: https://localhost (Nginx + self-signed certificates)
+- **Backend**: https://localhost/api (Nginx proxy)
+- **Features**: SSL certificates, optimized builds, automatic demo data
 - **No configuration needed!**
 
-#### **Production** (HTTPS with Traefik)
+#### **Production Cloud** (HTTPS with Traefik)
 - **Frontend**: https://industrace.local (Traefik + Let's Encrypt)
 - **Backend**: https://industrace.local/api (Traefik proxy)
 - **Features**: SSL certificates, optimized builds, production security
@@ -42,19 +41,16 @@ Industrace supports three deployment scenarios:
 
 ### 3. Start the System
 
-#### **Development** (Recommended for first time)
+#### **Production Local** (Recommended for first time)
 ```bash
-# Initialize with demo data
-make init
-
-# Or just start development environment
-make dev
+# Start production with Nginx + self-signed certificates + auto-init DB
+make prod
 ```
 
-#### **Production** (HTTPS with Traefik)
+#### **Production Cloud** (HTTPS with Traefik)
 ```bash
 # Start production with Traefik + Let's Encrypt
-make prod
+make prod-cloud
 ```
 
 #### **Custom Certificates** (HTTPS with Nginx)
@@ -68,19 +64,19 @@ make custom-certs-start
 
 ### Configuration Differences
 
-- **Development** (`make dev`): Vite dev server, direct port access, hot reload, automatic demo data
-- **Production** (`make prod`): Traefik reverse proxy, Let's Encrypt SSL, optimized builds
+- **Production Local** (`make prod`): Nginx reverse proxy, self-signed SSL, optimized builds, automatic demo data
+- **Production Cloud** (`make prod-cloud`): Traefik reverse proxy, Let's Encrypt SSL, optimized builds
 - **Custom Certs** (`make custom-certs-start`): Nginx reverse proxy, custom SSL certificates
 
 ### 4. Verify Installation
 
 Open your browser and go to:
 
-#### **Development**
-- **Frontend**: http://localhost:5173
-- **Backend API**: http://localhost:8000/docs
+#### **Production Local**
+- **Application**: https://localhost
+- **Backend API**: https://localhost/api/docs
 
-#### **Production**
+#### **Production Cloud**
 - **Application**: https://industrace.local
 - **Traefik Dashboard**: http://localhost:8080
 
@@ -89,7 +85,7 @@ Open your browser and go to:
 
 ## First Access
 
-1. **Login**: Use the default credentials (for development):
+1. **Login**: Use the default credentials:
    - Email: `admin@example.com`
    - Password: `admin123`
 
@@ -97,7 +93,7 @@ Open your browser and go to:
    - Editor: `editor@example.com` / `editor123`
    - Viewer: `viewer@example.com` / `viewer123`
 
-2. **Demo Data**: The system automatically populates with realistic demo data including:
+2. **Demo Data**: The system automatically populates with realistic demo data when using `make prod` or `make prod-cloud` including:
    - 3 Sites (Production Plant, R&D Center, Distribution Warehouse)
    - 12 Areas (Assembly Lines, Labs, Control Rooms, etc.)
    - 19 Locations (Control Panels, Quality Stations, etc.)
@@ -124,34 +120,31 @@ industrace/
 
 ## Useful Commands
 
-### Development Commands
+### Production Local Commands
 ```bash
-# Initialize system with demo data (recommended)
-make init
+# Start production system (Nginx + self-signed certificates + auto-init DB)
+make prod
 
-# Start development environment
-make dev
-
-# Stop all services
+# Stop production system
 make stop
 
-# View logs
+# View production logs
 make logs
 
-# Restart services
+# Restart production system
 make restart
 
-# Clean system completely
-make clean
+# Build containers
+make build
 
-# Show system status
-make status
+# Rebuild containers
+make rebuild
 ```
 
-### Production Commands
+### Production Cloud Commands
 ```bash
 # Start production system (Traefik + Let's Encrypt)
-make prod
+make prod-cloud
 
 # Stop production system
 make stop
@@ -235,7 +228,7 @@ make logs
 
 # Clean and restart
 make clean
-make init
+make prod
 ```
 
 ### Demo data not loading
@@ -245,7 +238,7 @@ make demo
 
 # Or clean and reinitialize
 make clean
-make init
+make prod
 ```
 
 ## Advanced Configuration (Optional)

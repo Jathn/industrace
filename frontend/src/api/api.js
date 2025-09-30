@@ -2,13 +2,8 @@ import axios from 'axios'
 import { useAuthStore } from '@/store/auth'
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:8000',
+  baseURL: '/api',
   withCredentials: true 
-})
-
-api.interceptors.request.use(config => {
-  // Usa i cookie per l'autenticazione web (withCredentials: true)
-  return config
 })
 
 api.interceptors.response.use(

@@ -1,7 +1,7 @@
 # Industrace Development Makefile
 # ===============================
 
-.PHONY: help init clean demo test dev prod
+.PHONY: help clean demo test dev prod
 
 # Default target
 help:
@@ -9,11 +9,10 @@ help:
 	@echo "=================================="
 	@echo ""
 	@echo "📋 Available commands:"
-	@echo "  make init      - Initialize system with demo data (clean start)"
+	@echo "  make prod      - Start PRODUCTION environment (HTTPS + Nginx + self-signed + auto-init DB)"
+	@echo "  make prod-cloud - Start CLOUD production environment (HTTPS + Traefik + Let's Encrypt)"
 	@echo "  make demo      - Add demo data to existing system"
 	@echo "  make clean     - Clean system completely"
-	@echo "  make dev       - Start development environment (localhost:5173/8000)"
-	@echo "  make prod      - Start production environment (HTTPS with Traefik)"
 	@echo "  make test      - Run tests"
 	@echo "  make logs      - Show logs"
 	@echo "  make stop      - Stop all containers"
@@ -35,144 +34,149 @@ help:
 	@echo "  make list-admins TENANT_SLUG=\"my-company\" - List admin users in tenant"
 	@echo ""
 
-# Initialize system with demo data
-init:
-	@echo "🚀 Initializing Industrace system..."
-	docker-compose -f docker-compose.dev.yml up -d
-	@echo "⏳ Waiting for services to start..."
-	sleep 10
-	@echo "📊 Running database migrations..."
-	docker-compose -f docker-compose.dev.yml exec backend alembic upgrade head
-	@echo "🌱 Seeding demo data..."
-	docker-compose -f docker-compose.dev.yml exec backend python -m app.init_demo_data
-	@echo "✅ System initialized successfully!"
 
 # Add demo data to existing system
 demo:
 	@echo "🌱 Adding demo data to existing system..."
-	docker-compose -f docker-compose.dev.yml exec backend python -m app.init_demo_data
+	docker-compose -f docker-compose.prod.yml exec backend python -m app.init_demo_data
 	@echo "✅ Demo data added successfully!"
 
 # Clean system completely
 clean:
 	@echo "🧹 Cleaning Industrace system..."
-	docker-compose -f docker-compose.dev.yml down -v
+	docker-compose -f docker-compose.prod.yml down -v
 	docker-compose down -v
 	docker system prune -f
 	@echo "🧹 Cleaning temporary files..."
-	@rm -f .env.dev .env.prod .env.custom
+	@rm -f .env.prod .env.prod-cloud .env.custom
 	@echo "✅ System cleaned successfully"
 
 # Clean everything including images
 clean-all:
 	@echo "🧹 Cleaning everything..."
-	docker-compose -f docker-compose.dev.yml down -v --rmi all
+	docker-compose -f docker-compose.prod.yml down -v --rmi all
 	docker-compose down -v --rmi all
 	docker system prune -af
 	@echo "✅ Everything cleaned successfully"
 
-# Start development environment
-dev:
-	@echo "🔧 Starting development environment..."
-	@echo "📝 Setting CORS for development (localhost:5173)..."
-	@echo "CORS_ORIGINS=http://localhost:5173,http://localhost:3000,http://localhost:8080" > .env.dev
-	@echo "VITE_API_URL=http://localhost:8000" >> .env.dev
-	docker-compose -f docker-compose.dev.yml --env-file .env.dev up -d
-	@echo "✅ Development environment started!"
-	@echo "🌐 Frontend: http://localhost:5173"
-	@echo "🌐 Backend:  http://localhost:8000"
 
-# Start production environment
+# Start production environment (Nginx + self-signed certificates)
 prod:
-	@echo "🚀 Starting production environment..."
-	@echo "📝 Setting CORS for production (HTTPS)..."
-	@echo "CORS_ORIGINS=https://industrace.local,https://www.industrace.local" > .env.prod
+	@echo "🚀 Starting production environment with Nginx..."
+	@if [ ! -f "nginx/ssl/cert.pem" ] || [ ! -f "nginx/ssl/key.pem" ]; then \
+		echo "🔐 SSL certificates not found. Generating self-signed certificates..."; \
+		./scripts/generate-ssl-certs.sh; \
+	fi
+	@echo "📝 Setting up production environment..."
+	@echo "CORS_ORIGINS=https://localhost,https://127.0.0.1,https://industrace.local" > .env.prod
 	@echo "SECURE_COOKIES=true" >> .env.prod
 	@echo "SAME_SITE_COOKIES=strict" >> .env.prod
-	docker-compose --env-file .env.prod up -d
+	@echo "SECRET_KEY=prod-$$(openssl rand -hex 32)" >> .env.prod
+	docker-compose -f docker-compose.prod.yml --env-file .env.prod up -d
+	@echo "⏳ Waiting for services to start..."
+	sleep 15
+	@echo "📊 Running database migrations..."
+	docker-compose -f docker-compose.prod.yml exec backend alembic upgrade head || true
+	@echo "🌱 Seeding demo data (if database is empty)..."
+	docker-compose -f docker-compose.prod.yml exec backend python -m app.init_demo_data || true
 	@echo "✅ Production environment started!"
+	@echo "🌐 Access your application at: https://localhost or https://industrace.local"
+	@echo "⚠️  Note: You'll see a security warning due to self-signed certificates"
+	@echo "   This is normal for local development. Click 'Advanced' and 'Proceed'"
+
+# Start cloud production environment (Traefik + Let's Encrypt)
+prod-cloud:
+	@echo "☁️  Starting cloud production environment with Traefik..."
+	@echo "📝 Setting CORS for cloud production (HTTPS)..."
+	@echo "CORS_ORIGINS=https://industrace.local,https://www.industrace.local" > .env.prod-cloud
+	@echo "SECURE_COOKIES=true" >> .env.prod-cloud
+	@echo "SAME_SITE_COOKIES=strict" >> .env.prod-cloud
+	docker-compose --env-file .env.prod-cloud up -d
+	@echo "✅ Cloud production environment started!"
 	@echo "🌐 Access your application at: https://industrace.local"
+	@echo "🦌 Traefik dashboard: http://localhost:8080"
+
 
 # Run tests
 test:
 	@echo "🧪 Running tests..."
-	docker-compose -f docker-compose.dev.yml exec backend pytest
+	docker-compose -f docker-compose.prod.yml exec backend pytest
 
 # Show logs
 logs:
 	@echo "📋 Showing logs..."
-	docker-compose -f docker-compose.dev.yml logs -f
+	docker-compose -f docker-compose.prod.yml logs -f
 
 # Show backend logs only
 logs-backend:
 	@echo "📋 Showing backend logs..."
-	docker-compose -f docker-compose.dev.yml logs -f backend
+	docker-compose -f docker-compose.prod.yml logs -f backend
 
 # Show frontend logs only
 logs-frontend:
 	@echo "📋 Showing frontend logs..."
-	docker-compose -f docker-compose.dev.yml logs -f frontend
+	docker-compose -f docker-compose.prod.yml logs -f frontend
 
 # Stop all containers
 stop:
 	@echo "🛑 Stopping all containers..."
-	docker-compose -f docker-compose.dev.yml down
+	docker-compose -f docker-compose.prod.yml down
 	docker-compose down
 
 # Build images
 build:
 	@echo "🔨 Building images..."
-	docker-compose -f docker-compose.dev.yml build
+	docker-compose -f docker-compose.prod.yml build
 
 # Rebuild images (no cache)
 rebuild:
 	@echo "🔨 Rebuilding images (no cache)..."
-	docker-compose -f docker-compose.dev.yml build --no-cache
+	docker-compose -f docker-compose.prod.yml build --no-cache
 
 # Check system status
 status:
 	@echo "📊 System status:"
-	docker-compose -f docker-compose.dev.yml ps
+	docker-compose -f docker-compose.prod.yml ps
 
 # Access backend shell
 shell:
 	@echo "🐚 Opening backend shell..."
-	docker-compose -f docker-compose.dev.yml exec backend bash
+	docker-compose -f docker-compose.prod.yml exec backend bash
 
 # Run database migrations
 migrate:
 	@echo "📊 Running database migrations..."
-	docker-compose -f docker-compose.dev.yml exec backend alembic upgrade head
+	docker-compose -f docker-compose.prod.yml exec backend alembic upgrade head
 
 # Create new migration
 migration:
 	@echo "📝 Creating new migration..."
-	docker-compose -f docker-compose.dev.yml exec backend alembic revision --autogenerate -m "$(message)"
+	docker-compose -f docker-compose.prod.yml exec backend alembic revision --autogenerate -m "$(message)"
 
 # Reset database (drop and recreate)
 reset-db:
 	@echo "🔄 Resetting database..."
-	docker-compose -f docker-compose.dev.yml down
+	docker-compose -f docker-compose.prod.yml down
 	docker volume rm industrace_industrace_postgres_data || true
-	docker-compose -f docker-compose.dev.yml up -d db
+	docker-compose -f docker-compose.prod.yml up -d db
 	sleep 10
-	docker-compose -f docker-compose.dev.yml up -d backend
+	docker-compose -f docker-compose.prod.yml up -d backend
 	sleep 15
 	make migrate
-	make init
+	make prod
 
-# Quick restart (for development)
+# Quick restart
 restart:
 	@echo "🔄 Quick restart..."
-	docker-compose -f docker-compose.dev.yml restart
+	docker-compose -f docker-compose.prod.yml restart
 
 # Show system info
 info:
 	@echo "ℹ️  System Information:"
 	@echo "======================"
-	@echo "Frontend: http://localhost:5173"
-	@echo "Backend:  http://localhost:8000"
-	@echo "API Docs: http://localhost:8000/docs"
+	@echo "Frontend: https://localhost"
+	@echo "Backend:  https://localhost/api"
+	@echo "API Docs: https://localhost/api/docs"
 	@echo ""
 	@echo "Default credentials:"
 	@echo "Admin:   admin@example.com / admin123"
@@ -184,15 +188,16 @@ config:
 	@echo "⚙️  Configuration Information:"
 	@echo "============================="
 	@echo ""
-	@echo "🔧 Development (make dev):"
-	@echo "  - CORS: http://localhost:5173, http://localhost:3000, http://localhost:8080"
-	@echo "  - API URL: http://localhost:8000"
-	@echo "  - Cookies: Insecure (development)"
-	@echo "  - Proxy: Vite dev server"
+	@echo "🚀 Production Local (make prod):"
+	@echo "  - CORS: https://localhost, https://127.0.0.1, https://industrace.local"
+	@echo "  - API URL: https://localhost/api (via Nginx)"
+	@echo "  - Cookies: Secure, SameSite=strict"
+	@echo "  - Proxy: Nginx + Self-signed certificates"
+	@echo "  - Access: https://localhost or https://industrace.local"
 	@echo ""
-	@echo "🚀 Production (make prod):"
+	@echo "☁️  Production Cloud (make prod-cloud):"
 	@echo "  - CORS: https://industrace.local, https://www.industrace.local"
-	@echo "  - API URL: https://industrace.local (via Traefik)"
+	@echo "  - API URL: https://industrace.local/api (via Traefik)"
 	@echo "  - Cookies: Secure, SameSite=strict"
 	@echo "  - Proxy: Traefik + Let's Encrypt"
 	@echo "  - Dashboard: http://localhost:8080"
@@ -238,10 +243,10 @@ create-tenant:
 		echo "🔐 No password provided, generating secure password..."; \
 		PASSWORD=$$(openssl rand -base64 12 | tr -d "=+/" | cut -c1-12); \
 		echo "Generated password: $$PASSWORD"; \
-		docker-compose -f docker-compose.dev.yml exec backend python -m app.init_tenant "$(TENANT_NAME)" "$(TENANT_SLUG)" "$(ADMIN_EMAIL)" "$$PASSWORD" "$(ADMIN_NAME)"; \
+		docker-compose -f docker-compose.prod.yml exec backend python -m app.init_tenant "$(TENANT_NAME)" "$(TENANT_SLUG)" "$(ADMIN_EMAIL)" "$$PASSWORD" "$(ADMIN_NAME)"; \
 	else \
 		echo "🔐 Using provided password..."; \
-		docker-compose -f docker-compose.dev.yml exec backend python -m app.init_tenant "$(TENANT_NAME)" "$(TENANT_SLUG)" "$(ADMIN_EMAIL)" "$(ADMIN_PASSWORD)" "$(ADMIN_NAME)"; \
+		docker-compose -f docker-compose.prod.yml exec backend python -m app.init_tenant "$(TENANT_NAME)" "$(TENANT_SLUG)" "$(ADMIN_EMAIL)" "$(ADMIN_PASSWORD)" "$(ADMIN_NAME)"; \
 	fi
 
 # Create tenant with default values
@@ -250,7 +255,7 @@ create-tenant-default:
 	@echo "🔐 Generating secure password..."
 	@PASSWORD=$$(openssl rand -base64 12 | tr -d "=+/" | cut -c1-12); \
 	echo "Generated password: $$PASSWORD"; \
-	docker-compose -f docker-compose.dev.yml exec backend python -m app.init_tenant "Nuovo Tenant" "nuovo-tenant" "admin@example.com" "$$PASSWORD"
+	docker-compose -f docker-compose.prod.yml exec backend python -m app.init_tenant "Nuovo Tenant" "nuovo-tenant" "admin@example.com" "$$PASSWORD"
 
 # Custom Certificates Commands
 # ============================
@@ -300,16 +305,16 @@ reset-admin-password:
 	fi
 	@if [ -z "$(NEW_PASSWORD)" ]; then \
 		echo "🔐 No new password provided, generating secure password..."; \
-		docker-compose -f docker-compose.dev.yml exec backend python app/reset_password.py reset "$(TENANT_SLUG)" "$(ADMIN_EMAIL)"; \
+		docker-compose -f docker-compose.prod.yml exec backend python app/reset_password.py reset "$(TENANT_SLUG)" "$(ADMIN_EMAIL)"; \
 	else \
 		echo "🔐 Using provided password..."; \
-		docker-compose -f docker-compose.dev.yml exec backend python app/reset_password.py reset "$(TENANT_SLUG)" "$(ADMIN_EMAIL)" "$(NEW_PASSWORD)"; \
+		docker-compose -f docker-compose.prod.yml exec backend python app/reset_password.py reset "$(TENANT_SLUG)" "$(ADMIN_EMAIL)" "$(NEW_PASSWORD)"; \
 	fi
 
 # List all tenants
 list-tenants:
 	@echo "🏢 Listing all tenants..."
-	docker-compose -f docker-compose.dev.yml exec backend python app/reset_password.py list-tenants
+	docker-compose -f docker-compose.prod.yml exec backend python app/reset_password.py list-tenants
 
 # List admin users in a tenant
 list-admins:
@@ -319,4 +324,4 @@ list-admins:
 		echo "Example: make list-admins TENANT_SLUG=\"my-company\""; \
 		exit 1; \
 	fi
-	docker-compose -f docker-compose.dev.yml exec backend python app/reset_password.py list-admins "$(TENANT_SLUG)"
+	docker-compose -f docker-compose.prod.yml exec backend python app/reset_password.py list-admins "$(TENANT_SLUG)"

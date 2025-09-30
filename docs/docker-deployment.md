@@ -23,22 +23,19 @@ This guide explains how to deploy Industrace using Docker Compose with Traefik a
 
 ## Deployment Methods
 
-### Method 1: Development (Recommended for first time)
+### Method 1: Production Local (Recommended for first time)
 
-#### Step 1: Start Development Environment
+#### Step 1: Start Production Environment
 ```bash
-# Initialize with demo data
-make init
-
-# Or just start development
-make dev
+# Start production with Nginx + self-signed certificates + auto-init DB
+make prod
 ```
 
 **Access Points:**
-- Frontend: http://localhost:5173
-- Backend API: http://localhost:8000/docs
+- Frontend: https://localhost
+- Backend API: https://localhost/api/docs
 
-### Method 2: Production with Traefik (Recommended for production)
+### Method 2: Production Cloud with Traefik (Recommended for production)
 
 #### Step 1: DNS Setup
 Create an A record for `industrace.yourdomain.com` pointing to your server's public IP.
@@ -46,7 +43,7 @@ Create an A record for `industrace.yourdomain.com` pointing to your server's pub
 #### Step 2: Start Production Services
 ```bash
 # Start production with Traefik + Let's Encrypt
-make prod
+make prod-cloud
 ```
 
 **Access Points:**
@@ -101,12 +98,12 @@ docker-compose ps
 - **API Documentation**: https://industrace.yourdomain.com/docs
 - **Traefik Dashboard**: http://your-server-ip:8080 (if enabled)
 
-### Method 2: Development Setup
+### Method 4: Development Setup (Advanced)
 
 #### Local Development
 ```bash
 # Start services for development
-docker-compose -f docker-compose.yml up -d
+docker-compose -f docker-compose.dev.yml up -d
 
 # Access services
 # Frontend: http://localhost:5173

@@ -25,7 +25,6 @@ Industrace provides secure external APIs for third-party integrations. These API
 - API Key usage monitoring
 
 ### Multi-Deployment Support
-- **Development**: http://localhost:8000
 - **Production**: https://industrace.local/api
 - **Custom Certificates**: https://yourdomain.com/api
 

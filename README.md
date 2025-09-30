@@ -94,27 +94,37 @@ Born in Italy, Industrace combines European attention to industrial processes wi
 - 4GB RAM minimum (8GB recommended)
 - 20GB disk space minimum
 - Port 80 and 443 available (for production)
-- Port 5173 and 8000 available (for development)
 
 ### Installation
 
-#### **Development** (Recommended for first time)
+#### **Quick Start** (Recommended for first time)
 ```bash
 # Clone the repository
 git clone https://github.com/industrace/industrace.git
 cd industrace
 
-# Initialize system with demo data
-make init
+# Start production environment with demo data
+make prod
 
 # Access the application
-open http://localhost:5173
+open https://localhost
 ```
 
-#### **Production** (HTTPS with Traefik)
+#### **Production Local** (HTTPS with Nginx + Self-signed certificates)
+```bash
+# Start production with Nginx + self-signed certificates
+make prod
+
+# Access the application
+open https://localhost
+# Note: You'll see a security warning due to self-signed certificates
+# This is normal for local development. Click 'Advanced' and 'Proceed'
+```
+
+#### **Production Cloud** (HTTPS with Traefik + Let's Encrypt)
 ```bash
 # Start production with Traefik + Let's Encrypt
-make prod
+make prod-cloud
 
 # Access the application
 open https://industrace.local
@@ -132,23 +142,11 @@ make custom-certs-start
 open https://yourdomain.com
 ```
 
-#### Option 2: Manual Setup
-```bash
-# Clone the repository
-git clone https://github.com/industrace/industrace.git
-cd industrace
 
-# Start the application
-docker-compose up -d
-
-# Access the application
-open http://localhost:5173
-```
-
-### Development Environment
+### Development Environment (Advanced)
 ```bash
 # Start development environment
-make dev
+docker-compose -f docker-compose.dev.yml up -d
 
 # Add demo data to existing system
 make demo
@@ -158,14 +156,18 @@ make clean
 
 # Show available commands
 make help
+
+# Show configuration options
+make config
 ```
 
 ### Default Credentials
-- **URL**: http://localhost:5173
+- **Production Local URL**: https://localhost
+- **Production Cloud URL**: https://industrace.local
 - **Email**: admin@example.com
 - **Password**: admin123
 
-**Note**: Demo data is automatically populated in development environment. The system includes sample sites, areas, locations, manufacturers, suppliers, contacts, assets with interfaces, and network connections for testing purposes.
+**Note**: Demo data is automatically populated when using `make prod` or `make prod-cloud`. The system includes sample sites, areas, locations, manufacturers, suppliers, contacts, assets with interfaces, and network connections for testing purposes.
 
 ## 📊 Demo Data Included
 
@@ -219,9 +221,8 @@ make logs
 
 ### Available Make Commands
 ```bash
-make init      # Initialize system with demo data
-make dev       # Start development environment
-make prod      # Start production environment
+make prod      # Start production environment (Nginx + self-signed certificates + auto-init DB)
+make prod-cloud # Start production environment (Traefik + Let's Encrypt)
 make demo      # Add demo data to existing system
 make clean     # Clean system completely
 make test      # Run tests
@@ -235,6 +236,7 @@ make migrate   # Run database migrations
 make reset-db  # Reset database
 make restart   # Restart services
 make info      # Show system information
+make config    # Show configuration options
 ```
 
 ## 🤝 Contributing

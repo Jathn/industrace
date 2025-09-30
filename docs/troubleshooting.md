@@ -10,7 +10,8 @@ make status    # Check service status
 make logs      # View all logs
 make restart   # Restart all services
 make clean     # Clean system completely
-make init      # Reinitialize system
+make prod      # Start production environment (Nginx + self-signed certificates + auto-init DB)
+make prod-cloud # Start production environment (Traefik + Let's Encrypt)
 make demo      # Add demo data
 make shell     # Open backend shell
 make migrate   # Run database migrations
@@ -51,10 +52,12 @@ docker-compose -f docker-compose.custom-certs.yml up -d
 make status
 
 # Check system health
-curl http://localhost:8000/health
+curl https://localhost/api/health  # Production Local
+curl https://industrace.local/api/health  # Production Cloud
 
 # Check setup status
-curl http://localhost:8000/setup/status
+curl https://localhost/api/setup/status  # Production Local
+curl https://industrace.local/api/setup/status  # Production Cloud
 ```
 
 ### Log Analysis
@@ -155,7 +158,7 @@ make reset-db
 
 # Or clean and reinitialize
 make clean
-make init
+make prod
 ```
 
 ### Frontend Issues
@@ -292,11 +295,10 @@ docker-compose logs
 
 # Clean and restart
 make clean
-make init
+make prod
 
 # Or for specific deployment
-make dev
-make prod
+make prod-cloud
 make custom-certs-start
 ```
 
@@ -385,11 +387,10 @@ make stop
 make clean
 
 # Reinitialize system
-make init
+make prod
 
 # Or for specific deployment
-make dev
-make prod
+make prod-cloud
 make custom-certs-start
 ```
 
@@ -405,7 +406,7 @@ make stop
 docker-compose down -v
 
 # Reinitialize database
-make init
+make prod
 
 # Or restore from backup
 python scripts/restore.py backups/industrace-backup-*.tar.gz

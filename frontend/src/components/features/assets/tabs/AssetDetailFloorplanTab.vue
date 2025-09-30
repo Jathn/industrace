@@ -276,7 +276,7 @@ const marker = reactive({
 // Computed per floorplan
 const floorplanUrl = computed(() => {
   if (!asset.value?.location?.floorplan?.id || !asset.value?.location?.id) return ''
-  const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+  const baseUrl = '/api'
   return `${baseUrl}/locations/${asset.value.location.id}/floorplan/${asset.value.location.floorplan.id}`
 })
 
