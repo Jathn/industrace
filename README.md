@@ -36,7 +36,7 @@ Born in Italy, Industrace combines European attention to industrial processes wi
 - **Risk Assessment**: Built-in risk scoring and vulnerability assessment
 - **Multi-tenant Architecture**: Support for multiple organizations
 - **Role-based Access Control**: Granular permissions system
-- **Real-time Monitoring**: Live asset status and health monitoring
+- **Change Management**: See what's changed with comparisons
 - **Document Management**: Asset documentation and photo management
 - **Audit Trail**: Complete activity logging and change tracking
 - **API-First Design**: RESTful API for integration with other systems
