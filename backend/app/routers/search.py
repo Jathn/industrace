@@ -191,8 +191,12 @@ def global_search(
         )
 
     # Search Locations
+    from app.models.area import Area
+    from sqlalchemy.orm import joinedload
     locations = (
         db.query(Location)
+        .options(joinedload(Location.area))
+        .join(Area, Location.area_id == Area.id, isouter=True)
         .filter(
             and_(
                 Location.tenant_id == current_user.tenant_id,
@@ -200,7 +204,8 @@ def global_search(
                 or_(
                     Location.name.ilike(f"%{query}%"),
                     Location.code.ilike(f"%{query}%"),
-                    Location.area.ilike(f"%{query}%"),
+                    Area.name.ilike(f"%{query}%"),
+                    Area.code.ilike(f"%{query}%"),
                 ),
             )
         )
@@ -209,12 +214,13 @@ def global_search(
     )
 
     for location in locations:
+        area_name = location.area.name if location.area else None
         results.append(
             {
                 "id": str(location.id),
                 "type": "location",
                 "title": location.name,
-                "desc": location.area,
+                "desc": area_name or location.code or "",
                 "url": f"/locations/{location.id}",
             }
         )

@@ -1,3 +1,10 @@
 {
-    "title": "Stati Dispositivo"
+    "title": "Stati di Dispositivi",
+    "messages": {
+        "fetchError": "Errore nel caricamento dello stato di dispositivi",
+        "created": "Stato di dispositivo creato con successo",
+        "createError": "Errore nella creazione del stato di dispositivo",
+        "updated": "Stato di dispositivo aggiornato con successo",
+        "updateError": "Errore nell'aggiornamento del stato di dispositivo"
+    } 
 }

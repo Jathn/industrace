@@ -3,21 +3,21 @@
     <template #title>
       <div class="flex align-items-center">
         <i class="pi pi-calendar mr-2"></i>
-        {{ t('assets.datesAndNotes') }}
+        {{ t('assets.strings.datesInfo') }}
       </div>
     </template>
     <template #content>
       <div class="grid">
         <div class="col-12 md:col-6">
           <div class="p-field">
-            <label for="installation_date">{{ t('assets.installationDate') }}</label>
+            <label for="installation_date">{{ t('assets.fields.installationDate') }}</label>
             <Calendar id="installation_date" v-model="form.installation_date" dateFormat="dd/mm/yy" showIcon class="w-full" />
           </div>
         </div>
 
         <div class="col-12 md:col-6">
           <div class="p-field">
-            <label for="last_update_date">{{ t('assets.lastMaintenanceDate') }}</label>
+            <label for="last_update_date">{{ t('assets.fields.lastMaintenanceDate') }}</label>
             <Calendar id="last_update_date" v-model="form.last_update_date" dateFormat="dd/mm/yy" showIcon class="w-full" />
           </div>
         </div>

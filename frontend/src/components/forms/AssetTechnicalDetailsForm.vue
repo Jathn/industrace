@@ -3,35 +3,35 @@
     <template #title>
       <div class="flex align-items-center">
         <i class="pi pi-cog mr-2"></i>
-        {{ t('assets.technicalDetails') }}
+        {{ t('assets.fields.technicalDetails') }}
       </div>
     </template>
     <template #content>
       <div class="grid">
         <div class="col-12 md:col-6">
           <div class="p-field">
-            <label for="tag">{{ t('assets.tag') }}</label>
+            <label for="tag">{{ t('assets.fields.tag') }}</label>
             <InputText id="tag" v-model="form.tag" class="w-full" />
           </div>
         </div>
 
         <div class="col-12 md:col-6">
           <div class="p-field">
-            <label for="serial_number">{{ t('assets.serialNumber') }}</label>
+            <label for="serial_number">{{ t('assets.fields.serialNumber') }}</label>
             <InputText id="serial_number" v-model="form.serial_number" class="w-full" />
           </div>
         </div>
 
         <div class="col-12 md:col-6">
           <div class="p-field">
-            <label for="firmware_version">{{ t('assets.firmwareVersion') }}</label>
+            <label for="firmware_version">{{ t('assets.fields.firmwareVersion') }}</label>
             <InputText id="firmware_version" v-model="form.firmware_version" class="w-full" />
           </div>
         </div>
 
         <div class="col-12">
           <div class="p-field">
-            <label for="protocols">{{ t('assets.protocols') }}</label>
+            <label for="protocols">{{ t('assets.fields.protocols') }}</label>
             <MultiSelect
               id="protocols"
               v-model="form.protocols"
@@ -39,17 +39,16 @@
               optionLabel="label"
               optionValue="value"
               :filter="true"
-              :placeholder="t('assets.protocolPlaceholder')"
               display="chip"
               :maxSelectedLabels="3"
               class="w-full"
             />
             <div class="mt-2 flex align-items-center">
-              <InputText id="new_protocol" v-model="newProtocol" :placeholder="t('assets.addProtocol')" @keyup.enter="addProtocol" class="mr-2" style="width:200px" />
+              <InputText id="new_protocol" v-model="newProtocol" :placeholder="t('assets.actions.addProtocol')" @keyup.enter="addProtocol" class="mr-2" style="width:200px" />
               <Button label="+" @click="addProtocol" size="small" />
             </div>
             <small class="text-gray-600">
-              {{ t('assets.protocolsNote') }}
+              {{ t('assets.strings.protocolsNote') }}
             </small>
           </div>
         </div>

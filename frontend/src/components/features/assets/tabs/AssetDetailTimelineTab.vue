@@ -6,10 +6,10 @@
 <template>
   <div class="asset-timeline">
     <div class="timeline-header">
-      <h3 class="text-lg font-semibold">{{ t('assetTimeline.title') }}</h3>
+      <h3 class="text-lg font-semibold">{{ t('assets.timeline.title') }}</h3>
       <div class="flex gap-2">
         <Button 
-          :label="t('assetTimeline.refresh')" 
+          :label="t('assets.timeline.refresh')" 
           icon="pi pi-refresh" 
           size="small"
           severity="secondary"
@@ -17,7 +17,7 @@
           @click="fetchTimeline" 
         />
         <Button 
-          :label="t('assetTimeline.export')" 
+          :label="t('assets.timeline.export')" 
           icon="pi pi-file-excel" 
           size="small"
           severity="secondary"
@@ -30,60 +30,60 @@
     <div class="timeline-filters mb-4">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div class="field">
-          <label for="timeline_action" class="block text-sm font-medium mb-2">{{ t('assetTimeline.action') }}</label>
+          <label for="timeline_action" class="block text-sm font-medium mb-2">{{ t('assets.timeline.action') }}</label>
           <Dropdown 
             id="timeline_action"
             v-model="filters.action" 
             :options="actionOptions" 
             optionLabel="label" 
             optionValue="value" 
-            :placeholder="t('assetTimeline.selectAction')"
+            :placeholder="t('assets.timeline.selectAction')"
             showClear
             class="w-full"
           />
         </div>
         
         <div class="field">
-          <label for="timeline_user" class="block text-sm font-medium mb-2">{{ t('assetTimeline.user') }}</label>
+          <label for="timeline_user" class="block text-sm font-medium mb-2">{{ t('assets.timeline.user') }}</label>
           <Dropdown 
             id="timeline_user"
             v-model="filters.user_id" 
             :options="userOptions" 
             optionLabel="label" 
             optionValue="value" 
-            :placeholder="t('assetTimeline.selectUser')"
+            :placeholder="t('assets.timeline.selectUser')"
             showClear
             class="w-full"
           />
         </div>
         
         <div class="field">
-          <label for="timeline_date_range" class="block text-sm font-medium mb-2">{{ t('assetTimeline.dateRange') }}</label>
+          <label for="timeline_date_range" class="block text-sm font-medium mb-2">{{ t('assets.timeline.dateRange') }}</label>
           <Calendar 
             id="timeline_date_range"
             v-model="filters.dateRange" 
             selectionMode="range" 
-            :placeholder="t('assetTimeline.selectDateRange')"
+            :placeholder="t('assets.timeline.selectDateRange')"
             dateFormat="dd/mm/yy"
             showIcon
             class="w-full"
           />
           <div v-if="filters.dateRange && filters.dateRange.length === 2 && filters.dateRange[0] && filters.dateRange[1]" class="date-range-labels mt-2">
-            <span>{{ t('assetTimeline.from') }}: {{ formatDate(filters.dateRange[0]) }}</span>
-            <span class="ml-2">{{ t('assetTimeline.to') }}: {{ formatDate(filters.dateRange[1]) }}</span>
+            <span>{{ t('assets.timeline.from') }}: {{ formatDate(filters.dateRange[0]) }}</span>
+            <span class="ml-2">{{ t('assets.timeline.to') }}: {{ formatDate(filters.dateRange[1]) }}</span>
           </div>
         </div>
       </div>
       
       <div class="flex gap-2 mt-4">
         <Button 
-          :label="t('common.search')" 
+          :label="t('common.actions.search')" 
           icon="pi pi-search" 
           size="small"
           @click="fetchTimeline" 
         />
         <Button 
-          :label="t('common.clear')" 
+          :label="t('common.actions.clear')" 
           icon="pi pi-times" 
           size="small"
           severity="secondary"
@@ -96,7 +96,7 @@
     <div v-if="timeline.length === 0 && !loading" class="empty-timeline">
       <div class="text-center py-8">
         <i class="pi pi-clock text-4xl text-gray-400 mb-4"></i>
-        <p class="text-gray-500">{{ t('assetTimeline.noChanges') }}</p>
+        <p class="text-gray-500">{{ t('assets.timeline.noChanges') }}</p>
       </div>
     </div>
 
@@ -122,13 +122,13 @@
             <div v-if="log.old_data || log.new_data" class="timeline-changes">
               <div v-if="log.old_data && log.new_data" class="changes-comparison">
                 <div class="change-item old">
-                  <h5 class="text-sm font-medium text-red-600 mb-2">{{ t('assetTimeline.before') }}</h5>
+                  <h5 class="text-sm font-medium text-red-600 mb-2">{{ t('assets.timeline.before') }}</h5>
                   <div class="change-data">
                     <div v-for="(change, key) in getChangedFields(log.old_data, log.new_data)" :key="key" class="change-field">
                       <span class="field-name">{{ getFieldLabel(key) }}:</span>
                       <span class="field-value old-value">
                         <template v-if="change.isComplex">
-                          <Tag severity="info" value="modificato" />
+                          <Tag severity="info" :value="t('assets.timeline.modified')" />
                         </template>
                         <template v-else>
                           {{ change.old }}
@@ -137,19 +137,19 @@
                     </div>
                     <!-- Messaggio se non ci sono modifiche -->
                     <div v-if="Object.keys(getChangedFields(log.old_data, log.new_data)).length === 0" class="no-changes-indicator">
-                      <span class="text-sm text-gray-500">{{ t('assetTimeline.noChangesDetected') }}</span>
+                      <span class="text-sm text-gray-500">{{ t('assets.timeline.noChangesDetected') }}</span>
                     </div>
                   </div>
                 </div>
                 
                 <div class="change-item new">
-                  <h5 class="text-sm font-medium text-green-600 mb-2">{{ t('assetTimeline.after') }}</h5>
+                  <h5 class="text-sm font-medium text-green-600 mb-2">{{ t('assets.timeline.after') }}</h5>
                   <div class="change-data">
                     <div v-for="(change, key) in getChangedFields(log.old_data, log.new_data)" :key="key" class="change-field">
                       <span class="field-name">{{ getFieldLabel(key) }}:</span>
                       <span class="field-value new-value">
                         <template v-if="change.isComplex">
-                          <Tag severity="info" value="modificato" />
+                          <Tag severity="info" :value="t('assets.timeline.modified')" />
                         </template>
                         <template v-else>
                           {{ change.new }}
@@ -158,14 +158,14 @@
                     </div>
                     <!-- Messaggio se non ci sono modifiche -->
                     <div v-if="Object.keys(getChangedFields(log.old_data, log.new_data)).length === 0" class="no-changes-indicator">
-                      <span class="text-sm text-gray-500">{{ t('assetTimeline.noChangesDetected') }}</span>
+                      <span class="text-sm text-gray-500">{{ t('assets.timeline.noChangesDetected') }}</span>
                     </div>
                   </div>
                 </div>
               </div>
               
               <div v-else-if="log.old_data" class="change-item old">
-                <h5 class="text-sm font-medium text-red-600 mb-2">{{ t('assetTimeline.removed') }}</h5>
+                <h5 class="text-sm font-medium text-red-600 mb-2">{{ t('assets.timeline.removed') }}</h5>
                 <div class="change-data">
                   <div v-for="(value, key) in parseJsonSafely(log.old_data)" :key="key" class="change-field">
                     <span class="field-name">{{ getFieldLabel(key) }}:</span>
@@ -175,7 +175,7 @@
               </div>
               
               <div v-else-if="log.new_data" class="change-item new">
-                <h5 class="text-sm font-medium text-green-600 mb-2">{{ t('assetTimeline.added') }}</h5>
+                <h5 class="text-sm font-medium text-green-600 mb-2">{{ t('assets.timeline.added') }}</h5>
                 <div class="change-data">
                   <div v-for="(value, key) in parseJsonSafely(log.new_data)" :key="key" class="change-field">
                     <span class="field-name">{{ getFieldLabel(key) }}:</span>
@@ -213,7 +213,7 @@
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { i18n } from '@/locales/loader.js'
+import i18n from '@/locales/loader-final.js'
 import api from '@/api/api'
 import { useApi } from '@/composables/useApi'
 
@@ -251,9 +251,9 @@ const filters = ref({
 })
 
 const actionOptions = [
-  { label: t('assetTimeline.actionCreate'), value: 'create' },
-  { label: t('assetTimeline.actionUpdate'), value: 'update' },
-  { label: t('assetTimeline.actionDelete'), value: 'delete' }
+  { label: t('assets.timeline.actionCreate'), value: 'create' },
+  { label: t('assets.timeline.actionUpdate'), value: 'update' },
+  { label: t('assets.timeline.actionDelete'), value: 'delete' }
 ]
 
 const userOptions = computed(() => {
@@ -280,7 +280,7 @@ async function fetchUsers() {
     users.value = response.data
     return response
   }, {
-    errorContext: t('assetTimeline.fetchUsersError'),
+    errorContext: t('assets.timeline.fetchUsersError'),
     showToast: false
   })
 }
@@ -305,7 +305,7 @@ async function fetchTimeline() {
     total.value = response.data.length // TODO: backend dovrebbe restituire il totale
     return response
   }, {
-    errorContext: t('assetTimeline.fetchError'),
+    errorContext: t('assets.timeline.fetchError'),
     showToast: false
   })
 }
@@ -448,7 +448,7 @@ function getChangedFields(oldData, newData) {
       if (Array.isArray(oldVal) || Array.isArray(newVal) || 
           (typeof oldVal === 'object' && oldVal !== null) || 
           (typeof newVal === 'object' && newVal !== null)) {
-        changed[key] = { old: '[modificato]', new: '[modificato]', isComplex: true }
+        changed[key] = { old: t('assets.timeline.modified'), new: t('assets.timeline.modified'), isComplex: true }
       } else {
         // Per i campi ID, prova a usare il nome se disponibile
         let oldDisplay = oldVal
@@ -484,30 +484,30 @@ function getChangedFields(oldData, newData) {
 
 function getFieldLabel(field) {
   const fieldMap = {
-    'name': t('assetTimeline.fieldName'),
-    'ip_address': t('assetTimeline.fieldIpAddress'),
-    'site_id': t('assetTimeline.fieldSite'),
-    'location_id': t('assetTimeline.fieldLocation'),
-    'asset_type_id': t('assetTimeline.fieldType'),
-    'asset_status_id': t('assetTimeline.fieldStatus'),
-    'manufacturer_id': t('assetTimeline.fieldManufacturer'),
-    'tag': t('assetTimeline.fieldTag'),
-    'firmware_version': t('assetTimeline.fieldFirmware'),
-    'serial_number': t('assetTimeline.fieldSerialNumber'),
-    'risk_score': t('assetTimeline.fieldRiskScore'),
-    'purdue_level': t('assetTimeline.fieldPurdueLevel'),
-    'impact_value': t('assetTimeline.fieldImpactValue'),
-    'access_ease': t('assetTimeline.fieldAccessEase'),
-    'exposure_level': t('assetTimeline.fieldExposureLevel'),
-    'update_status': t('assetTimeline.fieldUpdateStatus'),
+    'name': t('common.fields.name'),
+    'ip_address': t('assets.fields.ipAddress'),
+    'site_id': t('assets.fields.site'),
+    'location_id': t('assets.fields.location'),
+    'asset_type_id': t('assets.fields.type'),
+    'asset_status_id': t('assets.fields.status'),
+    'manufacturer_id': t('assets.fields.manufacturer'),
+    'tag': t('assets.fields.tag'),
+    'firmware_version': t('assets.fields.firmware'),
+    'serial_number': t('assets.fields.serialNumber'),
+    'risk_score': t('assets.fields.riskScore'),
+    'purdue_level': t('assets.fields.purdueLevel'),
+    'impact_value': t('assets.fields.impactValue'),
+    'access_ease': t('assets.fields.accessEase'),
+    'exposure_level': t('assets.fields.exposureLevel'),
+    'update_status': t('assets.fields.updateStatus'),
     // Campi con nomi degli oggetti
-    'site_id_name': t('assetTimeline.fieldSite'),
-    'location_id_name': t('assetTimeline.fieldLocation'),
-    'asset_type_id_name': t('assetTimeline.fieldType'),
-    'asset_status_id_name': t('assetTimeline.fieldStatus'),
-    'manufacturer_id_name': t('assetTimeline.fieldManufacturer'),
-    'status_id': t('assetTimeline.fieldStatus'),
-    'status_id_name': t('assetTimeline.fieldStatus')
+    'site_id_name': t('assets.fields.site'),
+    'location_id_name': t('assets.fields.location'),
+    'asset_type_id_name': t('common.fields.type'),
+    'asset_status_id_name': t('common.fields.status'),
+    'manufacturer_id_name': t('common.fields.manufacturer'),
+    'status_id': t('common.fields.status'),
+    'status_id_name': t('common.fields.status')
   }
   return fieldMap[field] || field
 }
@@ -590,7 +590,7 @@ async function exportTimeline() {
     link.remove()
     window.URL.revokeObjectURL(url)
   } catch (e) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assetTimeline.fetchError') })
+    toast.add({ severity: 'error', summary: t('common.strings.error'), detail: t('assets.timeline.fetchError') })
   }
 }
 </script>

@@ -5,7 +5,7 @@
       <!-- Placeholder per upload file -->
       <input type="file" accept=".pcap" />
       <div class="mt-3">
-        <Button :label="t('common.cancel')" class="p-button-secondary p-button-sm" @click="$emit('update:visible', false)" />
+        <Button :label="t('common.actions.cancel')" class="p-button-secondary p-button-sm" @click="$emit('update:visible', false)" />
         <Button :label="t('assetCommunications.import')" class="p-button-sm ml-2" />
       </div>
     </div>

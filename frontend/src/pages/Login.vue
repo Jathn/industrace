@@ -14,23 +14,23 @@
           <img src="/src/static/logo_black.png" alt="Industrace" class="login-logo" />
           <div class="logo-glow"></div>
         </div>
-        <h1 class="brand-title">{{ $t('common.loginTitle') }}</h1>
-        <p class="brand-subtitle">{{ $t('login.welcomeMessage') }}</p>
+        <h1 class="brand-title">{{ $t('login.title') }}</h1>
+        <p class="brand-subtitle">{{ $t('login.strings.welcomeMessage') }}</p>
       </div>
 
       <!-- Form di login -->
       <div class="login-form-container">
         <div class="form-card">
           <div class="form-header">
-            <h2>{{ $t('login.signIn') }}</h2>
-            <p>{{ $t('login.enterCredentials') }}</p>
+            <h2>{{ $t('login.strings.signIn') }}</h2>
+            <p>{{ $t('login.strings.enterCredentials') }}</p>
           </div>
 
           <form @submit.prevent="handleSubmit" class="login-form">
             <div class="form-group">
               <label for="email" class="form-label">
                 <i class="pi pi-envelope"></i>
-                {{ $t('common.loginEmail') }}
+                {{ $t('login.strings.email') }}
               </label>
               <div class="input-wrapper">
                 <InputText 
@@ -39,7 +39,7 @@
                   type="email" 
                   required 
                   class="form-input"
-                  :placeholder="$t('login.emailPlaceholder')"
+                  :placeholder="$t('login.strings.emailPlaceholder')"
                   :class="{ 'p-invalid': emailError }"
                 />
                 <div class="input-icon">
@@ -52,7 +52,7 @@
             <div class="form-group">
               <label for="password_input" class="form-label">
                 <i class="pi pi-lock"></i>
-                {{ $t('common.loginPassword') }}
+                {{ $t('login.strings.password') }}
               </label>
               <div class="input-wrapper">
                 <Password 
@@ -62,7 +62,7 @@
                   required 
                   toggleMask 
                   class="form-input"
-                  :placeholder="$t('login.passwordPlaceholder')"
+                  :placeholder="$t('login.strings.passwordPlaceholder')"
                   :class="{ 'p-invalid': passwordError }"
                   inputId="password_input"
                 />
@@ -80,13 +80,13 @@
                   :binary="true" 
                   :inputId="'remember'"
                 />
-                <label for="remember" class="checkbox-label">{{ $t('login.rememberMe') }}</label>
+                <label for="remember" class="checkbox-label">{{ $t('login.strings.rememberMe') }}</label>
               </div>
             </div>
 
             <Button 
               type="submit" 
-              :label="$t('common.loginSubmit')" 
+              :label="$t('login.strings.submit')" 
               :loading="loading" 
               class="login-button"
               :disabled="!isFormValid"
@@ -149,17 +149,17 @@ const handleSubmit = async () => {
 
   // Validazione
   if (!email.value.trim()) {
-    emailError.value = t('login.emailRequired')
+    emailError.value = t('login.messages.emailRequired')
     return
   }
 
   if (!validateEmail(email.value)) {
-    emailError.value = t('login.emailInvalid')
+    emailError.value = t('login.messages.emailInvalid')
     return
   }
 
   if (!password.value.trim()) {
-    passwordError.value = t('login.passwordRequired')
+    passwordError.value = t('login.messages.passwordRequired')
     return
   }
 
@@ -168,14 +168,14 @@ const handleSubmit = async () => {
     await authStore.login(email.value, password.value)
     toast.add({
       severity: 'success',
-      summary: t('common.success'),
-      detail: t('login.success'),
+      summary: t('common.messages.success'),
+      detail: t('login.messages.success'),
       life: 3000
     })
     router.push('/')
   } catch (error) {
     const errorCode = error.response?.data?.error_code
-    let message = t('toast.error_generic')
+    let message = t('login.messages.error')
 
     // Prova a ottenere la traduzione specifica per il codice di errore
     if (errorCode) {
@@ -188,7 +188,7 @@ const handleSubmit = async () => {
 
     toast.add({
       severity: 'error',
-      summary: t('toast.error'),
+      summary: t('common.messages.error'),
       detail: message,
       life: 5000
     })

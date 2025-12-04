@@ -3,12 +3,12 @@
     <table v-if="rows.length" class="comm-table">
       <thead>
         <tr>
-          <th>Asset sorgente</th>
-          <th>Interfaccia sorgente</th>
-          <th>Asset destinazione</th>
-          <th>Interfaccia destinazione</th>
-          <th>Pacchetti</th>
-          <th>Direzione</th>
+          <th>{{ t('assets.communications.sourceAsset') }}</th>
+          <th>{{ t('assets.communications.sourceInterface') }}</th>
+          <th>{{ t('assets.communications.destinationAsset') }}</th>
+          <th>{{ t('assets.communications.destinationInterface') }}</th>
+          <th>{{ t('assets.communications.packets') }}</th>
+          <th>{{ t('assets.communications.direction') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -30,12 +30,12 @@
             </div>
           </td>
           <td>{{ row.packet_count }}</td>
-          <td>{{ row.direction === 'outgoing' ? t('assetCommunications.outgoing') : t('assetCommunications.incoming') }}</td>
+          <td>{{ row.direction === 'outgoing' ? t('assets.communications.outgoing') : t('assets.communications.incoming') }}</td>
         </tr>
       </tbody>
     </table>
     <div v-else class="placeholder">
-      <span>{{ t('assetCommunications.noTableData') }}</span>
+      <span>{{ t('assets.communications.noTableData') }}</span>
     </div>
   </div>
 </template>

@@ -1,31 +1,31 @@
 <template>
   <div>
     <div class="flex align-items-center mb-2">
-      <span class="section-title">{{ t('assetSuppliersTab.title') }}</span>
-      <Button v-if="!readOnly" class="ml-2 p-button-sm" icon="pi pi-pencil" :label="t('common.edit')" @click="showDialog = true" />
+      <span class="section-title">{{ t('suppliers.title') }}</span>
+      <Button v-if="!readOnly" class="ml-2 p-button-sm" icon="pi pi-pencil" :label="t('common.actions.edit')" @click="showDialog = true" />
     </div>
     <DataTable :value="suppliers" :loading="loading" class="p-datatable-sm" v-if="suppliers.length">
-      <Column field="name" :header="t('common.name')" />
-      <Column field="email" :header="t('common.email')" />
-      <Column field="phone" :header="t('common.phone')" />
-      <Column field="website" :header="t('common.website')" />
-      <Column field="notes" :header="t('common.notes')" />
+      <Column field="name" :header="t('common.fields.name')" />
+      <Column field="email" :header="t('common.fields.email')" />
+      <Column field="phone" :header="t('common.fields.phone')" />
+      <Column field="website" :header="t('common.fields.website')" />
+      <Column field="notes" :header="t('common.fields.notes')" />
     </DataTable>
-    <div v-else class="text-muted">{{ t('assetSuppliersTab.noSuppliers') }}</div>
+    <div v-else class="text-muted">{{ t('suppliers.strings.noSuppliers') }}</div>
 
-    <Dialog v-model:visible="showDialog" :header="t('assetSuppliersTab.editSuppliers')" modal :closable="true" :dismissableMask="true">
+    <Dialog v-model:visible="showDialog" :header="t('suppliers.strings.editSuppliers')" modal :closable="true" :dismissableMask="true">
       <MultiSelect
         v-model="selectedSupplierIds"
         :options="allSuppliers"
         optionLabel="name"
         optionValue="id"
-        :placeholder="t('assetSuppliersTab.selectSuppliers')"
+        :placeholder="t('common.strings.select')"
         display="chip"
         class="w-full mb-3"
       />
       <div class="flex justify-content-end gap-2">
-        <Button :label="t('common.cancel')" class="p-button-secondary" @click="showDialog = false" />
-        <Button :label="t('common.save')" icon="pi pi-check" @click="saveSuppliers" :loading="saving" /> 
+        <Button :label="t('common.actions.cancel')" class="p-button-secondary" @click="showDialog = false" />
+        <Button :label="t('common.actions.save')" icon="pi pi-check" @click="saveSuppliers" :loading="saving" /> 
       </div>
     </Dialog>
   </div>

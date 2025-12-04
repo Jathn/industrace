@@ -11,19 +11,15 @@
         <!-- Azioni principali -->
         <Button 
           v-if="!trashMode && canWrite('sites')"
-          :label="t('common.new')" 
+          :label="t('common.actions.create')" 
           icon="pi pi-plus" 
           severity="success"
           @click="openCreateDialog" 
         />
-        <!-- RIMOSSO: Bottone Import -->
-        <!-- RIMOSSO: Bottone Export CSV -->
-        <!-- Separatore visivo -->
         <div class="w-px h-8 bg-gray-300 mx-2"></div>
-        <!-- Gestione cestino -->
         <Button 
           icon="pi pi-trash" 
-          :label="trashMode ? t('common.showActive') : t('common.showTrash')" 
+          :label="trashMode ? t('common.actions.showActive') : t('common.actions.showTrash')" 
           severity="secondary"
           @click="toggleTrashMode"
         />
@@ -31,7 +27,7 @@
     </div>
 
     <div v-if="!trashMode" class="mb-4">
-      <Tree :value="siteTree" :selectionMode="null" :filter="true" :filterPlaceholder="t('sites.filterTree')" />
+      <Tree :value="siteTree" :selectionMode="null" :filter="true" :filterPlaceholder="t('sites.messages.filterTree')" />
     </div>
     
     <BaseDataTable
@@ -53,7 +49,7 @@
           :options="parentSiteOptions" 
           optionLabel="name" 
           optionValue="id" 
-          :placeholder="t('sites.filterByParent')" 
+          :placeholder="t('sites.messages.filterByParent')" 
           showClear 
           style="min-width: 150px" 
         />
@@ -106,7 +102,7 @@
     
     <BaseDialog
       v-model:visible="showDialog"
-      :title="editingSite ? t('common.edit') : t('common.new')"
+      :title="editingSite ? t('common.actions.edit') : t('common.actions.create')"
       :showFooter="false"
       @close="close"
     >
@@ -120,34 +116,34 @@
 
     <BaseDialog
       v-model:visible="showBulkDialog"
-      :title="t('sites.bulkEdit')"
+      :title="t('common.actions.bulkEdit')"
       @close="closeBulkDialog"
     >
       <div class="bulk-edit-form">
         <div class="mb-4">
           <p class="text-sm text-gray-600">
-            {{ t('sites.bulkEditInfo', { count: selectedSites.length }) }}
+            {{ t('common.actions.bulkEditInfo', { count: selectedSites.length }) }}
           </p>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="field">
-            <label class="block text-sm font-medium mb-2">{{ t('sites.parent') }}</label>
+            <label class="block text-sm font-medium mb-2">{{ t('sites.fields.parent') }}</label>
             <Dropdown
               v-model="bulkData.parent_id"
               :options="parentSiteOptions"
               option-label="name"
               option-value="id"
-              :placeholder="t('common.select')"
+              :placeholder="t('common.strings.select')"
               class="w-full"
             />
           </div>
           
           <div class="field">
-            <label class="block text-sm font-medium mb-2">{{ t('sites.address') }}</label>
+            <label class="block text-sm font-medium mb-2">{{ t('common.fields.address') }}</label>
             <InputText
               v-model="bulkData.address"
-              :placeholder="t('sites.address')"
+              :placeholder="t('common.fields.address')"
               class="w-full"
             />
           </div>
@@ -155,12 +151,12 @@
         
         <div class="flex justify-end gap-2 mt-6">
           <Button 
-            :label="t('common.cancel')" 
+            :label="t('common.actions.cancel')" 
             severity="secondary"
             @click="closeBulkDialog" 
           />
           <Button 
-            :label="t('common.save')" 
+            :label="t('common.actions.save')" 
             @click="saveBulkEdit" 
           />
         </div>
@@ -170,11 +166,11 @@
     <!-- TODO: Implementare SiteImportDialog -->
     <BaseDialog
       v-model:visible="showImportDialog"
-      :title="t('sites.import')"
+      :title="t('common.actions.import')"
       @close="showImportDialog = false"
     >
       <div class="p-4">
-        <p>{{ t('sites.importNotImplemented') }}</p>
+        <p>{{ t('sites.messages.importNotImplemented') }}</p>
       </div>
     </BaseDialog>
     
@@ -249,15 +245,15 @@ const bulkData = ref({
 
 const columnOptions = computed(() => {
   const columns = [
-    { field: 'name', header: t('common.name'), sortable: true },
-    { field: 'code', header: t('common.code'), sortable: true },
-    { field: 'address', header: t('common.address'), sortable: true },
-    { field: 'description', header: t('common.description'), sortable: false }
+    { field: 'name', header: t('common.fields.name'), sortable: true },
+    { field: 'code', header: t('common.fields.code'), sortable: true },
+    { field: 'address', header: t('common.fields.address'), sortable: true },
+    { field: 'description', header: t('common.fields.description'), sortable: false }
   ]
   
   // Aggiungi colonna azioni solo se l'utente ha permessi di scrittura o eliminazione
   if (canWrite('sites') || canDelete('sites')) {
-    columns.push({ field: 'actions', header: t('common.actions'), sortable: false })
+    columns.push({ field: 'actions', header: t('common.strings.actions'), sortable: false })
   }
   
   return columns
@@ -311,17 +307,17 @@ async function fetchSites() {
     sites.value = response.data
     return response
   }, {
-    errorContext: t('sites.fetchError'),
+    errorContext: t('common.messages.fetchError'),
     showToast: false
   })
 }
 
 function openCreateDialog() {
-  openCreate(t('sites.new'), null)
+  openCreate(t('common.actions.create'), null)
 }
 
 function openEditDialog(site) {
-  openEdit(t('sites.edit'), site)
+  openEdit(t('common.actions.edit'), site)
 }
 
 function openBulkEditDialog() {
@@ -354,8 +350,8 @@ async function saveBulkEdit() {
     closeBulkDialog()
     await fetchSites()
   }, {
-    successMessage: t('common.bulkUpdated'),
-    errorContext: t('common.bulkError')
+    successMessage: t('common.messages.bulkUpdated'),
+    errorContext: t('common.messages.bulkError')
   })
 }
 
@@ -367,8 +363,8 @@ async function saveSite(data) {
       close()
       await fetchSites()
     }, {
-      successMessage: t('common.updated'),
-      errorContext: t('common.updateError')
+      successMessage: t('common.messages.updated'),
+      errorContext: t('common.messages.updateError')
     })
   } else {
     // Modalità creazione
@@ -377,23 +373,23 @@ async function saveSite(data) {
       close()
       await fetchSites()
     }, {
-      successMessage: t('common.created'),
-      errorContext: t('common.createError')
+      successMessage: t('common.messages.created'),
+      errorContext: t('common.messages.createError')
     })
   }
 }
 
 async function deleteSite(id) {
   await confirmDelete(
-    t('common.confirmDelete'),
-    t('common.warningDelete'),
+    t('common.messages.confirmDelete'),
+    t('common.messages.warningDelete'),
     async () => {
       await execute(async () => {
         await api.deleteSite(id)
         await fetchSites()
       }, {
-        successMessage: t('common.deleted'),
-        errorContext: t('common.deleteError')
+        successMessage: t('common.messages.deleted'),
+        errorContext: t('common.messages.deleteError')
       })
     }
   )
@@ -429,8 +425,8 @@ async function restoreSite(id) {
     await api.restoreSite(id)
     await fetchSites()
   }, {
-    successMessage: t('common.restored'),
-    errorContext: t('common.restoreError')
+    successMessage: t('common.messages.restored'),
+    errorContext: t('common.messages.restoreError')
   })
 }
 
@@ -439,8 +435,8 @@ async function hardDeleteSite(id) {
     await api.hardDeleteSite(id)
     await fetchSites()
   }, {
-    successMessage: t('common.hardDeleted'),
-    errorContext: t('common.hardDeleteError')
+    successMessage: t('common.messages.hardDeleted'),
+    errorContext: t('common.messages.hardDeleteError')
   })
 }
 
@@ -449,15 +445,15 @@ async function emptyTrash() {
     await api.emptySitesTrash()
     await fetchSites()
   }, {
-    successMessage: t('common.trashEmptied'),
-    errorContext: t('common.emptyTrashError')
+    successMessage: t('common.messages.trashEmptied'),
+    errorContext: t('common.messages.emptyTrashError')
   })
 }
 
 async function handleEmptyTrash() {
   await confirmEmptyTrash(
-    t('common.confirmEmptyTrash'),
-    t('common.warningEmptyTrash'),
+    t('common.messages.emptyTrashConfirm'),
+    t('common.messages.emptyTrashWarning'),
     emptyTrash
   )
 }

@@ -1,20 +1,20 @@
 <template>
   <div>
     <div class="flex align-items-center mb-2">
-      <span>{{ t('interfaces.summary', { count: localInterfaces.length }) }}</span>
-      <Button class="ml-2 p-button-text p-button-sm" :label="expanded ? t('interfaces.hide') : t('interfaces.show')" icon="pi pi-chevron-down" @click="expanded = !expanded" />
+      <span>{{ t('assets.strings.networkInterfacesSummary', { count: localInterfaces.length }) }}</span>
+      <Button class="ml-2 p-button-text p-button-sm" :label="expanded ? t('common.actions.hide') : t('common.actions.show')" icon="pi pi-chevron-down" @click="expanded = !expanded" />
     </div>
     <transition name="fade">
       <div v-if="expanded">
         <DataTable :value="localInterfaces" responsiveLayout="scroll" class="p-datatable-sm mb-3">
-          <Column field="name" :header="t('interfaces.name')" />
-          <Column field="type" :header="t('interfaces.type')" />
-          <Column field="ip_address" :header="t('interfaces.ipAddress')" />
-          <Column field="mac_address" :header="t('interfaces.macAddress')" />
-          <Column field="vlan" :header="t('interfaces.vlan')" />
-          <Column field="default_gateway" :header="t('interfaces.gateway')" />
-          <Column field="subnet_mask" :header="t('interfaces.subnet')" />
-          <Column field="protocols" :header="t('interfaces.protocols')">
+          <Column field="name" :header="t('assets.interfaces.name')" />
+          <Column field="type" :header="t('assets.interfaces.type')" />
+          <Column field="ip_address" :header="t('assets.interfaces.ipAddress')" />
+          <Column field="mac_address" :header="t('assets.interfaces.macAddress')" />
+          <Column field="vlan" :header="t('assets.interfaces.vlan')" />
+          <Column field="default_gateway" :header="t('assets.interfaces.gateway')" />
+          <Column field="subnet_mask" :header="t('assets.interfaces.subnet')" />
+          <Column field="protocols" :header="t('assets.interfaces.protocols')">
             <template #body="{ data }">
               <div v-if="data.protocols && data.protocols.length" class="protocol-chips">
                 <span v-for="(protocol, idx) in data.protocols" :key="protocol + idx" class="protocol-chip">
@@ -24,8 +24,8 @@
               <span v-else class="text-muted">-</span>
             </template>
           </Column>
-          <Column field="other" :header="t('interfaces.other')" />
-          <Column v-if="editable" :header="t('common.actions')" style="width:120px">
+          <Column field="other" :header="t('assets.interfaces.other')" />
+          <Column v-if="editable" :header="t('common.strings.actions')" style="width:120px">
             <template #body="slotProps">
               <Button icon="pi pi-pencil" class="p-button-text p-button-sm mr-2" @click="editInterface(slotProps.index)" />
               <Button icon="pi pi-trash" class="p-button-text p-button-danger p-button-sm" @click="removeInterface(slotProps.index)" />
@@ -34,117 +34,117 @@
         </DataTable>
       </div>
     </transition>
-    <Button v-if="editable" :label="t('interfaces.addInterface')" icon="pi pi-plus" class="p-button-sm mt-2" @click="addInterface" />
-    <Button v-if="editable" :label="t('interfaces.addMultiple')" icon="pi pi-plus" class="p-button-sm mt-2 ml-2" @click="showBulkDialog = true" />
+    <Button v-if="editable" :label="t('assets.interfaces.addInterface')" icon="pi pi-plus" class="p-button-sm mt-2" @click="addInterface" />
+    <Button v-if="editable" :label="t('assets.interfaces.addMultiple')" icon="pi pi-plus" class="p-button-sm mt-2 ml-2" @click="showBulkDialog = true" />
 
-    <Dialog v-model:visible="showDialog" :header="dialogIndex === null ? t('interfaces.addInterface') : t('interfaces.editInterface')" :modal="true" :closable="false" :style="{width: '500px'}">
+    <Dialog v-model:visible="showDialog" :header="dialogIndex === null ? t('assets.interfaces.addInterface') : t('assets.interfaces.editInterface')" :modal="true" :closable="false" :style="{width: '500px'}">
       <form @submit.prevent="saveDialog">
         <div class="p-fluid">
           <div class="p-field">
-            <label for="name">{{ t('interfaces.name') }}*</label>
+            <label for="name">{{ t('assets.interfaces.name') }}*</label>
             <InputText id="name" v-model="dialogData.name" required />
           </div>
           <div class="p-field">
-            <label for="type">{{ t('interfaces.type') }}*</label>
+            <label for="type">{{ t('assets.interfaces.type') }}*</label>
             <Dropdown id="type" v-model="dialogData.type" :options="interfaceTypeOptions" optionLabel="label" optionValue="value" placeholder="Select type" required />
           </div>
           <div v-if="dialogData.type === 'other'" class="p-field">
-            <label for="type_custom">{{ t('interfaces.typeCustom') }}</label>
+            <label for="type_custom">{{ t('assets.interfaces.typeCustom') }}</label>
             <InputText id="type_custom" v-model="dialogData.type_custom" placeholder="Specify the type" />
           </div>
           <div class="p-field">
-            <label for="ip_address">{{ t('interfaces.ipAddress') }}</label>
+            <label for="ip_address">{{ t('assets.interfaces.ipAddress') }}</label>
             <InputText id="ip_address" v-model="dialogData.ip_address" @blur="validateIP" />
-            <small v-if="ipError" class="p-error">{{ t('interfaces.invalidIP') }}</small>
+            <small v-if="ipError" class="p-error">{{ t('assets.interfaces.invalidIP') }}</small>
           </div>
           <div class="p-field">
-            <label for="subnet_mask">{{ t('interfaces.subnet') }}</label>
+            <label for="subnet_mask">{{ t('assets.interfaces.subnet') }}</label>
             <InputText id="subnet_mask" v-model="dialogData.subnet_mask" @blur="validateSubnet" />
-            <small v-if="subnetError" class="p-error">{{ t('interfaces.invalidSubnet') }}</small>
+            <small v-if="subnetError" class="p-error">{{ t('assets.interfaces.invalidSubnet') }}</small>
           </div>
           <div class="p-field">
-            <label for="default_gateway">{{ t('interfaces.gateway') }}</label>
+            <label for="default_gateway">{{ t('assets.interfaces.gateway') }}</label>
             <InputText id="default_gateway" v-model="dialogData.default_gateway" @blur="validateGateway" />
-            <small v-if="gatewayError" class="p-error">{{ t('interfaces.invalidGateway') }}</small>
+            <small v-if="gatewayError" class="p-error">{{ t('assets.interfaces.invalidGateway') }}</small>
           </div>
           <div class="p-field">
-            <label for="mac_address">{{ t('interfaces.macAddress') }}</label>
+            <label for="mac_address">{{ t('assets.interfaces.macAddress') }}</label>
             <InputText id="mac_address" v-model="dialogData.mac_address" @blur="validateMAC" />
-            <small v-if="macError" class="p-error">{{ t('interfaces.invalidMAC') }}</small>
+            <small v-if="macError" class="p-error">{{ t('assets.interfaces.invalidMAC') }}</small>
           </div>
           <div class="p-field">
-            <label for="vlan">{{ t('interfaces.vlan') }}</label>
+            <label for="vlan">{{ t('assets.interfaces.vlan') }}</label>
             <InputText id="vlan" v-model="dialogData.vlan" />
           </div>
           <div class="p-field">
-            <label for="logical_port">{{ t('interfaces.logicalPort') }}</label>
+            <label for="logical_port">{{ t('assets.interfaces.logicalPort') }}</label>
             <InputText id="logical_port" v-model="dialogData.logical_port" />
           </div>
           <div class="p-field">
-            <label for="physical_plug_label">{{ t('interfaces.plugLabel') }}</label>
+            <label for="physical_plug_label">{{ t('assets.interfaces.plugLabel') }}</label>
             <InputText id="physical_plug_label" v-model="dialogData.physical_plug_label" />
           </div>
           <div class="p-field">
-            <label for="other">{{ t('interfaces.other') }}</label>
+            <label for="other">{{ t('assets.interfaces.other') }}</label>
             <InputText id="other" v-model="dialogData.other" />
           </div>
           <div class="p-field">
-            <label for="protocols">{{ t('interfaces.protocols') }}</label>
+            <label for="protocols">{{ t('assets.interfaces.protocols') }}</label>
             <MultiSelect
               id="protocols"
               v-model="dialogData.protocols"
               :options="protocolOptions"
               :filter="true"
-              :placeholder="t('interfaces.protocolPlaceholder')"
+              :placeholder="t('assets.interfaces.protocolPlaceholder')"
               display="chip"
               :maxSelectedLabels="3"
               class="w-full"
             />
             <div class="mt-2 flex align-items-center">
-              <InputText id="new_protocol" v-model="newProtocol" :placeholder="t('interfaces.addProtocol')" @keyup.enter="addProtocol" class="mr-2" style="width:200px" />
+              <InputText id="new_protocol" v-model="newProtocol" :placeholder="t('assets.interfaces.addProtocol')" @keyup.enter="addProtocol" class="mr-2" style="width:200px" />
               <Button label="+" @click="addProtocol" size="small" />
             </div>
             <small class="text-gray-600">
-              {{ t('interfaces.protocolsNote') }}
+              {{ t('assets.interfaces.protocolsNote') }}
             </small>
           </div>
           <div class="p-field">
-            <label for="details">{{ t('interfaces.details') }} (JSON)</label>
-            <InputText id="details" v-model="detailsString" :placeholder="t('interfaces.detailsPlaceholder')" />
-            <small v-if="detailsError" class="p-error">{{ t('interfaces.invalidDetails') }}</small>
+            <label for="details">{{ t('assets.interfaces.details') }} (JSON)</label>
+            <InputText id="details" v-model="detailsString" :placeholder="t('assets.interfaces.detailsPlaceholder')" />
+            <small v-if="detailsError" class="p-error">{{ t('assets.interfaces.invalidDetails') }}</small>
           </div>
         </div>
         <div class="flex justify-content-end gap-2 mt-3">
-          <Button :label="t('common.save')" icon="pi pi-check" type="submit" class="p-button-sm" />
-          <Button :label="t('common.cancel')" icon="pi pi-times" type="button" class="p-button-secondary p-button-sm" @click="closeDialog" />
+          <Button :label="t('common.actions.save')" icon="pi pi-check" type="submit" class="p-button-sm" />
+          <Button :label="t('common.actions.cancel')" icon="pi pi-times" type="button" class="p-button-secondary p-button-sm" @click="closeDialog" />
         </div>
       </form>
     </Dialog>
 
-    <Dialog v-model:visible="showBulkDialog" :header="t('interfaces.addMultiple')" :modal="true" :closable="false" :style="{width: '400px'}">
+    <Dialog v-model:visible="showBulkDialog" :header="t('assets.interfaces.addMultiple')" :modal="true" :closable="false" :style="{width: '400px'}">
       <form @submit.prevent="bulkCreateInterfaces">
         <div class="p-fluid">
           <div class="p-field">
-            <label for="bulk_count">{{ t('interfaces.bulkCount') }}*</label>
+            <label for="bulk_count">{{ t('assets.interfaces.bulkCount') }}*</label>
             <InputText id="bulk_count" v-model.number="bulkCount" type="number" min="1" required />
           </div>
           <div class="p-field">
-            <label for="bulk_prefix">{{ t('interfaces.bulkPrefix') }}*</label>
+            <label for="bulk_prefix">{{ t('assets.interfaces.bulkPrefix') }}*</label>
             <InputText id="bulk_prefix" v-model="bulkPrefix" required />
           </div>
           <div class="p-field">
-            <label for="bulk_type">{{ t('interfaces.type') }}*</label>
+            <label for="bulk_type">{{ t('assets.interfaces.type') }}*</label>
             <Dropdown id="bulk_type" v-model="bulkType" :options="interfaceTypeOptions" optionLabel="label" optionValue="value" placeholder="Select type" required />
           </div>
           <div v-if="bulkType === 'other'" class="p-field">
-            <label for="bulk_type_custom">{{ t('interfaces.typeCustom') }}</label>
+            <label for="bulk_type_custom">{{ t('assets.interfaces.typeCustom') }}</label>
             <InputText id="bulk_type_custom" v-model="bulkTypeCustom" placeholder="Specify the type" />
           </div>
           <!-- Other optional parameters can be added here -->
         </div>
         <div class="flex justify-content-end gap-2 mt-3">
-          <Button :label="t('common.save')" icon="pi pi-check" type="submit" class="p-button-sm" />
-          <Button :label="t('common.cancel')" icon="pi pi-times" type="button" class="p-button-secondary p-button-sm" @click="showBulkDialog = false" />
+          <Button :label="t('common.actions.save')" icon="pi pi-check" type="submit" class="p-button-sm" />
+          <Button :label="t('common.actions.cancel')" icon="pi pi-times" type="button" class="p-button-secondary p-button-sm" @click="showBulkDialog = false" />
         </div>
       </form>
     </Dialog>

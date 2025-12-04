@@ -4,7 +4,7 @@
       <Button icon="pi pi-arrow-left" class="p-button-text" @click="goBack" />
       <h1 class="m-0">
         <i class="pi pi-lock mr-2" />
-        {{ role.id ? t('roles.editTitle') : t('roles.createTitle') }}
+        {{ role.id ? t('common.actions.edit') : t('common.actions.create') }}
       </h1>
     </div>
 
@@ -12,11 +12,11 @@
       <template #content>
         <!-- Nome ruolo -->
         <div class="field mb-5">
-          <label class="block font-semibold mb-2">{{ t('roles.name') }}</label>
+          <label class="block font-semibold mb-2">{{ t('common.fields.name') }}</label>
           <InputText 
             v-model="role.name" 
             class="w-full" 
-            :placeholder="t('roles.namePlaceholder')"
+            :placeholder="t('common.fields.name')"
             :disabled="loading"
           />
         </div>
@@ -48,14 +48,14 @@
         <!-- Azioni -->
         <div class="flex justify-content-end gap-3 mt-5 pt-4 border-top-1 surface-border">
           <Button 
-            :label="t('common.save')" 
+            :label="t('common.actions.save')" 
             icon="pi pi-save" 
             class="p-button-success" 
             @click="saveRole" 
             :loading="loading"
           />
           <Button 
-            :label="t('common.cancel')" 
+            :label="t('common.actions.cancel')" 
             icon="pi pi-times" 
             class="p-button-outlined" 
             @click="cancel"
@@ -156,21 +156,21 @@ onMounted(async () => {
 
 async function saveRole() {
   if (!role.value.name) {
-    toast.add({ severity: 'warn', summary: t('common.warning'), detail: t('roles.nameRequired'), life: 3000 })
+    toast.add({ severity: 'warn', summary: t('common.messages.warning'), detail: t('roles.strings.nameRequired'), life: 3000 })
     return
   }
   loading.value = true
   try {
     if (role.value.id) {
       await api.updateRole(role.value.id, { name: role.value.name, permissions: role.value.permissions })
-      toast.add({ severity: 'success', summary: t('common.success'), detail: t('roles.updated'), life: 2000 })
+      toast.add({ severity: 'success', summary: t('common.messages.success'), detail: t('roles.strings.updated'), life: 2000 })
     } else {
       await api.createRole({ name: role.value.name, permissions: role.value.permissions })
-      toast.add({ severity: 'success', summary: t('common.success'), detail: t('roles.created'), life: 2000 })
+      toast.add({ severity: 'success', summary: t('common.messages.success'), detail: t('roles.strings.created'), life: 2000 })
     }
     router.push({ name: 'Roles' })
   } catch (error) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('roles.saveError'), life: 3000 })
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('roles.strings.saveError'), life: 3000 })
   } finally {
     loading.value = false
   }

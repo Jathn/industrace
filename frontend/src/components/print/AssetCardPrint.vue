@@ -132,7 +132,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { i18n } from '../../locales/loader.js'
+import i18n from '../../locales/loader-final.js'
 import PrintLayout from './PrintLayout.vue'
 
 const props = defineProps({

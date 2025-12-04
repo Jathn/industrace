@@ -1,19 +1,45 @@
 {
-  "welcomeMessage": "Gestione intelligente degli asset industriali",
-  "signIn": "Accedi",
-  "enterCredentials": "Inserisci le tue credenziali per accedere",
-  "emailPlaceholder": "Inserisci la tua email",
-  "passwordPlaceholder": "Inserisci la tua password",
-  "emailRequired": "L'email è obbligatoria",
-  "emailInvalid": "Inserisci un'email valida",
-  "passwordRequired": "La password è obbligatoria",
-  "rememberMe": "Ricordami",
-  "forgotPassword": "Password dimenticata?",
-  "or": "oppure",
-  "demoMode": "Modalità Demo",
-  "noAccount": "Non hai un account?",
-  "signUp": "Registrati",
-  "success": "Accesso effettuato con successo",
-  "demoSuccess": "Accesso in modalità demo effettuato",
-  "demoError": "Errore nell'accesso demo"
-} 
+    "title": "Login",
+    "messages": {
+        "emailInvalid": "Inserisci un'email valida",
+        "passwordRequired": "La password è obbligatoria",
+        "success": "Accesso effettuato con successo",
+        "error": "Errore nell'accesso",
+        "error_generic": "Si è verificato un errore",
+        "error_email_required": "L'email è obbligatoria",
+        "error_email_invalid": "Inserisci un'email valida",
+        "error_password_required": "La password è obbligatoria",
+        "error_success": "Accesso effettuato con successo"
+    },
+    "fields": {
+        "fullName": "Nome completo",
+        "firstName": "Nome",
+        "lastName": "Cognome",
+        "phone1": "Telefono 1",
+        "phone2": "Telefono 2",
+        "type": "Tipo",
+        "notes": "Note",
+        "internal": "Interno",
+        "supplier": "Fornitore",
+        "other": "Altro"
+    },
+    "strings": {
+        "email": "Email",
+        "password": "Password",
+        "welcomeMessage": "Benvenuto in Industrace",
+        "signIn": "Accedi",
+        "enterCredentials": "Inserisci le tue credenziali per accedere",
+        "emailPlaceholder": "Inserisci la tua email",
+        "passwordPlaceholder": "Inserisci la tua password",
+        "emailRequired": "L'email è obbligatoria",
+        "emailInvalid": "Inserisci un'email valida",
+        "passwordRequired": "La password è obbligatoria",
+        "rememberMe": "Ricordami",
+        "forgotPassword": "Password dimenticata?",
+        "or": "oppure",
+        "demoMode": "Modalità Demo",
+        "noAccount": "Non hai un account?",
+        "signUp": "Registrati",
+        "submit": "Accedi"
+    }
+}

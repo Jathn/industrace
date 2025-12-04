@@ -2,28 +2,28 @@
   <form @submit.prevent="handleSubmit">
     <div class="p-fluid">
       <div class="p-field">
-        <label for="name">{{ t('common.name') }}</label>
+        <label for="name">{{ t('common.fields.name') }}</label>
         <InputText id="name" v-model="form.name" required />
       </div>
       <div class="p-field">
-        <label for="description">{{ t('common.description') }}</label>
+        <label for="description">{{ t('common.fields.description') }}</label>
         <Textarea id="description" v-model="form.description" autoResize />
       </div>
       <div class="p-field">
-        <label for="color">{{ t('common.color') }}</label>
+        <label for="color">{{ t('common.fields.color') }}</label>
         <InputText id="color" v-model="form.color" type="color" style="width: 3rem; height: 2rem; padding: 0;" />
       </div>
       <div class="p-field">
-        <label for="order">{{ t('common.order') }}</label>
+        <label for="order">{{ t('common.fields.order') }}</label>
         <InputNumber id="order" v-model="form.order" :min="0" />
       </div>
       <div class="p-field-checkbox">
         <Checkbox id="active" v-model="form.active" :binary="true" inputId="status_active" />
-        <label for="status_active">{{ t('common.active') }}</label>
+        <label for="status_active">{{ t('common.fields.active') }}</label>
       </div>
       <div class="flex justify-content-end gap-2 mt-4">
-        <Button :label="t('common.cancel')" class="p-button-text" @click="emit('cancel')" />
-        <Button :label="t('common.save')" type="submit" />
+        <Button :label="t('common.actions.cancel')" class="p-button-text" @click="emit('cancel')" />
+        <Button :label="t('common.actions.save')" type="submit" />
       </div>
     </div>
   </form>

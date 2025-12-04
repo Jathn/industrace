@@ -44,7 +44,7 @@ const floorplanUrl = computed(() => {
 async function uploadFloorplan({ files }) {
   const file = files[0]
   if (!file) {
-    toast.add({ severity: 'warn', summary: t('common.error'), detail: t('locations.noFileSelected') })
+    toast.add({ severity: 'warn', summary: t('common.messages.error'), detail: t('locations.floorplan.noFileSelected') })
     return
   }
 
@@ -54,11 +54,11 @@ async function uploadFloorplan({ files }) {
   uploading.value = true
   try {
     await api.uploadFloorplan(props.locationId, formData)
-    toast.add({ severity: 'success', summary: t('common.success'), detail: t('locations.floorplanUploaded') })
+    toast.add({ severity: 'success', summary: t('common.messages.success'), detail: t('locations.floorplan.floorplanUploaded') })
     emit('uploaded')
   } catch (error) {
     console.error('Upload error:', error)
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('locations.uploadError') })
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('locations.floorplan.uploadError') })
   } finally {
     uploading.value = false
   }
@@ -67,10 +67,10 @@ async function uploadFloorplan({ files }) {
 
 <template>
   <div class="mt-3">
-    <h4>{{ t('locations.floorplan') }}</h4>
+    <h4>{{ t('locations.floorplan.title') }}</h4>
 
     <div v-if="floorplanUrl" class="mb-3">
-      <p>{{ t('locations.currentFloorplan') }}:</p>
+      <p>{{ t('locations.floorplan.currentFloorplan') }}:</p>
       <img :src="floorplanUrl" alt="Planimetria" style="max-width: 100%; max-height: 300px;" />
     </div>
 
@@ -78,8 +78,8 @@ async function uploadFloorplan({ files }) {
   name="file"
   customUpload
   :auto="false"
-  :chooseLabel="t('locations.chooseLabel')"
-  :uploadLabel="t('locations.uploadLabel')"
+  :chooseLabel="t('locations.floorplan.chooseLabel')"
+  :uploadLabel="t('locations.floorplan.uploadLabel')"
   @uploader="uploadFloorplan"
   :disabled="uploading"
   accept="image/*"

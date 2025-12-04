@@ -27,7 +27,7 @@ We like to think of Industrace as an experiment in human + AI co-creation, where
 Last thing..
 Born in Italy, Industrace combines European attention to industrial processes with a global open-source mindset.
 
-[![Release](https://img.shields.io/badge/Release-v1.0.0-blue.svg)](https://github.com/industrace/industrace/releases/tag/v1.0.0)
+[![Release](https://img.shields.io/badge/Release-v1.1.0-blue.svg)](https://github.com/industrace/industrace/releases/tag/v1.1.0)
 
 ## 🌟 Key Features
 
@@ -37,6 +37,8 @@ Born in Italy, Industrace combines European attention to industrial processes wi
 - **Multi-tenant Architecture**: Support for multiple organizations
 - **Role-based Access Control**: Granular permissions system
 - **Change Management**: See what's changed with comparisons
+- **Global Search**: Spotlight-style search (Command+K) across all entities with instant results
+- **Asset Timeline**: Complete change history and audit trail for each asset
 - **Document Management**: Asset documentation and photo management
 - **Audit Trail**: Complete activity logging and change tracking
 - **API-First Design**: RESTful API for integration with other systems
@@ -75,6 +77,14 @@ Born in Italy, Industrace combines European attention to industrial processes wi
 ### 📱 Responsive Design
 ![Mobile View](docs/images/readme/mobile-view.png)
 *Fully responsive interface that works on desktop, tablet, and mobile*
+
+### 🔍 Global Search - Spotlight Feature
+![Global Search](docs/images/globalsearch.gif)
+*Powerful spotlight-style global search (Command+K / Ctrl+K) that searches across all entities - assets, locations, sites, contacts, suppliers, and more. Real-time results with instant navigation to any item in your system.*
+
+### 📜 Asset Timeline
+![Asset Timeline](docs/images/readme/asset-details.png)
+*Complete change history and audit trail for each asset. Track every modification, view detailed change logs, and see who made what changes and when. Perfect for compliance, troubleshooting, and understanding asset evolution over time.*
 
 ## 🏗️ Architecture
 
@@ -252,6 +262,29 @@ See the [LICENSE](LICENSE) file for details.
 - **Issues**: [GitHub Issues](https://github.com/industrace/industrace/issues)
 
 ## 📋 Changelog
+
+### [v1.1.0] - November 2025
+#### ✨ New Features
+- **Trash Management for Areas**: Soft delete, restore, and hard delete functionality aligned with Sites and Locations
+- **Multilingual Printed Kit**: PDF generation in Italian/English with automatic language detection
+- **Restructured Translation System**: Consolidated translation files with complete IT/EN alignment
+- **Improved Global Search**: Enhanced search with auto-search and better result descriptions
+- **Asset Timeline Filtering**: Timeline now shows only changes related to the specific asset
+
+#### 🔧 Improvements
+- Performance optimizations with new database indexes
+- Dashboard caching for improved response times
+- Complete translation system restructuring (40 files consolidated into 19)
+- Global search fixes and enhancements
+
+#### 🐛 Fixes
+- Fixed asset timeline showing all changes instead of asset-specific changes
+- Fixed global search not finding Locations results
+- Complete IT/EN translation alignment
+
+#### 📚 Documentation
+- Added comprehensive upgrade guide (`docs/UPGRADE.md`)
+- Added performance optimizations documentation
 
 ### [v1.0.0] - august 2025
 #### 🎉 Initial Release

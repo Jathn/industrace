@@ -1,15 +1,11 @@
-<!--
-  - BaseConfirmDialog.vue
-  - Componente base standardizzato per i dialog di conferma
-  - Fornisce conferme uniformi per eliminazioni e azioni distruttive
--->
+
 <template>
   <ConfirmDialog />
   
   <Dialog 
     :visible="showConfirmDialog" 
     @update:visible="val => $emit('update:showConfirmDialog', val)"
-    :header="confirmData?.title || t('common.confirm')" 
+    :header="confirmData?.title || t('common.actions.confirm')" 
     :modal="true" 
     :style="{ width: '400px' }"
     :closable="true"
@@ -21,12 +17,12 @@
       </div>
       
       <div class="confirm-message">
-        <p>{{ confirmData?.message || t('common.confirmAction') }}</p>
+        <p>{{ confirmData?.message || t('common.actions.confirmAction') }}</p>
         
         <!-- Dettagli aggiuntivi per azioni bulk -->
         <div v-if="confirmData?.type === 'bulk' && confirmData?.items" class="bulk-details mt-2">
           <p class="text-sm text-500">
-            {{ t('common.selectedItems', { count: confirmData.items.length }) }}
+            {{ t('common.actions.selectedItems', { count: confirmData.items.length }) }}
           </p>
         </div>
       </div>
@@ -35,7 +31,7 @@
     <template #footer>
       <div class="flex justify-content-end gap-2">
         <Button 
-          :label="t('common.cancel')" 
+          :label="t('common.actions.cancel')" 
           class="p-button-text" 
           @click="closeConfirmDialog"
         />
@@ -108,17 +104,17 @@ const iconColor = computed(() => {
 })
 
 const confirmButtonLabel = computed(() => {
-  if (!props.confirmData) return t('common.confirm')
+  if (!props.confirmData) return t('common.actions.confirm')
   
   switch (props.confirmData.type) {
     case 'delete':
-      return props.confirmData.hardDelete ? t('common.deletePermanently') : t('common.delete')
+      return props.confirmData.hardDelete ? t('common.actions.deletePermanently') : t('common.actions.delete')
     case 'bulk':
-      return t(`common.actions${props.confirmData.action.charAt(0).toUpperCase() + props.confirmData.action.slice(1)}`)
+      return t(`common.actions.${props.confirmData.action.charAt(0).toUpperCase() + props.confirmData.action.slice(1)}`)
     case 'emptyTrash':
-      return t('common.emptyTrash')
+      return t('common.actions.emptyTrash')
     default:
-      return t('common.confirm')
+      return t('common.actions.confirm')
   }
 })
 

@@ -1,26 +1,29 @@
 {
-  "section": {
+"navigation": {
     "dashboard": "Dashboard",
-    "management": "Dispositivi",
-    "registry": "Registro",
-    "users": "Utenti e Permessi",
-    "utility": "Utility",
-    "setup": "Setup"
-  },
-  "setup": "Setup",
-  "assets": "Dispositivi",
-  "assettypes": "Tipi Dispositivo",
-  "assetstatuses": "Stati Dispositivo",
-  "sites": "Siti",
-  "areas": "Aree",
-  "locations": "Posizioni",
-  "suppliers": "Fornitori",
-  "manufacturers": "Produttori",
-  "users": "Utenti",
-  "tenants": "Tenant",
-  "dashboard": "Dashboard",
-  "networkMap": "Mappa di Rete",
-  "pcap": "Carica PCAP",
-  "logout": "Logout",
-  "roles": "Ruoli"
-} 
+    "assets": "Dispositivi",
+    "assettypes": "Tipi di Dispositivi",
+    "assetstatuses": "Stati di Dispositivi",
+    "sites": "Siti",
+    "areas": "Aree",
+    "locations": "Posizioni",
+    "suppliers": "Fornitori",
+    "manufacturers": "Produttori",
+    "contacts": "Contatti",
+    "users": "Utenti",
+    "roles": "Ruoli",
+    "networkMap": "Mappa di Rete",
+    "profile": "Profilo",
+    "pcap": "PCAP",
+    "auditLogs": "Log di Audit",
+    "setup": "Setup",
+    "settings": "Impostazioni",
+    "logout": "Esci",
+    "utility": "Utility"
+    },
+"section": {
+    "management": "Gestione",
+    "registry": "Inventario",
+    "utility": "Utility"
+    }
+}

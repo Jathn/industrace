@@ -2,9 +2,9 @@
   <div class="p-4">
     <h2 class="text-xl mb-4">{{ t('assettypes.title') }}</h2>
     <div class="mb-4">
-      <h3 class="text-lg font-semibold">{{ t('common.info') }}</h3>
-      <p><strong>{{ t('common.name') }}:</strong> {{ assettype.name }}</p>
-      <p><strong>{{ t('common.description') }}:</strong> {{ assettype.description }}</p>
+      <h3 class="text-lg font-semibold">{{ t('common.strings.info') }}</h3>
+      <p><strong>{{ t('common.fields.name') }}:</strong> {{ assettype.name }}</p>
+      <p><strong>{{ t('common.fields.description') }}:</strong> {{ assettype.description }}</p>
     </div>
   </div>
 </template>

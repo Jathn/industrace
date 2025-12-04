@@ -1,13 +1,9 @@
-<!--
-  - Assets.vue
-  - Componente per la gestione degli asset
-  - Utilizza i componenti PrimeVue per la gestione del form
--->
+
 <template>
   <div class="assets-page">
     <AssetsHeader 
       :trashMode="trashMode"
-      @create="openCreate(t('assets.create'))"
+      @create="openCreate(t('common.actions.create'))"
       @import="showImportDialog = true"
       @toggleTrash="toggleTrashMode"
     />
@@ -24,11 +20,11 @@
     <div class="flex justify-content-between align-items-center mb-3">
       <div class="text-sm text-600">
         <i class="pi pi-info-circle mr-2"></i>
-        {{ t('assets.totalAssets', { count: totalAssets }) }}
+        {{ $t('assets.strings.totalAssets') }} {{ totalAssetsCount }}
       </div>
-      <div class="text-sm text-600" v-if="filteredAssets.length !== totalAssets">
+      <div class="text-sm text-600" v-if="filteredAssets.length !== totalAssetsCount">
         <i class="pi pi-filter mr-2"></i>
-        {{ t('assets.filteredAssets', { filtered: filteredAssets.length, total: totalAssets }) }}
+        {{ t('assets.strings.filteredAssets', { filtered: filteredAssets.length, total: totalAssetsCount }) }}
       </div>
     </div>
 
@@ -52,7 +48,7 @@
       <template #actions>
         <Button 
           v-if="!trashMode && canWrite('assets')"
-          :label="t('common.bulkEdit')" 
+          :label="t('common.actions.bulkEdit')" 
           icon="pi pi-pencil" 
           severity="warning"
           :disabled="!selectedAssets.length" 
@@ -60,7 +56,7 @@
         />
         <Button 
           v-if="!trashMode && canDelete('assets')"
-          :label="t('common.moveToTrash')" 
+          :label="t('common.actions.moveToTrash')" 
           icon="pi pi-trash" 
           severity="danger"
           :disabled="!selectedAssets.length" 
@@ -241,19 +237,19 @@ const toast = useToast()
 
 // Definizione delle colonne PRIMA di useFilters
 const allColumns = [
-  { field: 'name', header: t('common.name') },
-  { field: 'ip_address', header: t('assets.ipAddress') },
-  { field: 'vlan', header: t('assets.vlan') },
-  { field: 'logical_port', header: t('assets.logicalPort') },
-  { field: 'site.name', header: t('common.site') },
-  { field: 'area_name', header: t('common.area') },
-  { field: 'location.name', header: t('assets.location') },
-  { field: 'status.name', header: t('common.status') },
-  { field: 'manufacturer.name', header: t('assets.manufacturer') },
-  { field: 'asset_type.name', header: t('common.type') },
-  { field: 'business_criticality', header: t('assets.businessCriticality'), sortable: true },
-  { field: 'risk_score', header: t('assets.riskScore'), sortable: true },
-  { field: 'actions', header: t('common.actions') }
+  { field: 'name', header: t('common.fields.name') },
+  { field: 'ip_address', header: t('assets.fields.ipAddress') },
+  { field: 'vlan', header: t('assets.fields.vlan') },
+  { field: 'logical_port', header: t('assets.fields.logicalPort') },
+  { field: 'site.name', header: t('common.fields.site') },
+  { field: 'area_name', header: t('areas.fields.name') },
+  { field: 'location.name', header: t('locations.fields.name') },
+  { field: 'status.name', header: t('common.fields.status') },
+  { field: 'manufacturer.name', header: t('manufacturers.fields.name') },
+  { field: 'asset_type.name', header: t('common.fields.type') },
+  { field: 'business_criticality', header: t('assets.fields.businessCriticality'), sortable: true },
+  { field: 'risk_score', header: t('assets.fields.riskScore'), sortable: true },
+  { field: 'actions', header: t('common.strings.actions') }
 ]
 
 // Composables
@@ -286,7 +282,7 @@ const { getStatusSeverity } = useStatus()
 
 // Computed properties per il dialog
 const dialogTitle = computed(() => {
-  return editingAsset.value ? t('assets.edit') : t('assets.create')
+  return editingAsset.value ? t('common.actions.edit') : t('common.actions.create')
 })
 
 const dialogMode = computed(() => {
@@ -296,6 +292,24 @@ const dialogMode = computed(() => {
 // Data
 const assets = ref([])
 const totalAssets = ref(0)
+
+
+// Computed per il conteggio totale degli asset
+const totalAssetsCount = computed(() => {
+  // Se totalAssets è stato impostato dall'API, usalo
+  if (totalAssets.value > 0) {
+    return totalAssets.value
+  }
+  // Altrimenti usa il conteggio degli asset caricati
+  return assets.value.length
+})
+
+// Watcher per aggiornare totalAssets quando assets cambia
+watch(assets, (newAssets) => {
+  if (newAssets && newAssets.length > 0 && totalAssets.value === 0) {
+    totalAssets.value = newAssets.length
+  }
+}, { immediate: true })
 const sites = ref([])
 const manufacturers = ref([])
 const assetTypes = ref([])
@@ -389,16 +403,20 @@ async function fetchAssets() {
     if (response.data && response.data.data) {
       assets.value = response.data.data
       // Aggiungi informazioni di paginazione se disponibili
-      if (response.data.total !== undefined) {
+      if (response.data.total !== undefined && response.data.total !== null) {
         totalAssets.value = response.data.total
+      } else {
+        // Fallback: usa il conteggio degli asset caricati
+        totalAssets.value = response.data.data.length
       }
     } else {
       // Fallback per la vecchia struttura
       assets.value = response.data || []
+      totalAssets.value = assets.value.length
     }
     return response
   }, {
-    errorContext: t('assets.fetchError'),
+    errorContext: t('assets.messages.fetchError'),
     showToast: false
   })
 }
@@ -409,7 +427,7 @@ async function fetchSites() {
     sites.value = response.data
     return response
   }, {
-    errorContext: t('assets.fetchSitesError'),
+    errorContext: t('assets.messages.fetchSitesError'),
     showToast: false
   })
 }
@@ -421,8 +439,8 @@ async function fetchLocations() {
   } catch (error) {
     toast.add({
       severity: 'error',
-      summary: t('common.error'),
-      detail: t('assets.fetchLocationsError'),
+      summary: t('common.messages.error'),
+      detail: t('assets.messages.fetchLocationsError'),
       life: 3000
     })
   }
@@ -435,8 +453,8 @@ async function fetchAreas() {
   } catch (error) {
     toast.add({
       severity: 'error',
-      summary: t('common.error'),
-      detail: t('assets.fetchAreasError'),
+      summary: t('common.messages.error'),
+      detail: t('assets.messages.fetchAreasError'),
       life: 3000
     })
   }
@@ -449,8 +467,8 @@ async function fetchManufactures() {
   } catch (error) {
     toast.add({
       severity: 'error',
-      summary: t('common.error'),
-      detail: t('assets.fetchManufacturersError'),
+      summary: t('common.messages.error'),
+      detail: t('assets.messages.fetchManufacturersError'),
       life: 3000
     })
   }
@@ -463,8 +481,8 @@ async function fetchAssetTypes() {
   } catch (error) {
     toast.add({
       severity: 'error',
-      summary: t('common.error'),
-      detail: t('assets.fetchAssetTypesError'),
+      summary: t('common.messages.error'),
+      detail: t('assets.messages.fetchAssetTypesError'),
       life: 3000
     })
   }
@@ -493,8 +511,8 @@ async function createAsset(assetData) {
   } catch (error) {
     toast.add({
       severity: 'error',
-      summary: t('common.error'),
-      detail: t('assets.createError'),
+      summary: t('common.messages.error'),
+      detail: t('assets.messages.createError'),
       life: 3000
     })
   }
@@ -506,7 +524,7 @@ async function updateAsset(assetData) {
     close()
     await fetchAssets()
   } catch (error) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assets.updateError'), life: 3000 })
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('assets.messages.updateError'), life: 3000 })
   }
 }
 
@@ -518,8 +536,8 @@ async function deleteAsset(id) {
     await api.deleteAsset(id)
     await fetchAssets()
   }, {
-    successMessage: t('assets.deleteSuccess'),
-    errorContext: t('assets.deleteError')
+    successMessage: t('assets.messages.deleteSuccess'),
+    errorContext: t('assets.messages.deleteError')
   })
 }
 
@@ -586,23 +604,23 @@ function onAssetImport(result) {
   if (result && (result.created || result.updated)) {
     toast.add({
       severity: 'success',
-      summary: t('common.success'),
-      detail: `${(result.created?.length || 0)} asset creati, ${(result.updated?.length || 0)} asset aggiornati` + (result.errors?.length ? `, ${result.errors.length} errori` : ''),
+      summary: t('common.messages.success'),
+      detail: t('assets.messages.imported', { created: result.created?.length || 0, updated: result.updated?.length || 0, errors: result.errors?.length || 0 }),
       life: 4000
     })
     fetchAssets()
   } else if (result && result.errors && result.errors.length) {
     toast.add({
       severity: 'warn',
-      summary: t('common.warning'),
-      detail: `${result.errors.length} errori durante l'import`,
+      summary: t('common.messages.warning'),
+      detail: t('assets.messages.importErrors', { errors: result.errors.length }),
       life: 4000
     })
   } else {
     toast.add({
       severity: 'info',
-      summary: t('assets.import'),
-      detail: t('assets.importedInfo'),
+      summary: t('common.actions.import'),
+      detail: t('assets.messages.importedInfo'),
       life: 4000
     })
   }
@@ -612,11 +630,11 @@ async function onBulkUpdate(bulkData) {
   try {
     const assetIds = selectedAssets.value.map(asset => asset.id)
     await api.bulkUpdateAssets(assetIds, { [bulkData.field]: bulkData.value })
-    toast.add({ severity: 'success', summary: t('common.success'), detail: t('assets.bulkUpdated'), life: 3000 })
+    toast.add({ severity: 'success', summary: t('common.messages.success'), detail: t('assets.messages.bulkUpdated'), life: 3000 })
     selectedAssets.value = []
     await fetchAssets()
   } catch (error) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assets.bulkUpdateError'), life: 4000 })
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('assets.messages.bulkUpdateError'), life: 4000 })
   }
 }
 
@@ -626,8 +644,8 @@ function confirmBulkSoftDelete() {
     selectedAssets.value,
     'soft_delete',
     () => bulkSoftDelete(selectedAssets.value), // Passa i parametri correttamente
-    t('assets.confirmBulkSoftDelete'),
-    t('assets.confirmBulkSoftDeleteMessage', { count: selectedAssets.value.length, names: assetNames })
+    t('assets.messages.confirmBulkSoftDelete'),
+    t('assets.messages.confirmBulkSoftDeleteMessage', { count: selectedAssets.value.length, names: assetNames })
   )
 }
 
@@ -648,8 +666,8 @@ async function bulkSoftDelete(assets) {
     if (deletedCount > 0) {
       toast.add({ 
         severity: 'success', 
-        summary: t('common.success'), 
-        detail: t('assets.bulkSoftDeleted', { count: deletedCount }), 
+        summary: t('common.messages.success'), 
+        detail: t('assets.messages.bulkSoftDeleted', { count: deletedCount }), 
         life: 3000 
       })
     }
@@ -658,8 +676,8 @@ async function bulkSoftDelete(assets) {
     if (errorCount > 0) {
       toast.add({ 
         severity: 'warn', 
-        summary: t('common.warning'), 
-        detail: t('assets.bulkSoftDeleteErrors', { count: errorCount }), 
+        summary: t('common.messages.warning'), 
+        detail: t('assets.messages.bulkSoftDeleteErrors', { count: errorCount }), 
         life: 4000 
       })
     }
@@ -668,8 +686,8 @@ async function bulkSoftDelete(assets) {
     if (deletedCount === 0 && errorCount === 0) {
       toast.add({ 
         severity: 'error', 
-        summary: t('common.error'), 
-        detail: t('assets.bulkSoftDeleteError'), 
+        summary: t('common.messages.error'), 
+        detail: t('assets.messages.bulkSoftDeleteError'), 
         life: 4000 
       })
     }
@@ -680,8 +698,8 @@ async function bulkSoftDelete(assets) {
     console.error('Bulk soft delete error:', error)
     toast.add({ 
       severity: 'error', 
-      summary: t('common.error'), 
-      detail: t('assets.bulkSoftDeleteError'), 
+      summary: t('common.messages.error'), 
+      detail: t('assets.messages.bulkSoftDeleteError'), 
       life: 4000 
     })
   }
@@ -695,31 +713,31 @@ function toggleTrashMode() {
 async function restoreAsset(id) {
   try {
     await api.restoreAsset(id)
-    toast.add({ severity: 'success', summary: t('common.success'), detail: t('assets.restored'), life: 3000 })
+    toast.add({ severity: 'success', summary: t('common.messages.success'), detail: t('assets.messages.restored'), life: 3000 })
     fetchAssets()
   } catch {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assets.restoreError'), life: 3000 })
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('assets.messages.restoreError'), life: 3000 })
   }
 }
 
 async function hardDeleteAsset(id) {
   try {
     await api.hardDeleteAsset(id)
-    toast.add({ severity: 'success', summary: t('common.success'), detail: t('assets.hardDeleted'), life: 3000 })
+    toast.add({ severity: 'success', summary: t('common.messages.success'), detail: t('assets.messages.hardDeleted'), life: 3000 })
     fetchAssets()
   } catch {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assets.hardDeleteError'), life: 3000 })
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('assets.messages.hardDeleteError'), life: 3000 })
   }
 }
 
 async function emptyTrash() {
   try {
     await api.emptyAssetsTrash()
-    toast.add({ severity: 'success', summary: t('common.success'), detail: t('assets.trashEmptied'), life: 3000 })
+    toast.add({ severity: 'success', summary: t('common.messages.success'), detail: t('assets.messages.trashEmptied'), life: 3000 })
     fetchAssets()
   } catch (err) {
     // console.log(err)
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assets.trashEmptyError'), life: 3000 })
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('assets.messages.trashEmptyError'), life: 3000 })
   }
 }
 
@@ -732,11 +750,11 @@ function riskLevelSeverity(score) {
 
 function getBusinessCriticalityLabel(value) {
   switch ((value || '').toLowerCase()) {
-    case 'low': return t('assets.businessCriticalityLow')
-    case 'medium': return t('assets.businessCriticalityMedium')
-    case 'high': return t('assets.businessCriticalityHigh')
-    case 'critical': return t('assets.businessCriticalityCritical')
-    default: return t('common.na')
+    case 'low': return t('assets.strings.businessCriticalityLow')
+    case 'medium': return t('assets.strings.businessCriticalityMedium')
+    case 'high': return t('assets.strings.businessCriticalityHigh')
+    case 'critical': return t('assets.strings.businessCriticalityCritical')
+    default: return t('common.strings.na')
   }
 }
 
@@ -749,6 +767,7 @@ function getCriticalityColor(value) {
     default: return '#6c757d'         // Grigio
   }
 }
+
 
 
 

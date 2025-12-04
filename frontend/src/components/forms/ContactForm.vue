@@ -2,36 +2,36 @@
   <form @submit.prevent="handleSubmit">
     <div class="p-fluid">
       <div class="p-field">
-        <label for="first_name">{{ t('common.firstName') }}</label>
+        <label for="first_name">{{ t('contacts.fields.firstName') }}</label>
         <InputText id="first_name" v-model="form.first_name" required />
       </div>
       <div class="p-field">
-        <label for="last_name">{{ t('common.lastName') }}</label>
+        <label for="last_name">{{ t('contacts.fields.lastName') }}</label>
         <InputText id="last_name" v-model="form.last_name" required />
       </div>
       <div class="p-field">
-        <label for="phone1">{{ t('common.phone1') }}</label>
+        <label for="phone1">{{ t('contacts.fields.phone1') }}</label>
         <InputText id="phone1" v-model="form.phone1" />
       </div>
       <div class="p-field">
-        <label for="phone2">{{ t('common.phone2') }}</label>
+        <label for="phone2">{{ t('contacts.fields.phone2') }}</label>
         <InputText id="phone2" v-model="form.phone2" />
       </div>
       <div class="p-field">
-        <label for="email">{{ t('common.email') }}</label>
+        <label for="email">{{ t('common.fields.email') }}</label>
         <InputText id="email" v-model="form.email" type="email" />
       </div>
       <div class="p-field">
-        <label for="type">{{ t('common.type') }}</label>
+        <label for="type">{{ t('contacts.fields.type') }}</label>
         <Dropdown id="type" v-model="form.type" :options="typeOptions" optionLabel="label" optionValue="value" />
       </div>
       <div class="p-field">
-        <label for="notes">{{ t('common.notes') }}</label>
+        <label for="notes">{{ t('contacts.fields.notes') }}</label>
         <Textarea id="notes" v-model="form.notes" rows="3" />
       </div>
       <div class="flex justify-content-end gap-2 mt-4">
-        <Button :label="t('common.cancel')" class="p-button-text" @click="handleCancel" />
-        <Button :label="t('common.save')" type="submit" />
+        <Button :label="t('common.actions.cancel')" class="p-button-text" @click="handleCancel" />
+        <Button :label="t('common.actions.save')" type="submit" />
       </div>
     </div>
   </form>
@@ -95,9 +95,9 @@ watch(
 )
 
 const typeOptions = ref([
-  { label: t('common.internal'), value: 'interno' },
-  { label: t('common.supplier'), value: 'fornitore' },
-  { label: t('common.other'), value: 'altro' }
+  { label: t('contacts.fields.internal'), value: 'interno' },
+  { label: t('contacts.fields.supplier'), value: 'fornitore' },
+  { label: t('contacts.fields.other'), value: 'altro' }
 ])
 
 function handleSubmit() {

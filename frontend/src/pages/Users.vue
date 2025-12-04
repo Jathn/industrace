@@ -11,7 +11,7 @@
         <!-- Azioni principali -->
         <Button 
           v-if="!trashMode && canWrite('users')"
-          :label="t('users.new')" 
+          :label="t('common.actions.create')" 
           icon="pi pi-plus" 
           severity="success"
           @click="openCreateDialog" 
@@ -24,7 +24,7 @@
         <Button 
           v-if="canDelete('users')"
           icon="pi pi-trash" 
-          :label="trashMode ? t('common.showActive') : t('common.showTrash')" 
+          :label="trashMode ? t('common.actions.showActive') : t('common.actions.showTrash')" 
           severity="secondary"
           @click="toggleTrashMode"
         />
@@ -53,7 +53,7 @@
           :options="roleOptions" 
           optionLabel="label" 
           optionValue="value" 
-          :placeholder="t('users.role')" 
+          :placeholder="t('users.fields.role')" 
           showClear 
           style="min-width: 150px" 
         />
@@ -62,7 +62,7 @@
           :options="statusOptions" 
           optionLabel="label" 
           optionValue="value" 
-          :placeholder="t('users.status')" 
+          :placeholder="t('users.fields.status')" 
           showClear 
           style="min-width: 150px" 
         />
@@ -75,7 +75,7 @@
 
       
       <template #body-is_active="{ data }">
-        <Tag :value="data.is_active ? t('common.active') : t('common.inactive')" :severity="data.is_active ? 'success' : 'danger'" />
+        <Tag :value="data.is_active ? t('users.strings.active') : t('users.strings.inactive')" :severity="data.is_active ? 'success' : 'danger'" />
       </template>
 
       <template #body-actions="{ data }">
@@ -137,7 +137,7 @@
 
     <BaseDialog
       v-model:visible="showBulkDialog"
-      :title="t('users.bulkEdit')"
+      :title="t('common.actions.bulkEdit')"
       @close="closeBulkDialog"
     >
       <!-- RIMOSSO: Form Bulk Edit Utenti -->
@@ -146,11 +146,11 @@
     <!-- TODO: Implementare UserImportDialog -->
     <BaseDialog
       v-model:visible="showImportDialog"
-      :title="t('users.import')"
+      :title="t('common.actions.import')"
       @close="showImportDialog = false"
     >
       <div class="p-4">
-        <p>{{ t('users.importNotImplemented') }}</p>
+        <p>{{ t('common.messages.importNotImplemented') }}</p>
       </div>
     </BaseDialog>
     
@@ -238,11 +238,11 @@ const bulkData = ref({
 })
 
 const columnOptions = [
-  { field: 'name', header: t('common.name'), sortable: true },
-  { field: 'email', header: t('common.email'), sortable: true },
-  { field: 'role_name', header: t('users.role'), sortable: false },
-  { field: 'is_active', header: t('common.status'), sortable: false, style: 'width: 110px' },
-  { field: 'actions', header: t('common.actions'), sortable: false }
+  { field: 'name', header: t('common.fields.name'), sortable: true },
+  { field: 'email', header: t('common.fields.email'), sortable: true },
+  { field: 'role_name', header: t('users.fields.role'), sortable: false },
+  { field: 'is_active', header: t('common.fields.status'), sortable: false, style: 'width: 110px' },
+  { field: 'actions', header: t('common.strings.actions'), sortable: false }
 ]
 
 const roleOptions = computed(() => {
@@ -250,8 +250,8 @@ const roleOptions = computed(() => {
 })
 
 const statusOptions = [
-  { label: t('common.active'), value: true },
-  { label: t('common.inactive'), value: false }
+  { label: t('users.strings.active'), value: true },
+  { label: t('users.strings.inactive'), value: false }
 ]
 
 // Computed properties
@@ -308,7 +308,7 @@ async function fetchUsers() {
     users.value = response.data
     return response
   }, {
-    errorContext: t('users.fetchError'),
+    errorContext: t('users.messages.fetchError'),
     showToast: false
   })
 }
@@ -319,17 +319,17 @@ async function fetchRoles() {
     roles.value = response.data
     return response
   }, {
-    errorContext: t('users.fetchRolesError'),
+    errorContext: t('users.messages.fetchRolesError'),
     showToast: false
   })
 }
 
 function openCreateDialog() {
-  openCreate(t('users.new'), null)
+  openCreate(t('common.actions.create'), null)
 }
 
 function openEditDialog(user) {
-  openEdit(t('users.edit'), user)
+  openEdit(t('common.actions.edit'), user)
 }
 
 function openBulkEditDialog() {
@@ -362,8 +362,8 @@ async function saveBulkEdit() {
     closeBulkDialog()
     await fetchUsers()
   }, {
-    successMessage: t('users.bulkUpdated'),
-    errorContext: t('users.bulkUpdateError')
+    successMessage: t('common.messages.bulkUpdated'),
+    errorContext: t('common.messages.bulkError')
   })
 }
 
@@ -375,8 +375,8 @@ async function saveUser(data) {
       close()
       await fetchUsers()
     }, {
-      successMessage: t('users.updated'),
-      errorContext: t('users.updateError')
+      successMessage: t('common.messages.updated'),
+      errorContext: t('common.messages.updateError')
     })
   } else {
     // Modalità creazione
@@ -385,23 +385,23 @@ async function saveUser(data) {
       close()
       await fetchUsers()
     }, {
-      successMessage: t('users.created'),
-      errorContext: t('users.createError')
+      successMessage: t('common.messages.created'),
+      errorContext: t('common.messages.createError')
     })
   }
 }
 
 async function deleteUser(id) {
   await confirmDelete(
-    t('users.deleteConfirm'),
-    t('users.deleteWarning'),
+    t('common.messages.deleteConfirm'),
+    t('common.messages.deleteWarning'),
     async () => {
       await execute(async () => {
         await api.deleteUser(id)
         await fetchUsers()
       }, {
-        successMessage: t('users.deleted'),
-        errorContext: t('users.deleteError')
+        successMessage: t('common.messages.deleted'),
+        errorContext: t('common.messages.deleteError')
       })
     }
   )
@@ -436,8 +436,8 @@ async function handleResetPassword(user) {
     await nextTick()
     showPasswordResetDialog.value = true
   }, {
-    successMessage: t('users.resetPasswordSuccess'),
-    errorContext: t('users.resetPasswordError')
+    successMessage: t('users.messages.resetPasswordSuccess'),
+    errorContext: t('users.messages.resetPasswordError')
   })
 }
 
@@ -451,8 +451,8 @@ async function updateUserRole(user) {
     await api.updateUserRole(user.id, user.role_id)
     await fetchUsers()
   }, {
-    successMessage: t('users.updated'),
-    errorContext: t('users.updateError')
+    successMessage: t('common.messages.updated'),
+    errorContext: t('common.messages.updateError')
   })
 }
 
@@ -471,8 +471,8 @@ async function restoreUser(id) {
     await api.restoreUser(id)
     await fetchUsers()
   }, {
-    successMessage: t('users.restored'),
-    errorContext: t('users.restoreError')
+    successMessage: t('common.messages.restored'),
+    errorContext: t('common.messages.restoreError')
   })
 }
 
@@ -481,8 +481,8 @@ async function hardDeleteUser(id) {
     await api.hardDeleteUser(id)
     await fetchUsers()
   }, {
-    successMessage: t('users.hardDeleted'),
-    errorContext: t('users.hardDeleteError')
+    successMessage: t('common.messages.hardDeleted'),
+    errorContext: t('common.messages.hardDeleteError')
   })
 }
 
@@ -493,15 +493,15 @@ async function emptyTrash() {
     }
     await fetchUsers()
   }, {
-    successMessage: t('users.trashEmptied'),
-    errorContext: t('users.emptyTrashError')
+    successMessage: t('common.messages.trashEmptied'),
+    errorContext: t('common.messages.emptyTrashError')
   })
 }
 
 async function handleEmptyTrash() {
   await confirmEmptyTrash(
-    t('users.emptyTrashConfirm'),
-    t('users.emptyTrashWarning'),
+    t('common.messages.emptyTrashConfirm'),
+    t('common.messages.emptyTrashWarning'),
     emptyTrash
   )
 }

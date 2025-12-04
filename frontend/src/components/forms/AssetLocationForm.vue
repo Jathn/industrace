@@ -3,14 +3,14 @@
     <template #title>
       <div class="flex align-items-center">
         <i class="pi pi-map-marker mr-2"></i>
-        {{ t('common.location') }}
+        {{ t('assets.strings.positionInfo') }}
       </div>
     </template>
     <template #content>
       <div class="grid">
         <div class="col-12 md:col-4">
           <div class="p-field">
-            <label for="site_id">{{ t('common.site') }} <span class="required">*</span></label>
+            <label for="site_id">{{ t('common.fields.site') }} <span class="required">*</span></label>
             <Dropdown 
               id="site_id" 
               v-model="form.site_id" 
@@ -47,7 +47,7 @@
 
         <div class="col-12 md:col-4">
           <div class="p-field">
-            <label for="location_id">{{ t('common.location') }}</label>
+            <label for="location_id">{{ t('assets.fields.location') }}</label>
             <Dropdown 
               id="location_id" 
               v-model="form.location_id" 
@@ -55,7 +55,7 @@
               optionLabel="name" 
               optionValue="id" 
               :disabled="!form.site_id"
-              :placeholder="t('common.selectLocation')"
+              :placeholder="t('common.strings.select')"
               :class="{ 'p-invalid': errors.location_id }"
               class="w-full"
             />

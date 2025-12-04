@@ -1,37 +1,52 @@
 {
     "title": "Produttori",
-    "new": "Nuovo produttore",
-    "add": "Aggiungi produttore",
-    "remove": "Rimuovi produttore",
-    "manufacturers": "Produttori",
-    "addManufacturers": "Aggiungi produttori",
-    "manufacturerForm": {
+    "messages": {
+        "fetchError": "Errore nel caricamento dei produttori",
+        "created": "Produttore creato con successo",
+        "createError": "Errore nella creazione del produttore",
+        "updated": "Produttore aggiornato con successo",
+        "updateError": "Errore nell'aggiornamento del produttore",
+        "deleted": "Produttore eliminato con successo",
+        "deleteError": "Errore nell'eliminazione del produttore",
+        "bulkUpdated": "Produttori aggiornati con successo",
+        "bulkUpdateError": "Errore nell'aggiornamento dei produttori",
+        "restored": "Produttore ripristinato con successo",
+        "restoreError": "Errore nel ripristino del produttore",
+        "hardDeleted": "Produttore eliminato definitivamente con successo",
+        "hardDeleteError": "Errore nell'eliminazione definitiva del produttore",
+        "trashEmptied": "Cestino svuotato con successo",
+        "emptyTrashError": "Errore nell'svuotamento del cestino"
+    },
+    "fields": {
         "name": "Nome",
         "description": "Descrizione",
+        "code": "Codice",
         "website": "Sito web",
         "email": "Email",
         "phone": "Telefono"
     },
+    "strings": {
+        "select": "Seleziona",
+        "info": "Informazioni",
+        "manufacturer": "Produttore"
+    },
     "manufacturerImport": {
         "title": "Importa Produttori",
         "downloadTemplate": "Scarica Template",
-        "confirm": "Conferma Import",
-        "emptyFile": "File vuoto",
-        "readError": "Errore nella lettura del file",
-        "importedInfo": "Produttori importati con successo",
+        "importantInfo": "Informazioni Utili",
+        "requiredFields": "Campi Obbligatori",
+        "nameRequired": "Nome è obbligatorio",
+        "websiteRequired": "Sito web è obbligatorio",
+        "emailRequired": "Email è obbligatorio",
+        "phoneRequired": "Telefono è obbligatorio",
+        "validFormats": "Formati Validi",
+        "emailFormat": "Email deve essere in formato email",
+        "phoneFormat": "Telefono deve essere in formato telefono",
         "toCreate": "Da Creare",
         "toUpdate": "Da Aggiornare",
         "errors": "Errori",
-        "differences": "Differenze",
         "row": "Riga",
-        "importantInfo": "Informazioni Importanti",
-        "requiredFields": "Campi Obbligatori",
-        "nameRequired": "Nome: obbligatorio",
-        "validFormats": "Formati Validi",
-        "emailFormat": "Email: formato standard valido",
-        "websiteFormat": "Sito web: con protocollo http o https",
-        "phoneFormat": "Telefono: con prefisso internazionale",
-        "tip": "Suggerimento",
-        "tipText": "Tutti i campi tranne il nome sono opzionali. I produttori vengono identificati univocamente dal nome."
+        "confirm": "Conferma",
+        "readError": "Errore nella lettura del file"
     }
 }

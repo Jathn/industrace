@@ -3,7 +3,7 @@
     <div class="asset-header-main">
       <div class="asset-header-top">
         <Button 
-          :label="t('common.back')" 
+          :label="t('common.actions.back')" 
           icon="pi pi-arrow-left" 
           class="p-button-text p-button-secondary back-btn"
           @click="$emit('back')"
@@ -12,8 +12,8 @@
       <h1 class="asset-title">{{ asset.name }}</h1>
       <div class="asset-meta">
         <Tag v-if="asset.status?.name" :value="asset.status.name" :style="{ background: asset.status?.color, color: '#fff' }" />
-        <span class="type">{{ asset.asset_type?.name || t('common.na') }}</span>
-        <span class="site">{{ asset.site?.name || t('common.na') }}</span>
+        <span class="type">{{ asset.asset_type?.name || t('common.strings.na') }}</span>
+        <span class="site">{{ asset.site?.name || t('common.strings.na') }}</span>
         <span class="area" v-if="asset.area_name">{{ asset.area_name }}</span>
         <CriticalityBadge
           v-if="asset.business_criticality"
@@ -22,7 +22,7 @@
         />
         <Tag
           v-if="riskBreakdown && riskBreakdown.final_score !== null"
-          :value="`${t('assets.riskScore')}: ${riskBreakdown.final_score} (${riskLevelLabel(riskBreakdown.final_score)})`"
+          :value="`${t('assets.fields.riskScore')}: ${riskBreakdown.final_score} (${riskLevelLabel(riskBreakdown.final_score)})`"
           :severity="riskLevelSeverity(riskBreakdown.final_score)"
           class="risk-badge"
         />
@@ -31,20 +31,20 @@
     <div class="asset-header-actions-modern">
       <Button 
         v-if="canWrite('assets')"
-        :label="t('common.edit')" 
+        :label="t('common.actions.edit')" 
         icon="pi pi-pencil" 
         severity="warning"
         @click="$emit('edit')" 
       />
       <Button 
-        :label="t('common.print')" 
+        :label="t('common.actions.print')" 
         icon="pi pi-print" 
         severity="success"
         @click="$emit('print')" 
       />
       <Button 
         v-if="hasFloorplan && canWrite('assets')"
-        :label="t('assets.floorplan')" 
+        :label="t('assets.strings.floorplan')" 
         icon="pi pi-map" 
         severity="info"
         @click="showPositioningDialog = true" 
@@ -89,10 +89,10 @@ const hasFloorplan = computed(() => !!(props.asset?.location?.floorplan?.id))
 
 // Risk utility functions
 function riskLevelLabel(score) {
-  if (score === null || score === undefined) return t('assets.riskLevelUndefined')
-  if (score >= 7) return t('assets.riskLevelHigh')
-  if (score >= 4) return t('assets.riskLevelMedium')
-  return t('assets.riskLevelLow')
+  if (score === null || score === undefined) return t('assets.strings.riskLevelUndefined')
+  if (score >= 7) return t('assets.strings.riskLevelHigh')
+  if (score >= 4) return t('assets.strings.riskLevelMedium')
+  return t('assets.strings.riskLevelLow')
 }
 
 function riskLevelSeverity(score) {

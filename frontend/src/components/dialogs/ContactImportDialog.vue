@@ -49,9 +49,9 @@
       <div v-if="previewResult.to_update && previewResult.to_update.length">
         <h4 class="mt-3 mb-1">{{ t('contacts.contactImport.toUpdate') }}</h4>
         <DataTable :value="previewResult.to_update" scrollable :scrollHeight="'20vh'">
-          <Column field="first_name" :header="t('contacts.contactForm.first_name')" />
-          <Column field="last_name" :header="t('contacts.contactForm.last_name')" />
-          <Column field="email" :header="t('contacts.contactForm.email')" />
+          <Column field="first_name" :header="t('contacts.fields.firstName')" />
+          <Column field="last_name" :header="t('contacts.fields.lastName')" />
+          <Column field="email" :header="t('common.fields.email')" />
           <Column field="diff" :header="t('contacts.contactImport.differences')">
             <template #body="{ data }">
               <ul>
@@ -71,7 +71,7 @@
       </div>
     </div>
     <template #footer>
-      <Button :label="t('common.cancel')" class="p-button-text" @click="$emit('close')" />
+      <Button :label="t('common.actions.cancel')" class="p-button-text" @click="$emit('close')" />
       <Button :label="t('contacts.contactImport.confirm')" :disabled="isConfirmDisabled" @click="confirmImport" />
     </template>
   </Dialog>

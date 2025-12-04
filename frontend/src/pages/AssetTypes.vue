@@ -4,7 +4,7 @@
       <h1>{{ t('assettypes.title') }}</h1>
       <Button 
         v-if="canWrite('asset_types')" 
-        :label="t('common.new')" 
+        :label="t('common.actions.create')" 
         icon="pi pi-plus" 
         @click="showDialog = true" 
       />
@@ -17,9 +17,9 @@
       :rows="10" 
       :rowsPerPageOptions="[5, 10, 25]"
     >
-      <Column field="name" :header="t('common.name')" sortable></Column>
-      <Column field="description" :header="t('common.description')"></Column>
-      <Column field="purdue_level" :header="t('common.purdueLevel')">
+      <Column field="name" :header="t('common.fields.name')" sortable></Column>
+      <Column field="description" :header="t('common.fields.description')"></Column>
+      <Column field="purdue_level" :header="t('assettypes.fields.purdueLevel')">
         <template #body="{ data }">
           <span v-if="data.purdue_level !== null && data.purdue_level !== undefined">
             {{ t('assettypes.level' + (data.purdue_level === 1.5 ? '1_5' : data.purdue_level)) }}
@@ -27,7 +27,7 @@
           <span v-else>-</span>
         </template>
       </Column>
-      <Column v-if="canWrite('asset_types') || canDelete('asset_types')" :header="t('common.actions')">
+      <Column v-if="canWrite('asset_types') || canDelete('asset_types')" :header="t('common.strings.actions')">
         <template #body="{ data }">
           <Button 
             v-if="canWrite('asset_types')"
@@ -47,7 +47,7 @@
 
     <Dialog 
       v-model:visible="showDialog" 
-      :header="t('common.new')" 
+      :header="t('common.actions.create')" 
       :modal="true" 
       :style="{ width: '40vw' }"
     >
@@ -60,7 +60,7 @@
 
     <Dialog 
       v-model:visible="editDialog" 
-      :header="t('common.edit')" 
+      :header="t('common.actions.edit')" 
       :modal="true" 
       :style="{ width: '40vw' }"
     >
@@ -111,7 +111,7 @@ async function fetchAssetTypes() {
     const response = await api.getAssetTypes()
     assettypes.value = response.data
   } catch (error) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assetTypes.fetchError'), life: 3000 })
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('assettypes.messages.fetchError'), life: 3000 })
   } finally {
     loading.value = false
   }
@@ -130,22 +130,22 @@ function onEditCancel() {
 async function createAssetType(data) {
   try {
     await api.createAssetType(data)
-    toast.add({ severity: 'success', summary: t('common.success'), detail: t('assetTypes.created'), life: 3000 })
+    toast.add({ severity: 'success', summary: t('common.messages.success'), detail: t('assettypes.messages.created'), life: 3000 })
     showDialog.value = false
     fetchAssetTypes()
   } catch (err) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assetTypes.createError'), life: 3000 })
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('assettypes.messages.createError'), life: 3000 })
   }
 }
 
 async function updateAssetType(data) {
   try {
     await api.updateAssetType(editingAssetType.value.id, data)
-    toast.add({ severity: 'success', summary: t('common.updated'), detail: t('assetTypes.updated'), life: 3000 })
+    toast.add({ severity: 'success', summary: t('common.messages.updated'), detail: t('assetTypes.messages.updated'), life: 3000 })
     editDialog.value = false
     fetchAssetTypes()
   } catch (err) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assetTypes.updateError'), life: 3000 })
+    toast.add({ severity: 'error', summary: t('common.messages.updateError'), detail: t('assetTypes.messages.updateError'), life: 3000 })
   }
 }
 
@@ -153,10 +153,10 @@ async function deleteAssetType(id) {
   if (!confirm(t('assetTypes.deleteConfirm'))) return
   try {
     await api.deleteAssetType(id)
-    toast.add({ severity: 'success', summary: t('common.deleted'), detail: t('assetTypes.deleted'), life: 3000 })
+    toast.add({ severity: 'success', summary: t('common.messages.deleted'), detail: t('assetTypes.messages.deleted'), life: 3000 })
     fetchAssetTypes()
   } catch (err) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assetTypes.deleteError'), life: 3000 })
+    toast.add({ severity: 'error', summary: t('common.messages.deleteError'), detail: t('assetTypes.messages.deleteError'), life: 3000 })
   }
 }
 

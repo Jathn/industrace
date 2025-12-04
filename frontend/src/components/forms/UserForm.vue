@@ -2,17 +2,17 @@
   <form @submit.prevent="handleSubmit">
     <div class="p-fluid">
       <div class="p-field">
-        <label for="name">{{ t('common.name') }}</label>
+        <label for="name">{{ t('common.fields.name') }}</label>
         <InputText id="name" v-model="form.name" required maxlength="100" />
       </div>
       
       <div class="p-field">
-        <label for="email">{{ t('common.email') }}</label>
+        <label for="email">{{ t('common.fields.email') }}</label>
         <InputText id="email" v-model="form.email" type="email" required maxlength="254" />
       </div>
       
       <div class="p-field">
-        <label for="role">{{ t('users.role') }}</label>
+        <label for="role">{{ t('users.fields.role') }}</label>
         <Dropdown 
           id="role" 
           v-model="form.role_id" 
@@ -24,17 +24,17 @@
       </div>
       
       <div class="p-field" v-if="!props.user">
-        <label for="user_password_input">{{ t('common.loginPassword') }}</label>
+        <label for="user_password_input">{{ t('users.fields.password') }}</label>
         <Password id="password" v-model="form.password" :feedback="false" :required="!props.user" toggleMask maxlength="100" inputId="user_password_input" />
       </div>
       
       <div class="p-field" v-else-if="canResetPassword">
-        <Button :label="t('users.resetPassword')" icon="pi pi-refresh" class="p-button-warning" @click.prevent="handleResetPassword" />
+        <Button :label="t('users.fields.resetPassword')" icon="pi pi-refresh" class="p-button-warning" @click.prevent="handleResetPassword" />
       </div>
       
       <div class="flex justify-content-end gap-2 mt-4">
-        <Button :label="t('common.cancel')" class="p-button-text" @click="handleCancel" />
-        <Button :label="t('common.save')" type="submit" />
+        <Button :label="t('common.actions.cancel')" class="p-button-text" @click="handleCancel" />
+        <Button :label="t('common.actions.save')" type="submit" />
       </div>
     </div>
   </form>

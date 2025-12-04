@@ -2,7 +2,7 @@
   <Dialog 
     :visible="visible" 
     @update:visible="$emit('update:visible', $event)"
-    :header="t('floorplanPositioning.title')"
+    :header="t('locations.floorplan.title')"
     modal 
     :style="{ width: '95vw', height: '90vh', maxWidth: 'none' }"
     :closable="true"
@@ -17,25 +17,25 @@
             icon="pi pi-plus" 
             class="p-button-sm p-button-text"
             @click="zoomIn"
-            :title="t('floorplanPositioning.zoomIn')"
+            :title="t('locations.floorplan.zoomIn')"
           />
           <Button 
             icon="pi pi-minus" 
             class="p-button-sm p-button-text"
             @click="zoomOut"
-            :title="t('floorplanPositioning.zoomOut')"
+            :title="t('locations.floorplan.zoomOut')"
           />
           <Button 
             icon="pi pi-refresh" 
             class="p-button-sm p-button-text"
             @click="resetView"
-            :title="t('floorplanPositioning.resetView')"
+            :title="t('locations.floorplan.resetView')"
           />
           <Button 
             icon="pi pi-expand" 
             class="p-button-sm p-button-text"
             @click="fitToView"
-            :title="t('floorplanPositioning.fitToView')"
+            :title="t('locations.floorplan.fitToView')"
           />
           <span class="zoom-level">{{ Math.round(zoom * 100) }}%</span>
         </div>
@@ -55,13 +55,13 @@
             icon="pi pi-save" 
             class="p-button-sm p-button-success"
             @click="savePosition"
-            :title="t('floorplanPositioning.savePosition')"
+            :title="t('locations.floorplan.savePosition')"
           />
           <Button 
             icon="pi pi-times" 
             class="p-button-sm p-button-secondary"
             @click="close"
-            :title="t('floorplanPositioning.close')"
+            :title="t('locations.floorplan.close')"
           />
         </div>
       </div>
@@ -93,7 +93,7 @@
           <!-- Messaggio se non c'è planimetria -->
           <div v-else-if="!hasFloorplan" class="no-floorplan-message">
             <i class="pi pi-image" style="font-size: 3rem; color: var(--text-color-secondary);"></i>
-            <p>{{ t('floorplanPositioning.noFloorplan') }}</p>
+            <p>{{ t('locations.floorplan.noFloorplan') }}</p>
           </div>
           
           <!-- Grid overlay -->
@@ -151,7 +151,7 @@
             :style="positioningGuideStyle"
           >
             <div class="guide-circle"></div>
-            <div class="guide-text">{{ t('floorplanPositioning.clickToPosition') }}</div>
+            <div class="guide-text">{{ t('locations.floorplan.clickToPosition') }}</div>
           </div>
         </div>
       </div>
@@ -159,29 +159,29 @@
       <!-- Pannello informazioni -->
       <div class="info-panel">
         <div class="info-section">
-          <h4>{{ t('floorplanPositioning.instructions') }}</h4>
+          <h4>{{ t('locations.floorplan.instructions') }}</h4>
           <ul>
-            <li>{{ t('floorplanPositioning.instruction1') }}</li>
-            <li>{{ t('floorplanPositioning.instruction2') }}</li>
-            <li>{{ t('floorplanPositioning.instruction3') }}</li>
-            <li v-if="isPositioned(marker)">{{ t('floorplanPositioning.instruction4') }}</li>
+            <li>{{ t('locations.floorplan.instruction1') }}</li>
+            <li>{{ t('locations.floorplan.instruction2') }}</li>
+            <li>{{ t('locations.floorplan.instruction3') }}</li>
+            <li v-if="isPositioned(marker)">{{ t('locations.floorplan.instruction4') }}</li>
           </ul>
         </div>
         
         <div class="info-section">
-          <h4>{{ t('floorplanPositioning.status') }}</h4>
+          <h4>{{ t('locations.floorplan.status') }}</h4>
           <div class="status-display">
             <span v-if="hasChanges" class="status-changed">
               <i class="pi pi-exclamation-triangle"></i>
-              {{ t('floorplanPositioning.changesPending') }}
+              {{ t('locations.floorplan.changesPending') }}
             </span>
             <span v-else-if="isPositioned(marker)" class="status-saved">
               <i class="pi pi-check-circle"></i>
-              {{ t('floorplanPositioning.positionSaved') }}
+              {{ t('locations.floorplan.positionSaved') }}
             </span>
             <span v-else class="status-not-positioned">
               <i class="pi pi-map-marker"></i>
-              {{ t('floorplanPositioning.notPositioned') }}
+              {{ t('locations.floorplan.notPositioned') }}
             </span>
           </div>
         </div>
@@ -472,8 +472,8 @@ async function savePosition() {
     
     toast.add({ 
       severity: 'success', 
-      summary: t('common.success'), 
-      detail: t('floorplanPositioning.positionSaved'), 
+      summary: t('common.messages.success'), 
+      detail: t('locations.floorplan.positionSaved'), 
       life: 3000 
     })
     
@@ -481,8 +481,8 @@ async function savePosition() {
   } catch (err) {
     toast.add({ 
       severity: 'error', 
-      summary: t('common.error'), 
-      detail: t('floorplanPositioning.saveError'), 
+      summary: t('common.messages.error'), 
+      detail: t('locations.floorplan.saveError'), 
       life: 3000 
     })
   }
@@ -491,7 +491,7 @@ async function savePosition() {
 function close() {
   if (hasChanges.value) {
     // Chiedi conferma se ci sono modifiche non salvate
-    if (confirm(t('floorplanPositioning.confirmClose'))) {
+    if (confirm(t('locations.floorplan.confirmClose'))) {
       emit('update:visible', false)
     }
   } else {

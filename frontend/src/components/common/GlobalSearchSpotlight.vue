@@ -7,7 +7,7 @@
           <input
             ref="input"
             v-model="searchQuery"
-            :placeholder="t('globalSearch.placeholder')"
+            :placeholder="t('globalsearch.strings.placeholder')"
             class="spotlight-input global-search-input"
             @keydown.down.prevent="moveSelection(1)"
             @keydown.up.prevent="moveSelection(-1)"
@@ -24,7 +24,7 @@
         <div class="spotlight-results">
           <template v-if="searchResults.length">
             <template v-for="(group, idx) in groupedResults" :key="group.type">
-              <div class="spotlight-group-label">{{ t('globalSearch.types.' + group.type) }}</div>
+              <div class="spotlight-group-label">{{ t('globalsearch.types.' + group.type) }}</div>
               <div v-for="(item, i) in group.items" :key="item.id"
                 :class="['spotlight-result', { selected: isSelected(idx, i) }]"
                 @mousedown.prevent="select(idx, i)"
@@ -37,15 +37,15 @@
           </template>
           <div v-else-if="searchQuery && !isLoading" class="spotlight-no-results">
             <i class="pi pi-info-circle" />
-            {{ t('globalSearch.noResults') }}
+            {{ t('globalsearch.strings.noResults') }}
           </div>
           <div v-else-if="!searchQuery && !auth.isAuthenticated" class="spotlight-no-results">
             <i class="pi pi-lock" />
-            {{ t('globalSearch.loginRequired') }}
+            {{ t('globalsearch.strings.loginRequired') }}
           </div>
           <div v-else-if="!searchQuery" class="spotlight-no-results">
             <i class="pi pi-search" />
-            {{ t('globalSearch.startTyping') }}
+            {{ t('globalsearch.strings.startTyping') }}
           </div>
         </div>
       </div>
@@ -164,6 +164,11 @@ const handleSearch = () => {
   if (searchTimeout) {
     clearTimeout(searchTimeout)
   }
+  // Se la query è troppo corta, pulisci i risultati
+  if (!searchQuery.value || searchQuery.value.trim().length < 2) {
+    searchResults.value = []
+    return
+  }
   searchTimeout = setTimeout(() => {
     performSearch()
   }, 300)
@@ -191,7 +196,14 @@ watch(isVisible, (val) => {
     })
   } else {
     selection.value = { group: 0, item: 0 }
+    searchQuery.value = ''
+    searchResults.value = []
   }
+})
+
+// Watch searchQuery per aggiornare automaticamente la ricerca
+watch(searchQuery, () => {
+  handleSearch()
 })
 </script>
 

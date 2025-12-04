@@ -2,7 +2,7 @@
   <form @submit.prevent="handleSubmit">
     <div class="p-fluid">
       <div class="p-field">
-        <label for="name">{{ t('common.name') }} *</label>
+        <label for="name">{{ t('common.fields.name') }} *</label>
         <InputText id="name" v-model="form.name" :placeholder="t('common.placeholders.supplierName')" required />
       </div>
       <div class="p-field">
@@ -10,76 +10,76 @@
         <Textarea id="description" v-model="form.description" :placeholder="t('common.placeholders.supplierDescription')" autoResize />
       </div>
       <div class="p-field">
-        <label for="vat_number">{{ t('common.vatNumber') }}</label>
+        <label for="vat_number">{{ t('suppliers.fields.vatNumber') }}</label>
         <InputText id="vat_number" v-model="form.vat_number" :placeholder="t('common.placeholders.vatNumber')" />
       </div>
       <div class="p-field">
-        <label for="tax_code">{{ t('common.taxCode') }}</label>
+        <label for="tax_code">{{ t('suppliers.fields.taxCode') }}</label>
         <InputText id="tax_code" v-model="form.tax_code" :placeholder="t('common.placeholders.taxCode')" />
       </div>
       <div class="p-field">
-        <label for="address">{{ t('common.address') }}</label>
+        <label for="address">{{ t('suppliers.fields.address') }}</label>
         <InputText id="address" v-model="form.address" :placeholder="t('common.placeholders.address')" />
       </div>
       <div class="p-field">
-        <label for="city">{{ t('common.city') }}</label>
+        <label for="city">{{ t('suppliers.fields.city') }}</label>
         <InputText id="city" v-model="form.city" :placeholder="t('common.placeholders.city')" />
       </div>
       <div class="p-field">
-        <label for="zip_code">{{ t('common.zipCode') }}</label>
+        <label for="zip_code">{{ t('suppliers.fields.zipCode') }}</label>
         <InputText id="zip_code" v-model="form.zip_code" :placeholder="t('common.placeholders.zipCode')" />
       </div>
       <div class="p-field">
-        <label for="province">{{ t('common.state') }}</label>
+        <label for="province">{{ t('suppliers.fields.province') }}</label>
         <InputText id="province" v-model="form.province" :placeholder="t('common.placeholders.province')" />
       </div>
       <div class="p-field">
-        <label for="country">{{ t('common.country') }}</label>
+        <label for="country">{{ t('suppliers.fields.country') }}</label>
         <InputText id="country" v-model="form.country" :placeholder="t('common.placeholders.country')" />
       </div>
       <div class="p-field">
-        <label for="phone">{{ t('common.phone') }}</label>
+        <label for="phone">{{ t('suppliers.fields.phone') }}</label>
         <InputText id="phone" v-model="form.phone" :placeholder="t('common.placeholders.phone')" />
       </div>
       <div class="p-field">
-          <label for="email">{{ t('common.email') }}</label>
+          <label for="email">{{ t('suppliers.fields.email') }}</label>
         <InputText id="email" v-model="form.email" :placeholder="t('common.placeholders.email')" />
       </div>
       <div class="p-field">
-        <label for="website">{{ t('common.website') }}</label>
+        <label for="website">{{ t('suppliers.fields.website') }}</label>
         <InputText id="website" v-model="form.website" :placeholder="t('common.placeholders.website')" />
       </div>
       <div class="p-field">
-        <label for="notes">{{ t('common.notes') }}</label>
+        <label for="notes">{{ t('suppliers.fields.notes') }}</label>
         <Textarea id="notes" v-model="form.notes" :placeholder="t('common.placeholders.notes')" autoResize />
       </div>
       <div class="flex justify-content-end gap-2 mt-4">
-        <Button :label="t('common.cancel')" class="p-button-text" @click="emit('cancel')" />
-        <Button :label="t('common.save')" type="submit" />
+        <Button :label="t('common.actions.cancel')" class="p-button-text" @click="emit('cancel')" />
+        <Button :label="t('common.actions.save')" type="submit" />
       </div>
     </div>
 
-    <Dialog v-model:visible="showContactDialog" :header="t('contacts.new')" :modal="true" :style="{ width: '30vw' }">
+    <Dialog v-model:visible="showContactDialog" :header="t('suppliers.contacts.new')" :modal="true" :style="{ width: '30vw' }">
       <div class="p-fluid">
         <div class="p-field">
-          <label for="contact_name">{{ t('common.name') }} *</label>
+          <label for="contact_name">{{ t('common.fields.name') }} *</label>
           <InputText id="contact_name" v-model="contactForm.name" :placeholder="t('common.placeholders.contactName')" required />
         </div>
         <div class="p-field">
-          <label for="contact_email">{{ t('common.email') }} *</label>
+          <label for="contact_email">{{ t('common.fields.email') }} *</label>
           <InputText id="contact_email" v-model="contactForm.email" :placeholder="t('common.placeholders.contactEmail')" required />
         </div>
         <div class="p-field">
-          <label for="contact_phone">{{ t('common.phone') }}</label>
+          <label for="contact_phone">{{ t('common.fields.phone') }}</label>
           <InputText id="contact_phone" v-model="contactForm.phone" />
         </div>
         <div class="p-field">
-          <label for="contact_role">{{ t('common.role') }}</label>
+          <label for="contact_role">{{ t('common.fields.type') }}</label>
           <InputText id="contact_role" v-model="contactForm.role" />
         </div>
         <div class="flex justify-content-end gap-2 mt-3">
-          <Button :label="t('common.cancel')" class="p-button-text" @click="cancelContactDialog" />
-          <Button :label="t('common.save')" @click="saveContact" />
+          <Button :label="t('common.actions.cancel')" class="p-button-text" @click="cancelContactDialog" />
+          <Button :label="t('common.actions.save')" @click="saveContact" />
         </div>
       </div>
     </Dialog>

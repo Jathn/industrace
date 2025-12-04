@@ -1,8 +1,4 @@
-<!--
-  - BaseDialog.vue
-  - Componente base standardizzato per i dialog
-  - Fornisce gestione uniforme per creazione, modifica e visualizzazione
--->
+
 <template>
   <Dialog 
     :visible="isVisible" 
@@ -131,17 +127,17 @@ const computedSubmitLabel = computed(() => {
   }
   switch (props.mode) {
     case 'create':
-      return t('common.create')
+      return t('common.actions.create')
     case 'edit':
-      return t('common.update')
+      return t('common.actions.update')
     case 'view':
-      return t('common.close')
+      return t('common.actions.close')
     default:
-      return t('common.save')
+      return t('common.actions.save')
   }
 })
 
-const computedCancelLabel = computed(() => props.cancelLabel ?? t('common.cancel'))
+const computedCancelLabel = computed(() => props.cancelLabel ?? t('common.actions.cancel'))
 
 const computedTitle = computed(() => {
   if (props.title) {
@@ -149,11 +145,11 @@ const computedTitle = computed(() => {
   }
   switch (props.mode) {
     case 'create':
-      return t('common.create')
+      return t('common.actions.create')
     case 'edit':
-      return t('common.edit')
+      return t('common.actions.edit')
     case 'view':
-      return t('common.view')
+      return t('common.actions.close')
     default:
       return ''
   }

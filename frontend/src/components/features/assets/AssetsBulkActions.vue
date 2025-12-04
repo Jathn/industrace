@@ -1,62 +1,62 @@
 <template>
-  <Dialog :visible="visible" @update:visible="$emit('update:visible', $event)" :header="t('assets.bulkUpdate')" :modal="true" :style="{ width: '40vw' }">
+  <Dialog :visible="visible" @update:visible="$emit('update:visible', $event)" :header="t('common.actions.bulkEdit')" :modal="true" :style="{ width: '40vw' }">
     <div class="p-fluid">
       <div class="p-field">
-        <label for="field">{{ t('assets.chooseField') }}</label>
-        <Dropdown v-model="bulkField" :options="bulkFieldOptions" optionLabel="label" optionValue="value" :placeholder="t('assets.chooseField')" />
+        <label for="field">{{ t('assets.strings.chooseField') }}</label>
+        <Dropdown v-model="bulkField" :options="bulkFieldOptions" optionLabel="label" optionValue="value" :placeholder="t('assets.strings.chooseField')" />
       </div>
       
       <!-- Status -->
       <div class="p-field" v-if="bulkField === 'status_id'">
-        <label>{{ t('assets.status') }}</label>
+        <label>{{ t('common.fields.status') }}</label>
         <Dropdown v-model="bulkValue" :options="assetStatusOptions" optionLabel="name" optionValue="id" :placeholder="t('assets.status')" />
       </div>
       
       <!-- Site -->
       <div class="p-field" v-if="bulkField === 'site_id'">
-        <label>{{ t('assets.site') }}</label>
-        <Dropdown v-model="bulkValue" :options="sites" optionLabel="name" optionValue="id" :placeholder="t('assets.site')" />
+        <label>{{ t('common.fields.site') }}</label>
+        <Dropdown v-model="bulkValue" :options="sites" optionLabel="name" optionValue="id" :placeholder="t('common.fields.site')" />
       </div>
       
       <!-- Asset Type -->
       <div class="p-field" v-if="bulkField === 'asset_type_id'">
-        <label>{{ t('assets.type') }}</label>
-        <Dropdown v-model="bulkValue" :options="assetTypes" optionLabel="name" optionValue="id" :placeholder="t('assets.type')" />
+        <label>{{ t('assets.fields.type') }}</label>
+        <Dropdown v-model="bulkValue" :options="assetTypes" optionLabel="name" optionValue="id" :placeholder="t('assets.fields.type')" />
       </div>
       
       <!-- Area -->
       <div class="p-field" v-if="bulkField === 'area_id'">
-        <label>{{ t('assets.area') }}</label>
-        <Dropdown v-model="bulkValue" :options="areas" optionLabel="name" optionValue="id" :placeholder="t('assets.area')" showClear />
+        <label>{{ t('assets.fields.area') }}</label>
+        <Dropdown v-model="bulkValue" :options="areas" optionLabel="name" optionValue="id" :placeholder="t('assets.fields.area')" showClear />
       </div>
       
       <!-- Location -->
       <div class="p-field" v-if="bulkField === 'location_id'">
-        <label>{{ t('assets.location') }}</label>
-        <Dropdown v-model="bulkValue" :options="locations" optionLabel="name" optionValue="id" :placeholder="t('assets.location')" showClear />
+        <label>{{ t('assets.fields.location') }}</label>
+        <Dropdown v-model="bulkValue" :options="locations" optionLabel="name" optionValue="id" :placeholder="t('assets.fields.location')" showClear />
       </div>
       
       <!-- Manufacturer -->
       <div class="p-field" v-if="bulkField === 'manufacturer_id'">
-        <label>{{ t('assets.manufacturer') }}</label>
-        <Dropdown v-model="bulkValue" :options="manufacturers" optionLabel="name" optionValue="id" :placeholder="t('assets.manufacturer')" />
+        <label>{{ t('assets.fields.manufacturer') }}</label>
+        <Dropdown v-model="bulkValue" :options="manufacturers" optionLabel="name" optionValue="id" :placeholder="t('assets.fields.manufacturer')" />
       </div>
       
       <!-- VLAN -->
       <div class="p-field" v-if="bulkField === 'vlan'">
-        <label for="bulk_vlan">{{ t('assets.vlan') }}</label>
+        <label for="bulk_vlan">{{ t('assets.fields.vlan') }}</label>
         <InputText id="bulk_vlan" v-model="bulkValue" />
       </div>
       
       <!-- Business Criticality -->
       <div class="p-field" v-if="bulkField === 'business_criticality'">
-        <label>{{ t('assetForm.businessCriticality') }}</label>
+        <label>{{ t('assets.fields.businessCriticality') }}</label>
         <Dropdown
           v-model="bulkValue"
           :options="businessCriticalityOptions"
           optionLabel="label"
           optionValue="value"
-          :placeholder="t('assetForm.businessCriticality')"
+          :placeholder="t('assets.fields.businessCriticality')"
           showClear
         />
       </div>
@@ -68,8 +68,8 @@
       </div>
       
       <div class="p-field">
-        <Button :label="t('common.confirm')" icon="pi pi-check" class="p-button-success" :disabled="!bulkField || bulkValue === null || bulkValue === ''" @click="onBulkUpdate" />
-        <Button :label="t('common.cancel')" icon="pi pi-times" class="p-button-text" @click="close" />
+        <Button :label="t('common.actions.confirm')" icon="pi pi-check" class="p-button-success" :disabled="!bulkField || bulkValue === null || bulkValue === ''" @click="onBulkUpdate" />
+        <Button :label="t('common.actions.cancel')" icon="pi pi-times" class="p-button-text" @click="close" />
       </div>
     </div>
   </Dialog>
@@ -101,21 +101,21 @@ const bulkField = ref(null)
 const bulkValue = ref(null)
 
 const bulkFieldOptions = [
-  { label: t('assets.status'), value: 'status_id' },
-  { label: t('assets.site'), value: 'site_id' },
-  { label: t('assets.area'), value: 'area_id' },
-  { label: t('assets.location'), value: 'location_id' },
-  { label: t('assets.type'), value: 'asset_type_id' },
-  { label: t('assets.manufacturer'), value: 'manufacturer_id' },
-  { label: t('assets.vlan'), value: 'vlan' },
-  { label: t('assetForm.businessCriticality'), value: 'business_criticality' }
+  { label: t('common.fields.status'), value: 'status_id' },
+  { label: t(' common.fields.site'), value: 'site_id' },
+  { label: t('common.fields.area'), value: 'area_id' },
+  { label: t('common.fields.location'), value: 'location_id' },
+  { label: t('common.fields.type'), value: 'asset_type_id' },
+  { label: t('common.fields.manufacturer'), value: 'manufacturer_id' },
+  { label: t('assets.fields.vlan'), value: 'vlan' },
+  { label: t('assets.fields.businessCriticality'), value: 'business_criticality' }
 ]
 
 const businessCriticalityOptions = [
-  { label: t('assetForm.businessCriticalityLow'), value: 'low' },
-  { label: t('assetForm.businessCriticalityMedium'), value: 'medium' },
-  { label: t('assetForm.businessCriticalityHigh'), value: 'high' },
-  { label: t('assetForm.businessCriticalityCritical'), value: 'critical' }
+  { label: t('assets.strings.businessCriticalityLow'), value: 'low' },
+  { label: t('assets.strings.businessCriticalityMedium'), value: 'medium' },
+  { label: t('assets.strings.businessCriticalityHigh'), value: 'high' },
+  { label: t('assets.strings.businessCriticalityCritical'), value: 'critical' }
 ]
 
 // Reset form quando si apre/chiude il dialog

@@ -5,7 +5,7 @@
         <div class="footer-brand">
           <img src="@/static/logo_besafe.png" alt="BeSafe logo" class="besafe-logo" />
           <div class="brand-info">
-            <span class="powered-by">{{ $t('common.footer.powered_by') }}</span>
+            <span class="powered-by">{{ $t('footer.powered_by') }}</span>
             <a :href="appConfig.links.website" target="_blank" rel="noopener" class="besafe-link">
               BeSafe
             </a>
@@ -17,10 +17,10 @@
         <div class="footer-info">
           <span class="version">v{{ version }}</span>
           <span class="separator">•</span>
-          <span class="copyright">{{ $t('common.footer.copyright', { year: currentYear }) }}</span>
+          <span class="copyright">{{ $t('footer.copyright', { year: currentYear }) }}</span>
           <span class="separator">•</span>
           <a :href="appConfig.links.license" target="_blank" rel="noopener" class="footer-link">
-            {{ $t('common.footer.license') }}
+            {{ $t('footer.license') }}
           </a>
         </div>
       </div>
@@ -28,11 +28,11 @@
       <div class="footer-section">
         <div class="footer-links">
           <a :href="appConfig.links.github" target="_blank" rel="noopener" class="footer-link">
-            {{ $t('common.footer.github') }}
+            {{ $t('footer.github') }}
           </a>
           <span class="separator">•</span>
           <a :href="appConfig.links.issues" target="_blank" rel="noopener" class="footer-link">
-            {{ $t('common.footer.report_bug') }}
+            {{ $t('footer.report_bug') }}
           </a>
         </div>
       </div>

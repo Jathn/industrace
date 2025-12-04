@@ -6,16 +6,16 @@
 <template>
   <div class="audit-logs-page">
     <div class="page-header">
-      <h1>{{ t('auditLogs.title') }}</h1>
+      <h1>{{ t('auditlog.title') }}</h1>
       <div class="flex gap-2">
         <Button 
-          :label="t('auditLogs.export')" 
+          :label="t('common.actions.export')" 
           icon="pi pi-file-excel" 
           severity="secondary"
           @click="exportAuditLogs" 
         />
         <Button 
-          :label="t('auditLogs.timeline')" 
+          :label="t('auditlog.strings.timeline')" 
           icon="pi pi-clock" 
           severity="info"
           @click="showTimelineView = !showTimelineView" 
@@ -27,11 +27,11 @@
     <div class="filters-section mb-4">
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div class="field">
-          <label class="block text-sm font-medium mb-2">{{ t('auditLogs.dateRange') }}</label>
+          <label class="block text-sm font-medium mb-2">{{ t('auditlog.strings.dateRange') }}</label>
           <Calendar 
             v-model="filters.dateRange" 
             selectionMode="range" 
-            :placeholder="t('auditLogs.selectDateRange')"
+            :placeholder="t('auditlog.strings.selectDateRange')"
             dateFormat="dd/mm/yy"
             showIcon
             class="w-full"
@@ -39,39 +39,39 @@
         </div>
         
         <div class="field">
-          <label class="block text-sm font-medium mb-2">{{ t('auditLogs.action') }}</label>
+          <label class="block text-sm font-medium mb-2">{{ t('auditlog.strings.action') }}</label>
           <Dropdown 
             v-model="filters.action" 
             :options="actionOptions" 
             optionLabel="label" 
             optionValue="value" 
-            :placeholder="t('auditLogs.selectAction')"
+            :placeholder="t('auditlog.strings.selectAction')"
             showClear
             class="w-full"
           />
         </div>
         
         <div class="field">
-          <label class="block text-sm font-medium mb-2">{{ t('auditLogs.entity') }}</label>
+          <label class="block text-sm font-medium mb-2">{{ t('auditlog.strings.entity') }}</label>
           <Dropdown 
             v-model="filters.entity" 
             :options="entityOptions" 
             optionLabel="label" 
             optionValue="value" 
-            :placeholder="t('auditLogs.selectEntity')"
+            :placeholder="t('auditlog.strings.selectEntity')"
             showClear
             class="w-full"
           />
         </div>
         
         <div class="field">
-          <label class="block text-sm font-medium mb-2">{{ t('auditLogs.user') }}</label>
+          <label class="block text-sm font-medium mb-2">{{ t('auditlog.strings.user') }}</label>
           <Dropdown 
             v-model="filters.user_id" 
             :options="userOptions" 
             optionLabel="label" 
             optionValue="value" 
-            :placeholder="t('auditLogs.selectUser')"
+            :placeholder="t('auditlog.strings.selectUser')"
             showClear
             class="w-full"
           />
@@ -80,12 +80,12 @@
       
       <div class="flex gap-2 mt-4">
         <Button 
-          :label="t('common.search')" 
+          :label="t('common.actions.search')" 
           icon="pi pi-search" 
           @click="fetchAuditLogs" 
         />
         <Button 
-          :label="t('common.clear')" 
+          :label="t('common.actions.clear')" 
           icon="pi pi-times" 
           severity="secondary"
           @click="clearFilters" 
@@ -95,7 +95,7 @@
 
     <!-- Vista Timeline -->
     <div v-if="showTimelineView" class="timeline-view mb-6">
-      <h3 class="text-lg font-semibold mb-4">{{ t('auditLogs.timelineView') }}</h3>
+      <h3 class="text-lg font-semibold mb-4">{{ t('auditlog.strings.timelineView') }}</h3>
       <div class="timeline-container">
         <div v-for="log in auditLogs" :key="log.id" class="timeline-item">
           <div class="timeline-marker" :class="getActionClass(log.action)">
@@ -111,7 +111,7 @@
               <p class="timeline-description">{{ getFormattedDescription(log) }}</p>
               <div v-if="log.entity_id" class="timeline-entity">
                 <Button 
-                  :label="t('auditLogs.viewEntity')" 
+                  :label="t('auditlog.strings.viewEntity')" 
                   icon="pi pi-external-link" 
                   size="small"
                   severity="secondary"
@@ -185,50 +185,50 @@
     <!-- Dialog Dettagli -->
     <BaseDialog
       v-model:visible="showDialog"
-      :title="t('auditLogs.details')"
+      :title="t('auditlog.strings.details')"
       :showFooter="false"
       @close="closeDialog"
     >
       <div v-if="selectedLog" class="audit-details">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
           <div class="detail-item">
-            <label class="text-sm font-medium text-gray-600">{{ t('auditLogs.timestamp') }}</label>
+            <label class="text-sm font-medium text-gray-600">{{ t('auditlog.strings.timestamp') }}</label>
             <p>{{ formatTimestamp(selectedLog.timestamp) }}</p>
           </div>
           <div class="detail-item">
-            <label class="text-sm font-medium text-gray-600">{{ t('auditLogs.user') }}</label>
+            <label class="text-sm font-medium text-gray-600">{{ t('auditlog.strings.user') }}</label>
             <p>{{ getUserName(selectedLog.user_id) }}</p>
           </div>
           <div class="detail-item">
-            <label class="text-sm font-medium text-gray-600">{{ t('auditLogs.action') }}</label>
+            <label class="text-sm font-medium text-gray-600">{{ t('auditlog.strings.action') }}</label>
             <Tag :value="selectedLog.action" :severity="getActionSeverity(selectedLog.action)" />
           </div>
           <div class="detail-item">
-            <label class="text-sm font-medium text-gray-600">{{ t('auditLogs.entity') }}</label>
+            <label class="text-sm font-medium text-gray-600">{{ t('auditlog.strings.entity') }}</label>
             <p>{{ getEntityLabel(selectedLog.entity) }}</p>
           </div>
           <div class="detail-item">
-            <label class="text-sm font-medium text-gray-600">{{ t('auditLogs.ip') }}</label>
+            <label class="text-sm font-medium text-gray-600">{{ t('auditlog.strings.ip') }}</label>
             <p>{{ selectedLog.ip_address || '-' }}</p>
           </div>
           <div class="detail-item">
-            <label class="text-sm font-medium text-gray-600">{{ t('auditLogs.description') }}</label>
+            <label class="text-sm font-medium text-gray-600">{{ t('auditlog.strings.description') }}</label>
             <p>{{ selectedLog.description }}</p>
           </div>
         </div>
         
         <div v-if="selectedLog.old_data || selectedLog.new_data" class="data-changes">
-          <h4 class="text-lg font-semibold mb-3">{{ t('auditLogs.dataChanges') }}</h4>
+          <h4 class="text-lg font-semibold mb-3">{{ t('auditlog.strings.dataChanges') }}</h4>
           
           <div v-if="selectedLog.old_data" class="mb-4">
-            <h5 class="text-md font-medium mb-2 text-red-600">{{ t('auditLogs.oldData') }}</h5>
+            <h5 class="text-md font-medium mb-2 text-red-600">{{ t('auditlog.strings.oldData') }}</h5>
             <div class="json-viewer">
               <pre>{{ formatJson(selectedLog.old_data) }}</pre>
             </div>
           </div>
           
           <div v-if="selectedLog.new_data">
-            <h5 class="text-md font-medium mb-2 text-green-600">{{ t('auditLogs.newData') }}</h5>
+            <h5 class="text-md font-medium mb-2 text-green-600">{{ t('auditlog.strings.newData') }}</h5>
             <div class="json-viewer">
               <pre>{{ formatJson(selectedLog.new_data) }}</pre>
             </div>
@@ -237,7 +237,7 @@
         
         <div v-if="selectedLog.entity_id" class="mt-6">
           <Button 
-            :label="t('auditLogs.viewEntity')" 
+            :label="t('auditlog.strings.viewEntity')" 
             icon="pi pi-external-link"
             @click="viewEntity(selectedLog.entity, selectedLog.entity_id)"
           />
@@ -251,7 +251,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { i18n } from '../locales/loader.js'
+import i18n from '../locales/loader-final.js'
 import { useApi } from '../composables/useApi'
 import { useFilters } from '../composables/useFilters'
 import { useDialog } from '../composables/useDialog'
@@ -290,23 +290,23 @@ const filters = ref({
 })
 
 const actionOptions = [
-  { label: t('auditLogs.actionCreate'), value: 'create' },
-  { label: t('auditLogs.actionUpdate'), value: 'update' },
-  { label: t('auditLogs.actionDelete'), value: 'delete' },
-  { label: t('auditLogs.actionLogin'), value: 'login' },
-  { label: t('auditLogs.actionLogout'), value: 'logout' }
+  { label: t('auditlog.strings.actionCreate'), value: 'create' },
+  { label: t('auditlog.strings.actionUpdate'), value: 'update' },
+  { label: t('auditlog.strings.actionDelete'), value: 'delete' },
+  { label: t('auditlog.strings.actionLogin'), value: 'login' },
+  { label: t('auditlog.strings.actionLogout'), value: 'logout' }
 ]
 
 const entityOptions = [
-  { label: t('auditLogs.entityAsset'), value: 'Asset' },
-  { label: t('auditLogs.entityUser'), value: 'User' },
-  { label: t('auditLogs.entitySite'), value: 'Site' },
-  { label: t('auditLogs.entityLocation'), value: 'Location' },
-  { label: t('auditLogs.entitySupplier'), value: 'Supplier' },
-  { label: t('auditLogs.entityContact'), value: 'Contact' },
-  { label: t('auditLogs.entityAssetType'), value: 'AssetType' },
-  { label: t('auditLogs.entityAssetStatus'), value: 'AssetStatus' },
-  { label: t('auditLogs.entityManufacturer'), value: 'Manufacturer' }
+  { label: t('auditlog.strings.entityAsset'), value: 'Asset' },
+  { label: t('auditlog.strings.entityUser'), value: 'User' },
+  { label: t('auditlog.strings.entitySite'), value: 'Site' },
+  { label: t('auditlog.strings.entityLocation'), value: 'Location' },
+  { label: t('auditlog.strings.entitySupplier'), value: 'Supplier' },
+  { label: t('auditlog.strings.entityContact'), value: 'Contact' },
+  { label: t('auditlog.strings.entityAssetType'), value: 'AssetType' },
+  { label: t('auditlog.strings.entityAssetStatus'), value: 'AssetStatus' },
+  { label: t('auditlog.strings.entityManufacturer'), value: 'Manufacturer' }
 ]
 
 const userOptions = computed(() => {
@@ -317,12 +317,12 @@ const userOptions = computed(() => {
 })
 
 const columnOptions = [
-  { field: 'timestamp', header: t('auditLogs.timestamp'), sortable: true },
-  { field: 'user_name', header: t('auditLogs.user'), sortable: false },
-  { field: 'action', header: t('auditLogs.action'), sortable: false },
-  { field: 'entity', header: t('auditLogs.entity'), sortable: false },
-  { field: 'description', header: t('auditLogs.description'), sortable: false },
-  { field: 'actions', header: t('common.actions'), sortable: false }
+  { field: 'timestamp', header: t('auditlog.strings.timestamp'), sortable: true },
+  { field: 'user_name', header: t('auditlog.strings.user'), sortable: false },
+  { field: 'action', header: t('auditlog.strings.action'), sortable: false },
+  { field: 'entity', header: t('auditlog.strings.entity'), sortable: false },
+  { field: 'description', header: t('auditlog.strings.description'), sortable: false },
+  { field: 'actions', header: t('common.strings.actions'), sortable: false }
 ]
 
 onMounted(async () => {
@@ -336,7 +336,7 @@ async function fetchUsers() {
     users.value = response.data
     return response
   }, {
-    errorContext: t('auditLogs.fetchUsersError'),
+    errorContext: t('auditlog.strings.fetchUsersError'),
     showToast: false
   })
 }
@@ -364,7 +364,7 @@ async function fetchAuditLogs() {
     
     return response
   }, {
-    errorContext: t('auditLogs.fetchError'),
+    errorContext: t('auditlog.strings.fetchError'),
     showToast: false
   })
 }
@@ -380,7 +380,7 @@ function clearFilters() {
 }
 
 function showDetails(log) {
-  openEdit(t('auditLogs.details'), log)
+  openEdit(t('auditlog.strings.details'), log)
 }
 
 function viewEntity(entity, entityId) {

@@ -144,6 +144,10 @@ app.include_router(api_keys.router, tags=["api-keys"])
 app.include_router(external_api.router, tags=["external-api"])
 app.include_router(setup.router, tags=["setup"])
 
+# Performance testing router (solo in development)
+from app.routers import performance_test
+app.include_router(performance_test.router, tags=["performance"])
+
 
 @app.on_event("startup")
 async def startup_event():

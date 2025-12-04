@@ -44,6 +44,7 @@ class PrintedKitRequest(BaseModel):
     include_photos: bool = Field(True, description="Include asset photos")
     include_documents: bool = Field(True, description="Include asset documents")
     format: str = Field("pdf", description="Output format (pdf)")
+    language: str = Field("en", description="Language for the printed kit (en/it)")
 
 
 class PrintedKitResponse(BaseModel):

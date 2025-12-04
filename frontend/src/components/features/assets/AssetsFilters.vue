@@ -6,7 +6,7 @@
       :options="assetStatusOptions" 
       optionLabel="name" 
       optionValue="id" 
-      :placeholder="t('assets.filterByStatus')" 
+      :placeholder="t('assets.strings.filterbyStatus')" 
       showClear 
       style="min-width: 150px" 
     />
@@ -16,7 +16,7 @@
       :options="sites" 
       optionLabel="name" 
       optionValue="id" 
-      :placeholder="t('assets.filterBySite')" 
+      :placeholder="t('assets.strings.filterbySite')" 
       showClear 
       style="min-width: 150px" 
     />
@@ -26,13 +26,13 @@
       :options="areas" 
       optionLabel="name" 
       optionValue="id" 
-      :placeholder="t('assets.filterByArea')" 
+      :placeholder="t('assets.strings.filterbyArea')" 
       showClear 
       style="min-width: 150px" 
     />
     <Button 
       icon="pi pi-filter" 
-      :label="t('assets.advancedFilters') || 'Filtri avanzati'"
+      :label="t('assets.strings.advancedFilters') || 'Filtri avanzati'"
       severity="help"
       @click="$emit('showAdvancedFilters')"
     />

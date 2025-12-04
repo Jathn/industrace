@@ -13,7 +13,15 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 5173,
     allowedHosts: ['industrace.local', 'www.industrace.local', 'localhost'],
-    hmr: false
+    hmr: false,
+    proxy: {
+      '/api': {
+        target: 'http://backend:8000',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      }
+    }
   },
   build: {
     chunkSizeWarningLimit: 1000,

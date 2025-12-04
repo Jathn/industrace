@@ -5,25 +5,25 @@
 -->
 <template>
   <Card>
-    <template #title>{{ t('assetDocumentUpload.title') }}</template>
+    <template #title>{{ t('assets.documents.title') }}</template>
     <template #content>
       <div>
-        <Textarea v-if="!readOnly" v-model="doc.description" :placeholder="t('assetDocumentUpload.descriptionPlaceholder')" class="mb-2" rows="3" />
-        <FileUpload v-if="!readOnly" name="file" :customUpload="true" :auto="true" :multiple="false" :chooseLabel="t('assetDocumentUpload.chooseLabel')"
-          :uploadLabel="t('assetDocumentUpload.uploadLabel')" accept=".pdf,.doc,.docx,.txt" @uploader="uploadDoc" />
+        <Textarea v-if="!readOnly" v-model="doc.description" :placeholder="t('assets.documents.descriptionPlaceholder')" class="mb-2" rows="3" />
+        <FileUpload v-if="!readOnly" name="file" :customUpload="true" :auto="true" :multiple="false" :chooseLabel="t('assets.documents.chooseLabel')"
+          :uploadLabel="t('assets.documents.uploadLabel')" accept=".pdf,.doc,.docx,.txt" @uploader="uploadDoc" />
 
         <DataTable :value="documents" class="mt-4">
-          <Column field="name" :header="t('assetDocumentUpload.name')" />
-          <Column field="description" :header="t('assetDocumentUpload.description')" />
+          <Column field="name" :header="t('assets.documents.name')" />
+          <Column field="description" :header="t('assets.documents.description')" />
           <Column header="Download">
             <template #body="{ data }">
               <Button icon="pi pi-download" text @click="downloadDoc(data)" />
             </template>
           </Column>
-          <Column v-if="!readOnly" :header="t('common.actions')">
+          <Column v-if="!readOnly" :header="t('common.strings.actions')">
             <template #body="{ data }">
               <Button icon="pi pi-trash" severity="danger" size="small" @click="deleteDoc(data.id)"
-                :aria-label="t('common.delete')" />
+                :aria-label="t('common.actions.delete')" />
             </template>
           </Column>
         </DataTable>
@@ -64,8 +64,8 @@ const fetchDocuments = async () => {
   } catch (err) {
     toast.add({
       severity: 'error',
-      summary: t('common.error'),
-      detail: t('assetDocumentUpload.fetchError')
+      summary: t('common.strings.error'),
+      detail: t('assets.documents.fetchError')
     })
   }
 }
@@ -83,13 +83,13 @@ const uploadDoc = async ({ files }) => {
     await fetchDocuments()
     toast.add({
       severity: 'success',
-      summary: t('assetDocumentUpload.documentUploaded')
+      summary: t('assets.documents.documentUploaded')
     })
   } catch (err) {
     toast.add({
       severity: 'error',
-      summary: t('common.error'),
-      detail: t('assetDocumentUpload.uploadError')
+      summary: t('common.strings.error'),
+      detail: t('assets.documents.uploadError')
     })
   }
 }
@@ -100,13 +100,13 @@ const deleteDoc = async (docId) => {
     await fetchDocuments()
     toast.add({
       severity: 'success',
-      summary: t('assetDocumentUpload.documentDeleted')
+      summary: t('assets.documents.documentDeleted')
     })
   } catch (err) {
     toast.add({
       severity: 'error',
-      summary: t('common.error'),
-      detail: t('assetDocumentUpload.deleteError')
+      summary: t('common.strings.error'),
+      detail: t('assets.documents.deleteError')
     })
   }
 }
@@ -124,8 +124,8 @@ const downloadDoc = async (doc) => {
   } catch (err) {
     toast.add({
       severity: 'error',
-      summary: t('common.error'),
-      detail: t('assetDocumentUpload.downloadError')
+      summary: t('common.strings.error'),
+      detail: t('assets.documents.downloadError')
     })
   }
 }

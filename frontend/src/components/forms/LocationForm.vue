@@ -2,60 +2,59 @@
   <form @submit.prevent="handleSubmit">
     <div class="p-fluid">
       <div class="p-field">
-        <label for="name">{{ t('common.name') }}</label>
+        <label for="name">{{ t('common.fields.name') }}</label>
         <InputText id="name" v-model="form.name" required />
       </div>
       <div class="p-field">
-        <label for="code">{{ t('common.code') }}</label>
+        <label for="code">{{ t('common.fields.code') }}</label>
         <InputText id="code" v-model="form.code" />
       </div>
       <div class="p-field">
-        <label for="description">{{ t('common.description') }}</label>
+        <label for="description">{{ t('common.fields.description') }}</label>
         <Textarea id="description" v-model="form.description" rows="3" />
       </div>
       <div class="p-field">
-        <label for="site_id">{{ t('common.site') }}</label>
+        <label for="site_id">{{ t('common.fields.site') }}</label>
         <Dropdown
           id="site_id"
           v-model="form.site_id"
           :options="sites"
           optionLabel="name"
           optionValue="id"
-          :placeholder="t('common.selectSite')"
+          :placeholder="t('common.strings.select')"
           class="w-full"
           :showClear="true"
-          @change="onSiteChange"
         />
       </div>
       <div class="p-field">
-        <label for="area_id">{{ t('common.area') }}</label>
+        <label for="area_id">{{ t('locations.fields.area') }}</label>
         <Dropdown
           id="area_id"
           v-model="form.area_id"
-          :options="areas"
+          :options="filteredAreas"
           optionLabel="name"
           optionValue="id"
-          :placeholder="t('common.selectArea')"
+          :placeholder="t('common.strings.select')"
           class="w-full"
           :showClear="true"
-          :disabled="!form.site_id"
+          :disabled="!form.site_id || filteredAreas.length === 0"
         />
       </div>
       <div class="p-field">
-        <label for="notes">{{ t('common.notes') }}</label>
+        <label for="notes">{{ t('common.fields.notes') }}</label>
         <Textarea id="notes" v-model="form.notes" rows="4" />
       </div>
       
       <div class="flex justify-content-end gap-2 mt-4">
-        <Button :label="t('common.cancel')" class="p-button-text" @click="emit('cancel')" />
-        <Button :label="t('common.save')" type="submit" />
+        <Button :label="t('common.actions.cancel')" class="p-button-text" @click="emit('cancel')" />
+        <Button :label="t('common.actions.save')" type="submit" />
       </div>
     </div>
   </form>
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
 import InputText from 'primevue/inputtext'
 import Textarea from 'primevue/textarea'
@@ -90,6 +89,14 @@ const form = ref({
   site_id: null
 })
 
+// Filter areas based on selected site
+const filteredAreas = computed(() => {
+  if (!form.value.site_id) {
+    return []
+  }
+  return props.areas.filter(area => area.site_id === form.value.site_id)
+})
+
 watch(
   () => props.location,
   (loc) => {
@@ -116,13 +123,18 @@ watch(
   { immediate: true }
 )
 
-function onSiteChange() {
-  if (form.value.site_id) {
-    emit('site-changed', form.value.site_id)
-  } else {
+watch(
+  () => form.value.site_id,
+  (newSiteId, oldSiteId) => {
+    // Reset area when site changes
+    if (newSiteId !== oldSiteId) {
     form.value.area_id = null
+      if (newSiteId) {
+        emit('site-changed', newSiteId)
+      }
   }
 }
+)
 
 function handleSubmit() {
   emit('submit', { ...form.value })

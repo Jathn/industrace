@@ -39,7 +39,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { i18n } from '../../locales/loader.js'
+import i18n from '../../locales/loader-final.js'
 
 const props = defineProps({
   options: {

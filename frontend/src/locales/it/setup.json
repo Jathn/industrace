@@ -1,158 +1,80 @@
 {
-  "title": "Configurazione Sistema",
-  "description": "Configura le impostazioni del sistema per il tuo tenant",
-  "welcome": "Benvenuto nel Setup di Industrace",
-  "refresh": "Aggiorna",
-  "next": "Avanti",
-  "back": "Indietro",
-  "install": "Installa",
-  "goToLogin": "Vai al Login",
-  "smtp": {
-    "title": "Configurazione SMTP",
-    "description": "Configura le impostazioni del server di posta elettronica",
-    "host": "Host SMTP",
-    "port": "Porta",
-    "username": "Nome utente",
-    "password": "Password",
-    "fromEmail": "Email mittente",
-    "useTls": "Usa TLS",
-    "testConnection": "Test Connessione",
-    "saveSettings": "Salva Impostazioni"
-  },
-  "printTemplates": {
-    "title": "Template di Stampa",
-    "description": "Gestisci i template per la stampa dei dispositivi",
-    "createTemplate": "Crea Template",
-    "editTemplate": "Modifica Template",
-    "initDefaults": "Inizializza Default",
-    "templateName": "Nome Template",
-    "templateKey": "Chiave Template",
-    "templateDescription": "Descrizione Template",
-    "basicInfo": "Informazioni Base",
-    "keyPlaceholder": "Inserisci chiave template (es: asset-card)",
-    "icon": "Icona",
-    "selectIcon": "Seleziona icona",
-    "namePlaceholder": "Inserisci nome template",
-    "descriptionPlaceholder": "Inserisci descrizione template",
-    "printOptions": "Opzioni di Stampa",
-    "component": "Componente",
-    "selectComponent": "Seleziona componente",
-    "keyRequired": "La chiave template è obbligatoria",
-    "keyFormat": "La chiave deve contenere solo lettere minuscole, numeri e trattini",
-    "nameRequired": "Il nome template è obbligatorio",
-    "templateCreated": "Template creato con successo",
-    "templateUpdated": "Template aggiornato con successo",
-    "saveError": "Errore nel salvataggio del template",
-    "initDescription": "Inizializza i template di stampa predefiniti",
-    "defaultTemplatesInfo": "I template di stampa predefiniti includono:",
-    "defaultTemplatesList": [
-      "Scheda Asset completa",
-      "Riepilogo Asset compatto"
-    ],
-    "defaultTemplate1": "Scheda Asset completa",
-    "defaultTemplate2": "Riepilogo Asset compatto"
-  },
-  "printedKit": {
-    "title": "Printed Kit",
-    "description": "Genera documentazione completa stampabile dell'azienda",
-    "generate": "Genera Printed Kit",
-    "generating": "Generazione in corso...",
-    "success": "Printed Kit generato con successo",
-    "error": "Errore nella generazione del Printed Kit",
-    "options": {
-      "includeAssets": "Include schede asset",
-      "includeSites": "Include informazioni stabilimenti",
-      "includeContacts": "Include contatti",
-      "includeSuppliers": "Include fornitori",
-      "includePhotos": "Include foto asset",
-      "includeDocuments": "Include documenti asset"
+    "title": "Setup",
+    "fields": {
+        "smtp": {
+            "host": "Host SMTP",
+            "port": "Porta",
+            "username": "Nome utente",
+            "password": "Password",
+            "fromEmail": "Email mittente",
+            "useTls": "Usa TLS"
+        }
     },
-    "info": {
-      "title": "Printed Kit - Documentazione Completa",
-      "description": "Genera una documentazione completa stampabile che include:",
-      "items": [
-        "Informazioni generali del tenant",
-        "Lista degli stabilimenti e aree",
-        "Schede complete di tutti gli asset",
-        "Contatti e fornitori",
-        "Documenti e foto degli asset"
-      ],
-      "item1": "Informazioni generali del tenant",
-      "item2": "Lista degli stabilimenti e aree",
-      "item3": "Schede complete di tutti gli asset",
-      "item4": "Contatti e fornitori",
-      "item5": "Documenti e foto degli asset"
+    "strings": {
+        "description": "Configura le impostazioni del sistema per il tuo tenant",
+        "smtp": {
+            "title": "Configurazione SMTP",
+            "description": "Configura le impostazioni del server di posta elettronica",
+            "testConnection": "Test Connessione",
+            "saveSettings": "Salva Impostazioni"
+        },
+        "printTemplates": {
+            "title": "Template di Stampa",
+            "description": "Gestisci i template per la stampa dei dispositivi",
+            "initDescription": "Inizializza i template di default",
+            "initDefaults": "Inizializza Default",
+            "defaultTemplatesInfo": "I template di stampa predefiniti includono:",
+            "defaultTemplatesList": [
+                "Scheda Asset completa",
+                "Riepilogo Asset compatto"
+            ],
+            "defaultTemplate1": "Scheda Asset completa",
+            "defaultTemplate2": "Riepilogo Asset compatto",
+            "templatesInitialized": "Template di default inizializzati con successo",
+            "templatesAlreadyExist": "Template già esistenti per questo tenant",
+            "templatesInitError": "Errore nell'inizializzazione dei template"
+        },
+        "printedKit": {
+            "title": "Kit di Stampa",
+            "description": "Gestisci il kit di stampa dei dispositivi",
+            "generate": "Genera Printed Kit",
+            "generating": "Generazione in corso...",
+            "success": "Printed Kit generato con successo",
+            "error": "Errore nella generazione del Printed Kit",
+            "options": {
+                "includeAssets": "Include schede asset",
+                "includeSites": "Include informazioni stabilimenti",
+                "includeContacts": "Include contatti",
+                "includeSuppliers": "Include fornitori",
+                "includePhotos": "Include foto asset",
+                "includeDocuments": "Include documenti asset"
+            },
+            "info": {
+                "title": "Printed Kit - Documentazione Completa",
+                "description": "Genera una documentazione completa stampabile che include:",
+                "items": [
+                    "Informazioni generali del tenant",
+                    "Lista degli stabilimenti e aree",
+                    "Schede complete di tutti gli asset",
+                    "Contatti e fornitori",
+                    "Documenti e foto degli asset"
+                ],
+                "item1": "Informazioni generali del tenant",
+                "item2": "Lista degli stabilimenti e aree",
+                "item3": "Schede complete di tutti gli asset",
+                "item4": "Contatti e fornitori",
+                "item5": "Documenti e foto degli asset"
+            },
+            "generationOptions": "Opzioni di generazione:"
+        }
     },
-    "generationOptions": "Opzioni di generazione:"
-  },
-  "systemCheck": {
-    "title": "Controllo Sistema",
-    "description": "Verifica che il sistema sia pronto per l'installazione",
-    "database": "Database",
-    "freshInstall": "Installazione pulita"
-  },
-  "organization": {
-    "title": "Organizzazione",
-    "description": "Configura le informazioni della tua organizzazione",
-    "name": "Nome Organizzazione",
-    "namePlaceholder": "Inserisci il nome della tua organizzazione",
-    "slug": "Slug Organizzazione",
-    "slugPlaceholder": "Inserisci uno slug per l'organizzazione",
-    "language": "Lingua",
-    "languagePlaceholder": "Seleziona la lingua predefinita"
-  },
-  "admin": {
-    "title": "Amministratore",
-    "description": "Crea l'account amministratore del sistema",
-    "name": "Nome Amministratore",
-    "namePlaceholder": "Inserisci il nome dell'amministratore",
-    "email": "Email Amministratore",
-    "emailPlaceholder": "Inserisci l'email dell'amministratore",
-    "password": "Password Amministratore",
-    "passwordPlaceholder": "Inserisci la password dell'amministratore"
-  },
-  "review": {
-    "title": "Riepilogo",
-    "description": "Rivedi le impostazioni prima dell'installazione",
-    "organization": "Organizzazione",
-    "admin": "Amministratore"
-  },
-  "success": {
-    "title": "Installazione Completata",
-    "description": "Industrace è stato installato con successo",
-    "credentials": "Credenziali di Accesso",
-    "warning": "Salva queste credenziali in un posto sicuro",
-    "installed": "Sistema installato con successo"
-  },
-  "steps": {
-    "systemCheck": "Controllo Sistema",
-    "organization": "Organizzazione",
-    "admin": "Amministratore",
-    "review": "Riepilogo",
-    "complete": "Completato"
-  },
-  "errors": {
-    "required": "Campo obbligatorio",
-    "invalidSlug": "Slug non valido (solo lettere minuscole, numeri e trattini)",
-    "invalidEmail": "Email non valida",
-    "passwordTooShort": "Password troppo corta (minimo 8 caratteri)",
-    "installationFailed": "Installazione fallita"
-  },
-  "notifications": {
-    "title": "Notifiche",
-    "description": "Configura le notifiche del sistema"
-  },
-  "security": {
-    "title": "Sicurezza",
-    "description": "Impostazioni di sicurezza e accesso"
-  },
-  "messages": {
-    "smtpSaved": "Configurazione SMTP salvata",
-    "smtpTestSuccess": "Connessione SMTP testata con successo",
-    "templatesInitialized": "Template di default inizializzati con successo",
-    "templatesAlreadyExist": "Template già esistenti per questo tenant",
-    "smtpSaveError": "Errore nel salvataggio della configurazione SMTP",
-    "smtpTestError": "Errore nel test della connessione SMTP",
-    "templatesInitError": "Errore nell'inizializzazione dei template"
-  }
-} 
+    "messages": {
+        "smtpSaved": "Configurazione SMTP salvata",
+        "smtpTestSuccess": "Connessione SMTP testata con successo",
+        "templatesInitialized": "Template di default inizializzati con successo",
+        "templatesAlreadyExist": "Template già esistenti per questo tenant",
+        "smtpSaveError": "Errore nel salvataggio della configurazione SMTP",
+        "smtpTestError": "Errore nel test della connessione SMTP",
+        "templatesInitError": "Errore nell'inizializzazione dei template"
+    }
+}

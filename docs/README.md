@@ -37,6 +37,7 @@ Industrace is fully open source and welcomes contributions from the community. T
 
 ### Administration
 - [Administration Guide](administration.md) - System administration tasks
+- [Upgrade Guide](UPGRADE.md) - How to upgrade from previous versions
 - [Backup and Restore](backup-restore.md) - Data protection procedures
 - [Security Guide](security.md) - Security best practices
 - [Troubleshooting](troubleshooting.md) - Common issues and solutions

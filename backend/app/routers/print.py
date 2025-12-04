@@ -684,7 +684,8 @@ def generate_printed_kit(
             "include_contacts": request.include_contacts,
             "include_suppliers": request.include_suppliers,
             "include_photos": request.include_photos,
-            "include_documents": request.include_documents
+            "include_documents": request.include_documents,
+            "language": request.language or "en"
         }
         file_path = pdf_generator.generate_printed_kit(kit_data, options_dict)
         

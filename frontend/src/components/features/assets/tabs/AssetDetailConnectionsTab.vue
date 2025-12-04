@@ -1,45 +1,45 @@
 <template>
   <div>
-    <h2>{{ t('assetDetail.physicalConnections') }}</h2>
-    <Button :label="t('assetDetail.addConnection')" icon="pi pi-plus" class="mb-3" @click="showAddConnectionDialog = true" />
+    <h2>{{ t('assets.connections.title') }}</h2>
+    <Button :label="t('assets.connections.addConnection')" icon="pi pi-plus" class="mb-3" @click="showAddConnectionDialog = true" />
     <AssetConnectionsTable :connections="mappedConnections" @edit-connection="onEditConnection" @delete-connection="onDeleteConnection" />
     <AssetConnectionGraph :connections="mappedConnections" />
     
     <!-- Dialog per aggiungere connessione -->
-    <Dialog v-model:visible="showAddConnectionDialog" :header="t('assetDetail.addConnection')" modal style="width: 400px" :closable="true" :dismissableMask="true" @hide="resetAddConnectionForm">
+    <Dialog v-model:visible="showAddConnectionDialog" :header="t('assets.connections.addConnection')" modal style="width: 400px" :closable="true" :dismissableMask="true" @hide="resetAddConnectionForm">
       <div class="p-fluid">
         <div class="field">
-          <label>{{ t('assetDetail.localInterface') }}</label>
-          <Dropdown v-model="selectedLocalInterface" :options="localInterfaces" optionLabel="name" optionValue="id" :placeholder="t('common.select')" />
+          <label>{{ t('assets.connections.localInterface') }}</label>
+          <Dropdown v-model="selectedLocalInterface" :options="localInterfaces" optionLabel="name" optionValue="id" :placeholder="t('common.strings.select')" />
         </div>
         <div class="field">
-          <label>{{ t('assetDetail.remoteAsset') }}</label>
-          <Dropdown v-model="selectedRemoteAsset" :options="remoteAssets" optionLabel="name" optionValue="id" :placeholder="t('common.select')" />
+          <label>{{ t('assets.connections.remoteAsset') }}</label>
+          <Dropdown v-model="selectedRemoteAsset" :options="remoteAssets" optionLabel="name" optionValue="id" :placeholder="t('common.strings.select')" />
         </div>
         <div class="field">
-          <label>{{ t('assetDetail.remoteInterface') }}</label>
-          <Dropdown v-model="selectedRemoteInterface" :options="remoteInterfaces" optionLabel="name" optionValue="id" :placeholder="t('common.select')" :disabled="!selectedRemoteAsset" />
+          <label>{{ t('assets.connections.remoteInterface') }}</label>
+          <Dropdown v-model="selectedRemoteInterface" :options="remoteInterfaces" optionLabel="name" optionValue="id" :placeholder="t('common.strings.select')" :disabled="!selectedRemoteAsset" />
         </div>
-        <Button :label="t('common.save')" icon="pi pi-check" class="mt-3" @click="addConnection" :disabled="!selectedLocalInterface || !selectedRemoteAsset || !selectedRemoteInterface" />
+        <Button :label="t('common.actions.save')" icon="pi pi-check" class="mt-3" @click="addConnection" :disabled="!selectedLocalInterface || !selectedRemoteAsset || !selectedRemoteInterface" />
       </div>
     </Dialog>
 
     <!-- Dialog per modificare connessione -->
-    <Dialog v-model:visible="showEditConnectionDialog" :header="t('assetDetail.editConnection')" modal style="width: 400px" :closable="true" :dismissableMask="true">
+    <Dialog v-model:visible="showEditConnectionDialog" :header="t('assets.connections.editConnection')" modal style="width: 400px" :closable="true" :dismissableMask="true">
       <div class="p-fluid">
         <div class="field">
-          <label>{{ t('assetDetail.localInterface') }}</label>
-          <Dropdown v-model="editConnectionData.interfaceA.id" :options="localInterfaces" optionLabel="name" optionValue="id" :placeholder="t('common.select')" />
+          <label>{{ t('assets.connections.localInterface') }}</label>
+          <Dropdown v-model="editConnectionData.interfaceA.id" :options="localInterfaces" optionLabel="name" optionValue="id" :placeholder="t('common.strings.select')" />
         </div>
         <div class="field">
-          <label>{{ t('assetDetail.remoteAsset') }}</label>
-          <Dropdown v-model="editConnectionData.assetB.id" :options="remoteAssets" optionLabel="name" optionValue="id" :placeholder="t('common.select')" />
+          <label>{{ t('assets.connections.remoteAsset') }}</label>
+          <Dropdown v-model="editConnectionData.assetB.id" :options="remoteAssets" optionLabel="name" optionValue="id" :placeholder="t('common.strings.select')" />
         </div>
         <div class="field">
-          <label>{{ t('assetDetail.remoteInterface') }}</label>
-          <Dropdown v-model="editConnectionData.interfaceB.id" :options="editRemoteInterfaces" optionLabel="name" optionValue="id" :placeholder="t('common.select')" :disabled="!editConnectionData.assetB.id" />
+          <label>{{ t('assets.connections.remoteInterface') }}</label>
+          <Dropdown v-model="editConnectionData.interfaceB.id" :options="editRemoteInterfaces" optionLabel="name" optionValue="id" :placeholder="t('common.strings.select')" :disabled="!editConnectionData.assetB.id" />
         </div>
-        <Button :label="t('common.save')" icon="pi pi-check" class="mt-3" @click="saveEditConnection" :disabled="!editConnectionData.interfaceA.id || !editConnectionData.assetB.id || !editConnectionData.interfaceB.id" />
+        <Button :label="t('common.actions.save')" icon="pi pi-check" class="mt-3" @click="saveEditConnection" :disabled="!editConnectionData.interfaceA.id || !editConnectionData.assetB.id || !editConnectionData.interfaceB.id" />
       </div>
     </Dialog>
   </div>
@@ -158,7 +158,7 @@ async function fetchConnections() {
     connectionsNodes.value = Array.from(nodesSet).map(s => JSON.parse(s))
     connectionsEdges.value = edgesArr
   } catch (e) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assetConnections.fetchError') })
+    toast.add({ severity: 'error', summary: t('common.strings.error'), detail: t('assets.connections.fetchError') })
   }
 }
 
@@ -177,12 +177,12 @@ async function addConnection() {
       local_interface_id: selectedLocalInterface.value,
       remote_interface_id: selectedRemoteInterface.value
     })
-    toast.add({ severity: 'success', summary: t('common.success'), detail: t('assetConnections.addConnectionSuccess') })
+    toast.add({ severity: 'success', summary: t('common.messages.success'), detail: t('assets.connections.addConnectionSuccess') })
     showAddConnectionDialog.value = false
     resetAddConnectionForm()
     await fetchConnections()
   } catch (e) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assetConnections.addConnectionError') })
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('assets.connections.addConnectionError') })
   }
 }
 
@@ -213,16 +213,16 @@ function onEditConnection(row) {
 
 async function onDeleteConnection(row) {
   confirm.require({
-    message: t('assetConnections.confirmDelete'),
-    header: t('common.confirm'),
+    message: t('assets.connections.confirmDelete'),
+    header: t('common.strings.confirm'),
     icon: 'pi pi-exclamation-triangle',
     accept: async () => {
       try {
         await api.deleteAssetConnection(props.assetId, row.id)
-        toast.add({ severity: 'success', summary: t('common.success'), detail: t('assetConnections.deleteSuccess') })
+        toast.add({ severity: 'success', summary: t('common.messages.success'), detail: t('assets.connections.deleteSuccess') })
         await fetchConnections()
       } catch (e) {
-        toast.add({ severity: 'error', summary: t('common.error'), detail: t('assetConnections.deleteError') })
+        toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('assets.connections.deleteError') })
       }
     }
   })
@@ -234,12 +234,12 @@ async function saveEditConnection() {
       local_interface_id: editConnectionData.value.interfaceA.id,
       remote_interface_id: editConnectionData.value.interfaceB.id
     })
-    toast.add({ severity: 'success', summary: t('common.success'), detail: t('assetConnections.editSuccess') })
+    toast.add({ severity: 'success', summary: t('common.messages.success'), detail: t('assets.connections.editSuccess') })
     showEditConnectionDialog.value = false
     resetEditConnectionForm()
     await fetchConnections()
   } catch (e) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assetConnections.editError') })
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('assets.connections.editError') })
   }
 }
 

@@ -3,14 +3,14 @@
     <template #title>
       <div class="flex align-items-center">
         <i class="pi pi-info-circle mr-2"></i>
-        {{ t('assetForm.basicInfo') }}
+        {{ t('assets.strings.mainInfo') }}
       </div>
     </template>
     <template #content>
       <div class="grid">
         <div class="col-12 md:col-6">
           <div class="p-field">
-            <label for="name">{{ t('common.name') }} <span class="required">*</span></label>
+            <label for="name">{{ t('common.fields.name') }} <span class="required">*</span></label>
             <InputText 
               id="name" 
               v-model="form.name" 
@@ -25,7 +25,7 @@
         
         <div class="col-12 md:col-6">
           <div class="p-field">
-            <label for="asset_type_id">{{ t('common.type') }} <span class="required">*</span></label>
+            <label for="asset_type_id">{{ t('common.fields.type') }} <span class="required">*</span></label>
             <Dropdown 
               id="asset_type_id" 
               v-model="form.asset_type_id" 
@@ -42,7 +42,7 @@
 
         <div class="col-12 md:col-6">
           <div class="p-field">
-            <label for="manufacturer_id">{{ t('common.manufacturer') }} <span class="required">*</span></label>
+            <label for="manufacturer_id">{{ t('manufacturers.strings.manufacturer') }} <span class="required">*</span></label>
             <Dropdown 
               id="manufacturer_id" 
               v-model="form.manufacturer_id" 
@@ -59,7 +59,7 @@
 
         <div class="col-12 md:col-6">
           <div class="p-field">
-            <label for="status_id">{{ t('common.status') }} <span class="required">*</span></label>
+            <label for="status_id">{{ t('common.fields.status') }} <span class="required">*</span></label>
             <Dropdown 
               id="status_id" 
               v-model="form.status_id" 

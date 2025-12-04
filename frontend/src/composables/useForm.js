@@ -91,7 +91,7 @@ export function useForm(initialData = {}, validationSchema = null) {
     if (validateBeforeSubmit && !validate()) {
       toast.add({
         severity: 'warn',
-        summary: t('common.warning'),
+        summary: t('common.messages.warning'),
         detail: t('form.validationError'),
         life: 3000
       })
@@ -106,7 +106,7 @@ export function useForm(initialData = {}, validationSchema = null) {
       if (successMessage) {
         toast.add({
           severity: 'success',
-          summary: t('common.success'),
+          summary: t('common.messages.success'),
           detail: successMessage,
           life: 3000
         })

@@ -6,21 +6,21 @@
         <!-- Azioni principali -->
         <Button 
           v-if="!trashMode && canWrite('contacts')"
-          :label="t('common.new')" 
+          :label="t('common.actions.create')" 
           icon="pi pi-plus" 
           severity="success"
           @click="openCreateDialog" 
         />
         <Button 
           v-if="!trashMode && canWrite('contacts')"
-          :label="t('common.import')" 
+          :label="t('common.actions.import')" 
           icon="pi pi-upload" 
           severity="info"
           @click="showImportDialog = true" 
         />
         <Button 
           v-if="!trashMode"
-          :label="t('common.exportCsv')" 
+          :label="t('common.actions.exportCsv')" 
           icon="pi pi-file-excel" 
           severity="secondary"
           @click="exportCsv" 
@@ -32,7 +32,7 @@
         <!-- Gestione cestino -->
         <Button 
           icon="pi pi-trash" 
-          :label="trashMode ? t('common.showActive') : t('common.showTrash')" 
+          :label="trashMode ? t('common.actions.showActive') : t('common.actions.showTrash')" 
           severity="secondary"
           @click="toggleTrashMode"
         />
@@ -56,7 +56,7 @@
       <template #actions>
         <Button 
           v-if="!trashMode && canWrite('contacts')"
-          :label="t('common.bulkEdit')" 
+          :label="t('common.actions.bulkEdit')" 
           icon="pi pi-pencil" 
           severity="warning"
           :disabled="!selectedContacts.length" 
@@ -114,7 +114,7 @@
     
     <BaseDialog
       v-model:visible="showDialog"
-      :title="editingContact ? t('common.edit') : t('common.new')"
+      :title="editingContact ? t('common.actions.edit') : t('common.actions.create')"
       :showFooter="false"
       @close="close"
     >
@@ -127,35 +127,35 @@
     
     <BaseDialog
       v-model:visible="showBulkDialog"
-      :title="t('common.bulkEdit')"
+      :title="t('common.actions.bulkEdit')"
       :showFooter="false"
       @close="closeBulkDialog"
     >
       <div class="bulk-edit-form">
         <div class="mb-4">
           <p class="text-sm text-gray-600">
-            {{ t('common.bulkEditInfo', { count: selectedContacts.length }) }}
+            {{ t('common.actions.bulkEditInfo', { count: selectedContacts.length }) }}
           </p>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="field">
-            <label class="block text-sm font-medium mb-2">{{ t('common.type') }}</label>
+            <label class="block text-sm font-medium mb-2">{{ t('common.fields.type') }}</label>
             <Dropdown
               v-model="bulkData.type"
               :options="typeOptions"
               option-label="label"
               option-value="value"
-              :placeholder="t('common.select')"
+              :placeholder="t('common.strings.select')"
               class="w-full"
             />
           </div>
           
           <div class="field">
-            <label class="block text-sm font-medium mb-2">{{ t('common.notes') }}</label>
+            <label class="block text-sm font-medium mb-2">{{ t('common.fields.notes') }}</label>
             <InputText
               v-model="bulkData.notes"
-              :placeholder="t('common.placeholders.notes')"
+              :placeholder="t('common.strings.notes_placeholder')"
               class="w-full"
             />
           </div>
@@ -163,12 +163,12 @@
         
         <div class="flex justify-end gap-2 mt-6">
           <Button 
-            :label="t('common.cancel')" 
+            :label="t('common.actions.cancel')" 
             severity="secondary"
             @click="closeBulkDialog" 
           />
           <Button 
-            :label="t('common.save')" 
+            :label="t('common.actions.save')" 
             @click="saveBulkEdit" 
           />
         </div>
@@ -178,7 +178,7 @@
     <div v-if="trashMode && canDelete('contacts')" class="mt-4 flex justify-content-end">
       <Button 
         icon="pi pi-times" 
-        :label="t('common.emptyTrash')" 
+        :label="t('common.actions.emptyTrash')" 
         severity="danger"
         @click="handleEmptyTrash"
       />
@@ -263,24 +263,24 @@ const bulkData = ref({
 
 const columnOptions = computed(() => {
   const columns = [
-    { field: 'fullName', header: t('common.fullName'), sortable: true },
-    { field: 'email', header: t('common.email'), sortable: true },
-    { field: 'phone1', header: t('common.phone1'), sortable: false },
-    { field: 'phone2', header: t('common.phone2'), sortable: false },
-    { field: 'type', header: t('common.type'), sortable: true },
-    { field: 'notes', header: t('common.notes'), sortable: false }
+    { field: 'fullName', header: t('contacts.fields.fullName'), sortable: true },
+    { field: 'email', header: t('common.fields.email'), sortable: true },
+    { field: 'phone1', header: t('contacts.fields.phone1'), sortable: false },
+    { field: 'phone2', header: t('contacts.fields.phone2'), sortable: false },
+    { field: 'type', header: t('contacts.fields.type'), sortable: true },
+    { field: 'notes', header: t('contacts.fields.notes'), sortable: false }
   ]
   
   // Aggiungi colonna azioni sempre, perché il pulsante "Visualizza" è sempre disponibile
-  columns.push({ field: 'actions', header: t('common.actions'), sortable: false })
+  columns.push({ field: 'actions', header: t('common.strings.actions'), sortable: false })
   
   return columns
 })
 
 const typeOptions = [
-  { label: t('common.internal'), value: 'interno' },
-  { label: t('common.supplier'), value: 'fornitore' },
-  { label: t('common.other'), value: 'altro' }
+  { label: t('contacts.fields.internal'), value: 'interno' },
+  { label: t('contacts.fields.supplier'), value: 'fornitore' },
+  { label: t('contacts.fields.other'), value: 'altro' }
 ]
 
 const filteredContacts = computed(() => {
@@ -327,17 +327,17 @@ async function fetchContacts() {
     contacts.value = response.data.map(mapContact)
     return response
   }, {
-    errorContext: t('contacts.fetchError'),
+    errorContext: t('contacts.messages.fetchError'),
     showToast: false
   })
 }
 
 function openCreateDialog() {
-  openCreate(t('common.new'), null)
+  openCreate(t('common.actions.create'), null)
 }
 
 function openEditDialog(contact) {
-  openEdit(t('common.edit'), contact)
+  openEdit(t('common.actions.edit'), contact)
 }
 
 function openBulkEditDialog() {
@@ -370,8 +370,8 @@ async function saveBulkEdit() {
     closeBulkDialog()
     await fetchContacts()
   }, {
-    successMessage: t('common.bulkUpdated'),
-    errorContext: t('common.bulkUpdateError')
+    successMessage: t('common.actions.bulkUpdated'),
+    errorContext: t('contacts.messages.bulkUpdateError')
   })
 }
 
@@ -383,8 +383,8 @@ async function saveContact(data) {
       close()
       await fetchContacts()
     }, {
-      successMessage: t('common.updated'),
-      errorContext: t('common.updateError')
+      successMessage: t('common.actions.updated'),
+      errorContext: t('contacts.messages.updateError')
     })
   } else {
     // Modalità creazione
@@ -393,23 +393,23 @@ async function saveContact(data) {
       close()
       await fetchContacts()
     }, {
-      successMessage: t('common.created'),
-      errorContext: t('common.createError')
+      successMessage: t('common.actions.created'),
+      errorContext: t('contacts.messages.createError')
     })
   }
 }
 
 async function deleteContact(id) {
   await confirmDelete(
-    t('common.deleteConfirm'),
-    t('common.deleteWarning'),
+    t('common.actions.deleteConfirm'),
+    t('common.actions.deleteWarning'),
     async () => {
       await execute(async () => {
         await api.deleteContact(id)
         await fetchContacts()
       }, {
-        successMessage: t('common.deleted'),
-        errorContext: t('common.deleteError')
+        successMessage: t('common.actions.deleted'),
+        errorContext: t('contacts.messages.deleteError')
       })
     }
   )
@@ -443,8 +443,8 @@ async function restoreContact(id) {
     await api.restoreContact(id)
     await fetchContacts()
   }, {
-    successMessage: t('common.restored'),
-    errorContext: t('common.restoreError')
+    successMessage: t('common.actions.restored'),
+    errorContext: t('contacts.messages.restoreError')
   })
 }
 
@@ -453,8 +453,8 @@ async function hardDeleteContact(id) {
     await api.hardDeleteContact(id)
     await fetchContacts()
   }, {
-    successMessage: t('common.hardDeleted'),
-    errorContext: t('common.hardDeleteError')
+    successMessage: t('common.actions.hardDeleted'),
+    errorContext: t('contacts.messages.hardDeleteError')
   })
 }
 
@@ -465,15 +465,15 @@ async function emptyTrash() {
     }
     await fetchContacts()
   }, {
-    successMessage: t('common.trashEmptied'),
-    errorContext: t('common.emptyTrashError')
+    successMessage: t('common.actions.trashEmptied'),
+    errorContext: t('contacts.messages.emptyTrashError')
   })
 }
 
 async function handleEmptyTrash() {
   await confirmEmptyTrash(
-    t('common.emptyTrashConfirm'),
-    t('common.emptyTrashWarning'),
+    t('common.actions.emptyTrashConfirm'),
+    t('common.actions.emptyTrashWarning'),
     emptyTrash
   )
 }

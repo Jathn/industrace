@@ -1,46 +1,78 @@
 {
-  "title": "Ruoli",
-  "new": "Nuovo Ruolo",
-  "edit": "Modifica Ruolo",
-  "editTitle": "Modifica Ruolo",
-  "createTitle": "Nuovo Ruolo",
-  "name": "Nome",
-  "namePlaceholder": "Inserisci il nome del ruolo",
-  "permissions": "Permessi",
-  "createdAt": "Data Creazione",
-  "testPermissions": "Test Permessi",
-  "deleteConfirm": "Conferma eliminazione",
-  "deleteWarning": "Sei sicuro di voler eliminare questo ruolo?",
-  "nameRequired": "Il nome del ruolo è obbligatorio",
-  "fetchError": "Errore nel caricamento dei ruoli",
-  "deleteError": "Errore durante l'eliminazione del ruolo",
-  "updateError": "Errore durante l'aggiornamento del ruolo",
-  "createError": "Errore durante la creazione del ruolo",
-  "saveError": "Errore durante il salvataggio del ruolo",
-  "testPermissionsError": "Errore durante il test dei permessi",
-  "deleted": "Ruolo eliminato con successo",
-  "updated": "Ruolo aggiornato con successo",
-  "created": "Ruolo creato con successo",
-  "sections": {
-    "assets": "Dispositivi",
-    "sites": "Siti",
-    "locations": "Posizioni",
-    "suppliers": "Fornitori",
-    "contacts": "Contatti",
-    "manufacturers": "Produttori",
-    "asset_types": "Tipi Dispositivo",
-    "asset_statuses": "Stati Dispositivo",
-    "users": "Utenti",
-    "audit_logs": "Log di Audit",
-    "utility": "Utility",
-    "asset_documents": "Documenti Dispositivo",
-    "asset_photos": "Foto Dispositivo",
-    "locations_floormap": "Piante Posizioni"
-  },
-  "levels": {
-    "none": "Nessuno",
-    "read": "Lettura",
-    "write": "Scrittura",
-    "delete": "Eliminazione"
-  }
-} 
+    "title": "Ruoli",
+    "actions": {
+        "testPermissions": "Test Permessi",
+        "refreshPermissions": "Aggiorna Permessi"
+    },
+    "fields": {
+        "permissions": "Permessi",
+        "createdAt": "Data Creazione",
+        "parentRole": "Ruolo Padre",
+        "selectParentRole": "Seleziona ruolo padre",
+        "inheritable": "Ereditabile"
+    },
+    "messages": {
+        "fetchError": "Errore nel caricamento dei ruoli",
+        "deleteError": "Errore nell'eliminazione del ruolo",
+        "updateError": "Errore nell'aggiornamento del ruolo",
+        "createError": "Errore nella creazione del ruolo",
+        "testPermissionsError": "Errore nel test dei permessi",
+        "permissionsUpdated": "Permessi aggiornati con successo",
+        "permissionsUpdateError": "Errore nell'aggiornamento dei permessi"
+    },
+    "sections": {
+        "assets": "Dispositivi",
+        "sites": "Siti",
+        "locations": "Località",
+        "suppliers": "Fornitori",
+        "contacts": "Contatti",
+        "manufacturers": "Produttori",
+        "asset_types": "Tipi Dispositivo",
+        "asset_statuses": "Stati Dispositivo",
+        "utility": "Utility",
+        "audit_logs": "Log di Audit",
+        "asset_documents": "Documenti Dispositivo",
+        "asset_photos": "Foto Dispositivo",
+        "locations_floormap": "Piante Posizioni",
+        "basicInfo": "Informazioni Base",
+        "permissions": "Permessi"
+    },
+    "levels": {
+        "none": "Nessuno",
+        "read": "Lettura",
+        "write": "Scrittura",
+        "delete": "Eliminazione"
+    },
+    "strings": {
+        "nameRequired": "Il nome del ruolo è obbligatorio",
+        "updated": "Ruolo aggiornato con successo",
+        "created": "Ruolo creato con successo",
+        "saveError": "Errore durante il salvataggio del ruolo",
+        "inheritanceInfo": "I permessi del ruolo padre verranno ereditati automaticamente",
+        "selectParentRole": "Seleziona ruolo padre",
+        "inheritableDescription": "Questo ruolo può essere utilizzato come ruolo padre per altri ruoli"
+    },
+    "permissions": {
+        "none": "Nessuno",
+        "read": "Lettura",
+        "write": "Scrittura",
+        "delete": "Eliminazione",
+        "bulk": "Operazioni Massive",
+        "users": "Utenti",
+        "roles": "Ruoli",
+        "assets": "Dispositivi",
+        "sites": "Siti",
+        "locations": "Località",
+        "suppliers": "Fornitori",
+        "contacts": "Contatti",
+        "reset_user_password": "Reset Password Utenti",
+        "manufacturers": "Produttori",
+        "noneDescription": "Nessun accesso alle risorse",
+        "readDescription": "Può visualizzare le risorse ma non modificarle",
+        "writeDescription": "Può creare e modificare le risorse",
+        "deleteDescription": "Può eliminare le risorse",
+        "bulkDescription": "Può eseguire operazioni su più risorse contemporaneamente",
+        "resetPassword": "Reset Password",
+        "resetPasswordDescription": "Può resettare la password di altri utenti"
+    }
+}

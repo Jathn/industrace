@@ -32,122 +32,11 @@ router = APIRouter(
 def get_dashboard_stats(
     current_user: User = Depends(get_current_user), db: Session = Depends(get_db)
 ):
-    from datetime import datetime, timedelta
-    from sqlalchemy import func, and_
+    """Ottimizzato con caching e query unificate"""
+    from app.services.dashboard_cache import get_dashboard_stats_cached
     
-    # Statistiche base
-    total_assets = (
-        db.query(Asset).filter(Asset.tenant_id == current_user.tenant_id).count()
-    )
-    
-    # Asset critici (business_criticality = 'critical' o 'high')
-    critical_assets = (
-        db.query(Asset)
-        .filter(
-            and_(
-                Asset.tenant_id == current_user.tenant_id,
-                Asset.business_criticality.in_(['critical', 'high'])
-            )
-        )
-        .count()
-    )
-    
-    # Asset a rischio (risk_score >= 5)
-    assets_at_risk = (
-        db.query(Asset)
-        .filter(
-            and_(
-                Asset.tenant_id == current_user.tenant_id,
-                Asset.risk_score >= 5
-            )
-        )
-        .count()
-    )
-    
-    # Modifiche recenti (ultime 24 ore)
-    yesterday = datetime.utcnow() - timedelta(days=1)
-    recent_changes = (
-        db.query(Asset)
-        .filter(
-            and_(
-                Asset.tenant_id == current_user.tenant_id,
-                Asset.updated_at >= yesterday
-            )
-        )
-        .count()
-    )
-    
-    # Asset attivi/inattivi
-    active_assets = (
-        db.query(Asset)
-        .join(AssetStatus)
-        .filter(
-            and_(
-                Asset.tenant_id == current_user.tenant_id,
-                AssetStatus.name == "Active"
-            )
-        )
-        .count()
-    )
-    
-    inactive_assets = total_assets - active_assets
-    
-    # Statistiche per status
-    statuses = (
-        db.query(AssetStatus)
-        .filter(AssetStatus.tenant_id == current_user.tenant_id)
-        .all()
-    )
-    status_stats = []
-    for status in statuses:
-        count = (
-            db.query(Asset)
-            .filter(
-                Asset.tenant_id == current_user.tenant_id, 
-                Asset.status_id == status.id
-            )
-            .count()
-        )
-        status_stats.append({
-            "status_id": str(status.id),
-            "name": status.name,
-            "color": status.color,
-            "count": count,
-        })
-    
-    # Statistiche per tipo di asset
-    from app.models import AssetType
-    asset_types = (
-        db.query(AssetType)
-        .filter(AssetType.tenant_id == current_user.tenant_id)
-        .all()
-    )
-    type_stats = []
-    for asset_type in asset_types:
-        count = (
-            db.query(Asset)
-            .filter(
-                Asset.tenant_id == current_user.tenant_id, 
-                Asset.asset_type_id == asset_type.id
-            )
-            .count()
-        )
-        type_stats.append({
-            "type_id": str(asset_type.id),
-            "name": asset_type.name,
-            "asset_count": count,
-        })
-    
-    return {
-        "total_assets": total_assets,
-        "critical_assets": critical_assets,
-        "assets_at_risk": assets_at_risk,
-        "recent_changes": recent_changes,
-        "active_assets": active_assets,
-        "inactive_assets": inactive_assets,
-        "status_stats": status_stats,
-        "type_stats": type_stats
-    }
+    # Usa il servizio di cache per le statistiche
+    return get_dashboard_stats_cached(str(current_user.tenant_id), db)
 
 
 @router.get("/risky-assets")
@@ -156,23 +45,31 @@ def get_risky_assets(
     db: Session = Depends(get_db),
     limit: int = 10
 ):
-    """Ottieni gli asset più a rischio"""
+    """
+    Ottieni gli asset più a rischio
+    PERFORMANCE: Usa selectinload per evitare N+1 queries
+    """
     from sqlalchemy import and_
-    from sqlalchemy.orm import joinedload
+    from sqlalchemy.orm import selectinload
     
-    from app.models import AssetType, Site
+    from app.models import AssetType, Site, Manufacturer
+    
+    # PERFORMANCE: Limita il numero massimo di risultati
+    limit = min(limit, 50)
     
     risky_assets = (
         db.query(Asset)
         .options(
-            joinedload(Asset.interfaces),
-            joinedload(Asset.asset_type),
-            joinedload(Asset.site),
-            joinedload(Asset.status)
+            selectinload(Asset.interfaces),  # Query separate ottimizzata
+            selectinload(Asset.asset_type),
+            selectinload(Asset.site),
+            selectinload(Asset.status),
+            selectinload(Asset.manufacturer)
         )
         .filter(
             and_(
                 Asset.tenant_id == current_user.tenant_id,
+                Asset.deleted_at == None,  # Non mostrare asset eliminati
                 Asset.risk_score >= 5
             )
         )
@@ -185,7 +82,7 @@ def get_risky_assets(
         {
             "id": str(asset.id),
             "name": asset.name,
-            "risk_score": asset.risk_score,
+            "risk_score": clean_float_values(asset.risk_score),
             "business_criticality": asset.business_criticality,
             "asset_type_name": asset.asset_type.name if asset.asset_type else "N/A",
             "status_name": asset.status.name if asset.status else "N/A",

@@ -47,7 +47,7 @@ export function usePrint() {
     } catch (error) {
       toast.add({
         severity: 'error',
-        summary: t('common.error'),
+        summary: t('common.messages.error'),
         detail: t('print.templates.loadError'),
         life: 3000
       })
@@ -84,7 +84,7 @@ export function usePrint() {
       // Trova il template selezionato
       const template = getTemplate(templateKey)
       if (!template) {
-        throw new Error('Template non trovato')
+        throw new Error(t('print.templates.notFound'))
       }
 
       // Opzioni di default del template
@@ -110,7 +110,7 @@ export function usePrint() {
         
         toast.add({
           severity: 'success',
-          summary: t('common.success'),
+          summary: t('common.messages.success'),
           detail: t('print.generation.success'),
           life: 3000
         })
@@ -122,7 +122,7 @@ export function usePrint() {
     } catch (error) {
       toast.add({
         severity: 'error',
-        summary: t('common.error'),
+        summary: t('common.messages.error'),
         detail: t('print.generation.error'),
         life: 3000
       })
@@ -142,7 +142,7 @@ export function usePrint() {
       }
       
       if (!template) {
-        throw new Error('Template non trovato')
+        throw new Error(t('print.templates.notFound'))
       }
 
       // Opzioni di default del template
@@ -168,7 +168,7 @@ export function usePrint() {
         
         toast.add({
           severity: 'success',
-          summary: t('common.success'),
+          summary: t('common.messages.success'),
           detail: t('print.generation.success'),
           life: 3000
         })
@@ -180,7 +180,7 @@ export function usePrint() {
     } catch (error) {
       toast.add({
         severity: 'error',
-        summary: t('common.error'),
+        summary: t('common.messages.error'),
         detail: t('print.generation.error'),
         life: 3000
       })

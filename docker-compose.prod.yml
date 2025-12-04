@@ -26,6 +26,7 @@ services:
       POSTGRES_DB: industrace
     volumes:
       - industrace_postgres_data:/var/lib/postgresql/data
+      - ./backend/init-db.sql:/docker-entrypoint-initdb.d/01-init-extensions.sql:ro
     networks:
       - industrace-network
     expose:

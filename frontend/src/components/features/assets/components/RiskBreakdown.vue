@@ -6,7 +6,7 @@
     </div>
     <div v-if="breakdown.missing_data && breakdown.missing_data.length" class="risk-warning">
       <i class="pi pi-exclamation-triangle"></i>
-      <span>{{ t('riskBreakdown.missingData') }}: {{ breakdown.missing_data.join(', ') }}</span>
+      <span>{{ t('assets.riskBreakdown.missingData') }}: {{ breakdown.missing_data.join(', ') }}</span>
     </div>
     <div class="risk-table">
       <div class="risk-row" v-for="(item, key) in partials" :key="key">
@@ -19,14 +19,14 @@
         </span>
       </div>
       <div class="risk-row risk-weights">
-        <span>{{ t('riskBreakdown.weights') }}:</span>
+        <span>{{ t('assets.riskBreakdown.weights') }}:</span>
         <span class="risk-weights-list">
           <span v-for="(w, k) in breakdown.weights" :key="k">{{ keyLabel(k) }}: {{ (w*100).toFixed(0) }}%</span>
         </span>
       </div>
     </div>
     <div v-if="breakdown.suggestions && breakdown.suggestions.length" class="risk-suggestions">
-      <h4>{{ t('riskBreakdown.suggestionsTitle') }}</h4>
+      <h4>{{ t('assets.riskBreakdown.suggestionsTitle') }}</h4>
       <ul>
         <li v-for="s in breakdown.suggestions" :key="s">
           <span class="suggestion-badge">⚠️</span> {{ s }}
@@ -50,10 +50,10 @@ const partials = computed(() => ({
 }))
 const riskLabel = computed(() => {
   const score = props.breakdown.final_score
-  if (score === null) return t('riskBreakdown.undefined')
-  if (score >= 7) return t('riskBreakdown.high')
-  if (score >= 4) return t('riskBreakdown.medium')
-  return t('riskBreakdown.low')
+  if (score === null) return t('assets.riskBreakdown.undefined')
+  if (score >= 7) return t('assets.riskBreakdown.high')
+  if (score >= 4) return t('assets.riskBreakdown.medium')
+  return t('assets.riskBreakdown.low')
 })
 const riskClass = computed(() => {
   const score = props.breakdown.final_score
@@ -65,7 +65,7 @@ const riskClass = computed(() => {
 function keyLabel(key) {
   // Usa direttamente la chiave come chiave di traduzione
   // Il backend dovrebbe inviare chiavi standardizzate (es: 'vulnerability', 'impact', 'operational')
-  return t(`riskBreakdown.${key}`)
+  return t(`assets.riskBreakdown.${key}`)
 }
 </script>
 

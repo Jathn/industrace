@@ -16,22 +16,22 @@
           <template #title>
             <div class="flex align-items-center gap-2">
               <i class="pi pi-user"></i>
-              {{ t('profile.userInfo') }}
+              {{ t('profile.strings.userInfo') }}
             </div>
           </template>
           <template #content>
             <div class="grid">
               <div class="col-12">
                 <div class="field">
-                  <label class="block text-sm font-medium mb-2">{{ t('profile.fullName') }}</label>
+                  <label class="block text-sm font-medium mb-2">{{ t('profile.fields.fullName') }}</label>
                   <div class="p-3 bg-gray-50 border-round">
-                    {{ user.full_name || t('common.na') }}
+                    {{ user.full_name || t('common.strings.na') }}
                   </div>
                 </div>
               </div>
               <div class="col-12">
                 <div class="field">
-                  <label class="block text-sm font-medium mb-2">{{ t('profile.email') }}</label>
+                  <label class="block text-sm font-medium mb-2">{{ t('common.fields.email') }}</label>
                   <div class="p-3 bg-gray-50 border-round">
                     {{ user.email }}
                   </div>
@@ -39,23 +39,23 @@
               </div>
               <div class="col-12">
                 <div class="field">
-                  <label class="block text-sm font-medium mb-2">{{ t('profile.role') }}</label>
+                  <label class="block text-sm font-medium mb-2">{{ t('profile.fields.role') }}</label>
                   <div class="p-3 bg-gray-50 border-round">
-                    {{ user.role?.name || t('common.na') }}
+                    {{ user.role?.name || t('common.strings.na') }}
                   </div>
                 </div>
               </div>
               <div class="col-12">
                 <div class="field">
-                  <label class="block text-sm font-medium mb-2">{{ t('profile.tenant') }}</label>
+                  <label class="block text-sm font-medium mb-2">{{ t('profile.fields.tenant') }}</label>
                   <div class="p-3 bg-gray-50 border-round">
-                    {{ user.tenant?.name || t('common.na') }}
+                    {{ user.tenant?.name || t('common.strings.na') }}
                   </div>
                 </div>
               </div>
               <div class="col-12">
                 <div class="field">
-                  <label class="block text-sm font-medium mb-2">{{ t('profile.lastLogin') }}</label>
+                  <label class="block text-sm font-medium mb-2">{{ t('profile.fields.lastLogin') }}</label>
                   <div class="p-3 bg-gray-50 border-round">
                     {{ formatDate(user.last_login) }}
                   </div>
@@ -72,22 +72,22 @@
           <template #title>
             <div class="flex align-items-center gap-2">
               <i class="pi pi-lock"></i>
-              {{ t('profile.security') }}
+              {{ t('profile.strings.security') }}
             </div>
           </template>
           <template #content>
             <div class="mb-4">
               <p class="text-sm text-gray-600 mb-3">
-                {{ t('profile.resetPasswordInfo') }}
+                {{ t('profile.strings.resetPasswordInfo') }}
               </p>
             </div>
             
             <form @submit.prevent="resetPassword" class="space-y-4">
               <div class="field">
-                <label class="block text-sm font-medium mb-2">{{ t('profile.currentPassword') }}</label>
+                <label class="block text-sm font-medium mb-2">{{ t('profile.fields.currentPassword') }}</label>
                 <Password 
                   v-model="passwordForm.currentPassword" 
-                  :placeholder="t('profile.enterCurrentPassword')"
+                  :placeholder="t('profile.strings.enterCurrentPassword')"
                   :feedback="false"
                   toggleMask
                   class="w-full"
@@ -99,10 +99,10 @@
               </div>
 
               <div class="field">
-                <label class="block text-sm font-medium mb-2">{{ t('profile.newPassword') }}</label>
+                <label class="block text-sm font-medium mb-2">{{ t('profile.fields.newPassword') }}</label>
                 <Password 
                   v-model="passwordForm.newPassword" 
-                  :placeholder="t('profile.enterNewPassword')"
+                  :placeholder="t('profile.strings.enterNewPassword')"
                   toggleMask
                   class="w-full"
                   :class="{ 'p-invalid': passwordErrors.newPassword }"
@@ -113,10 +113,10 @@
               </div>
 
               <div class="field">
-                <label class="block text-sm font-medium mb-2">{{ t('profile.confirmPassword') }}</label>
+                <label class="block text-sm font-medium mb-2">{{ t('profile.fields.confirmPassword') }}</label>
                 <Password 
                   v-model="passwordForm.confirmPassword" 
-                  :placeholder="t('profile.confirmNewPassword')"
+                  :placeholder="t('profile.strings.confirmNewPassword')"
                   :feedback="false"
                   toggleMask
                   class="w-full"
@@ -130,14 +130,14 @@
               <div class="flex gap-2">
                 <Button 
                   type="submit" 
-                  :label="t('profile.resetPassword')" 
+                  :label="t('profile.fields.resetPassword')" 
                   icon="pi pi-key"
                   :loading="resetting"
                   :disabled="!isPasswordFormValid"
                 />
                 <Button 
                   type="button" 
-                  :label="t('common.clear')" 
+                  :label="t('common.actions.clear')" 
                   severity="secondary"
                   @click="clearPasswordForm"
                 />
@@ -153,13 +153,13 @@
           <template #title>
             <div class="flex align-items-center gap-2">
               <i class="pi pi-cog"></i>
-              {{ t('profile.settings') }}
+              {{ t('profile.fields.settings') }}
             </div>
           </template>
           <template #content>
             <div class="text-center p-4">
               <i class="pi pi-info-circle text-2xl text-blue-500 mb-2"></i>
-              <p class="text-gray-600">{{ t('profile.settingsComingSoon') }}</p>
+              <p class="text-gray-600">{{ t('profile.strings.settingsComingSoon') }}</p>
             </div>
           </template>
         </Card>
@@ -171,7 +171,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { i18n } from '../locales/loader.js'
+import i18n from '../locales/loader-final.js'
 import { useToast } from 'primevue/usetoast'
 import { useApi } from '../composables/useApi'
 import api from '../api/api'
@@ -211,7 +211,7 @@ const isPasswordFormValid = computed(() => {
 
 // Methods
 function formatDate(dateString) {
-  if (!dateString) return t('common.na')
+  if (!dateString) return t('common.strings.na')
   const locale = i18n.global.locale.value;
   const dateLocale = locale === 'it' ? 'it-IT' : 'en-US';
   return new Date(dateString).toLocaleString(dateLocale)
@@ -230,23 +230,23 @@ function validatePasswordForm() {
   let isValid = true
 
   if (!passwordForm.value.currentPassword) {
-    passwordErrors.value.currentPassword = t('profile.currentPasswordRequired')
+    passwordErrors.value.currentPassword = t('profile.strings.currentPasswordRequired')
     isValid = false
   }
 
   if (!passwordForm.value.newPassword) {
-    passwordErrors.value.newPassword = t('profile.newPasswordRequired')
+    passwordErrors.value.newPassword = t('profile.strings.newPasswordRequired')
     isValid = false
   } else if (passwordForm.value.newPassword.length < 8) {
-    passwordErrors.value.newPassword = t('profile.passwordMinLength')
+    passwordErrors.value.newPassword = t('profile.strings.passwordMinLength')
     isValid = false
   }
 
   if (!passwordForm.value.confirmPassword) {
-    passwordErrors.value.confirmPassword = t('profile.confirmPasswordRequired')
+    passwordErrors.value.confirmPassword = t('profile.strings.confirmPasswordRequired')
     isValid = false
   } else if (passwordForm.value.newPassword !== passwordForm.value.confirmPassword) {
-    passwordErrors.value.confirmPassword = t('profile.passwordsDoNotMatch')
+    passwordErrors.value.confirmPassword = t('profile.strings.passwordsDoNotMatch')
     isValid = false
   }
 
@@ -267,12 +267,12 @@ async function resetPassword() {
       clearPasswordForm()
       toast.add({
         severity: 'success',
-        summary: t('common.success'),
-        detail: t('profile.passwordResetSuccess'),
+        summary: t('common.messages.success'),
+        detail: t('profile.strings.passwordResetSuccess'),
         life: 3000
       })
     }, {
-      errorContext: t('profile.passwordResetError')
+      errorContext: t('profile.strings.passwordResetError')
     })
   } finally {
     resetting.value = false
@@ -294,7 +294,7 @@ async function fetchUserProfile() {
     user.value = response.data
     return response
   }, {
-    errorContext: t('profile.fetchError')
+    errorContext: t('profile.strings.fetchError')
   })
 }
 

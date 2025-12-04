@@ -63,6 +63,9 @@ export default {
   getAreas(params = {}) {
     return api.get('/areas', { params })
   },
+  getAreasTrash(params = {}) {
+    return api.get('/areas/trash', { params })
+  },
   getArea(id) {
     return api.get(`/areas/${id}`)
   },
@@ -74,6 +77,15 @@ export default {
   },
   deleteArea(id) {
     return api.delete(`/areas/${id}`)
+  },
+  restoreArea(id) {
+    return api.patch(`/areas/${id}/restore`)
+  },
+  hardDeleteArea(id) {
+    return api.delete(`/areas/${id}/hard`)
+  },
+  emptyAreasTrash() {
+    return api.delete('/areas/trash/empty')
   },
   getAreasBySite(siteId) {
     return api.get(`/areas/site/${siteId}`)

@@ -24,6 +24,7 @@ def list_audit_logs(
     to_date: Optional[datetime] = Query(None, alias="to"),
     action: Optional[str] = None,
     entity: Optional[str] = None,
+    entity_id: Optional[uuid.UUID] = Query(None, alias="entity_id"),
     user_id: Optional[uuid.UUID] = None,
     skip: int = 0,
     limit: int = 50,
@@ -39,6 +40,8 @@ def list_audit_logs(
         query = query.filter(AuditLog.action == action)
     if entity:
         query = query.filter(AuditLog.entity == entity)
+    if entity_id:
+        query = query.filter(AuditLog.entity_id == entity_id)
     if user_id:
         query = query.filter(AuditLog.user_id == user_id)
     query = query.order_by(AuditLog.timestamp.desc())
@@ -63,6 +66,7 @@ def export_audit_logs(
     to_date: Optional[datetime] = Query(None, alias="to"),
     action: Optional[str] = None,
     entity: Optional[str] = None,
+    entity_id: Optional[uuid.UUID] = Query(None, alias="entity_id"),
     user_id: Optional[uuid.UUID] = None,
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user),
@@ -76,6 +80,8 @@ def export_audit_logs(
         query = query.filter(AuditLog.action == action)
     if entity:
         query = query.filter(AuditLog.entity == entity)
+    if entity_id:
+        query = query.filter(AuditLog.entity_id == entity_id)
     if user_id:
         query = query.filter(AuditLog.user_id == user_id)
     query = query.order_by(AuditLog.timestamp.desc())

@@ -1,10 +1,19 @@
 {
-    "title": "Tipi di asset",
-    "level0": "Livello 0 (Processi Fisici)",
-    "level1": "Livello 1 (Controllo Base)",
-    "level2": "Livello 2 (Controllo Supervisore)",
-    "level3": "Livello 3 (Operazioni di Produzione)",
-    "level4": "Livello 4 (Logistica e Business)",
-    "level1_5": "Livello 1.5 (Interfaccia di Accesso Dati / Gateway OT)",
-    "updated": "Tipo di asset aggiornato con successo"
+    "title": "Tipi di Dispositivi",
+    "fields": {
+        "purdueLevel": "Livello Purdue"
+    },
+    "messages": {
+        "fetchError": "Errore nel caricamento dei tipi di dispositivi",
+        "created": "Tipo di dispositivo creato con successo",
+        "createError": "Errore nella creazione del tipo di dispositivo",
+        "updated": "Tipo di dispositivo aggiornato con successo",
+        "updateError": "Errore nell'aggiornamento del tipo di dispositivo"
+    },
+    "level0": "0",
+    "level1": "1",
+    "level1_5": "1.5",
+    "level2": "2",
+    "level3": "3",
+    "level4": "4"
 }

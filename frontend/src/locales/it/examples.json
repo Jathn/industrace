@@ -1,0 +1,15 @@
+{
+  "title": "Esempi Traduzione Intelligente",
+  "description": "Esempi del nuovo sistema di traduzione intelligente",
+  "welcomeMessage": "Benvenuto {name}!",
+  "itemsCount": {
+    "singular": "1 elemento",
+    "plural": "{count} elementi"
+  },
+  "status": {
+    "pending": "In attesa",
+    "active": "Attivo",
+    "completed": "Completato", 
+    "cancelled": "Annullato"
+  }
+}

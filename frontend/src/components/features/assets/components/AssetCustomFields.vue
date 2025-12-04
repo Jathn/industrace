@@ -5,7 +5,7 @@
 -->
 <template>
   <Card>
-    <template #title>{{ t('assetCustomFields.title') }}</template>
+    <template #title>{{ t('assets.customFields.title') }}</template>
     <template #content>
       <div v-if="!isEditing">
         <table class="custom-fields-table">
@@ -15,11 +15,11 @@
               <td>{{ field.value }}</td>
             </tr>
             <tr v-if="fieldsArray.length === 0">
-              <td colspan="2">{{ t('assetCustomFields.noCustomFields') }}</td>
+              <td colspan="2">{{ t('assets.customFields.noCustomFields') }}</td>
             </tr>
           </tbody>
         </table>
-        <Button v-if="!readOnly" :label="t('assetCustomFields.addField')" icon="pi pi-plus" class="mt-2" @click="addNewField" />
+        <Button v-if="!readOnly" :label="t('assets.customFields.addField')" icon="pi pi-plus" class="mt-2" @click="addNewField" />
       </div>
 
       <div v-else>
@@ -28,9 +28,9 @@
           <InputText :id="`custom_field_value_${index}`" v-model="field.value" placeholder="Value" class="w-6/12" @input="showSave = true" />
           <Button icon="pi pi-trash" severity="danger" @click="removeField(index)" />
         </div>
-        <Button :label="t('assetCustomFields.addField')" icon="pi pi-plus" class="mt-2" @click="addField" />
-        <Button :label="t('assetCustomFields.saveFields')" icon="pi pi-save" class="mt-2" @click="saveFields" v-if="showSave" />
-        <Button :label="t('assetCustomFields.cancel')" icon="pi pi-times" class="mt-2 p-button-text" @click="cancelEditing" />
+        <Button :label="t('assets.customFields.addField')" icon="pi pi-plus" class="mt-2" @click="addField" />
+        <Button :label="t('assets.customFields.saveFields')" icon="pi pi-save" class="mt-2" @click="saveFields" v-if="showSave" />
+        <Button :label="t('common.actions.cancel')" icon="pi pi-times" class="mt-2 p-button-text" @click="cancelEditing" />
       </div>
     </template>
   </Card>
@@ -106,11 +106,11 @@ async function saveFields() {
   // Validazione base
   const keys = editableFields.value.map(f => f.key.trim())
   if (keys.some(k => !k)) {
-    toast.add({ severity: 'warn', summary: t('common.error'), detail: t('assetCustomFields.allKeysMustBeFilled') })
+    toast.add({ severity: 'warn', summary: t('common.strings.error'), detail: t('assets.customFields.allKeysMustBeFilled') })
     return
   }
   if (new Set(keys).size !== keys.length) {
-    toast.add({ severity: 'warn', summary: t('common.error'), detail: t('assetCustomFields.allKeysMustBeUnique') })
+    toast.add({ severity: 'warn', summary: t('common.strings.error'), detail: t('assets.customFields.allKeysMustBeUnique') })
     return
   }
 
@@ -121,12 +121,12 @@ async function saveFields() {
 
   try {
     await api.updateAssetCustomFields(props.assetId, { custom_fields: payload })
-    toast.add({ severity: 'success', summary: t('common.success'), detail: t('assetCustomFields.fieldsUpdated') })
+    toast.add({ severity: 'success', summary: t('common.messages.success'), detail: t('assets.customFields.fieldsUpdated') })
     isEditing.value = false
     showSave.value = false
     emit('saved', editableFields.value)
   } catch (error) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assetCustomFields.saveError') })
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('assets.customFields.saveError') })
   }
 }
 </script>

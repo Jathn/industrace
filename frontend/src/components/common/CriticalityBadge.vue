@@ -33,11 +33,11 @@ const props = defineProps({
 
 const criticalityLabel = computed(() => {
   switch ((props.value || '').toLowerCase()) {
-    case 'low': return t('assets.businessCriticalityLow')
-    case 'medium': return t('assets.businessCriticalityMedium')
-    case 'high': return t('assets.businessCriticalityHigh')
-    case 'critical': return t('assets.businessCriticalityCritical')
-    default: return t('common.na')
+    case 'low': return t('assets.strings.businessCriticalityLow')
+    case 'medium': return t('assets.strings.businessCriticalityMedium')
+    case 'high': return t('assets.strings.businessCriticalityHigh')
+    case 'critical': return t('assets.strings.businessCriticalityCritical')
+    default: return t('common.strings.na')
   }
 })
 
@@ -65,7 +65,7 @@ const criticalityColor = computed(() => {
 
 const tooltipText = computed(() => {
   if (props.iconOnly) {
-    return `${t('assets.businessCriticality')}: ${criticalityLabel.value}`
+    return `${t('common.fields.businessCriticality')}: ${criticalityLabel.value}`
   }
   return criticalityLabel.value
 })

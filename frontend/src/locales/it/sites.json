@@ -1,8 +1,34 @@
 {
-  "title": "Siti",
-  "filterByParent": "Filtra per sito padre",
-  "filterTree": "Filtra per albero",
-  "area": "Area",
-  "parent": "Sito padre",
-  "noParent": "Nessun sito padre"
-} 
+    "title": "Siti",
+    "messages": {
+        "fetchError": "Errore nel caricamento dei siti",
+        "created": "Sito creato con successo",
+        "createError": "Errore nella creazione del sito",
+        "updated": "Sito aggiornato con successo",
+        "updateError": "Errore nell'aggiornamento del sito",
+        "deleted": "Sito eliminato con successo",
+        "deleteError": "Errore nell'eliminazione del sito",
+        "bulkUpdated": "Siti aggiornati con successo",
+        "bulkUpdateError": "Errore nell'aggiornamento dei siti",
+        "restored": "Sito ripristinato con successo",
+        "restoreError": "Errore nel ripristino del sito",
+        "hardDeleted": "Sito eliminato definitivamente con successo",
+        "hardDeleteError": "Errore nell'eliminazione definitiva del sito",
+        "trashEmptied": "Cestino svuotato con successo",
+        "emptyTrashError": "Errore nell'svuotamento del cestino",
+        "filterTree": "Filtra gerarchia siti",
+        "filterByParent": "Filtra per sito padre",
+        "noParent": "Nessun sito padre",
+        "fetchLocationsError": "Errore nel caricamento delle località",
+        "locationCreated": "Località creata con successo",
+        "locationUpdated": "Località aggiornata con successo",
+        "updateLocationError": "Errore nell'aggiornamento della località"
+    },
+    "fields": {
+        "parent": "Sito padre"
+    },
+    "strings": {
+        "select": "Seleziona",
+        "info": "Informazioni"
+    }
+}

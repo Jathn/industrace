@@ -82,7 +82,7 @@ export function useConfirm() {
       if (successMessage) {
         toast.add({
           severity: 'success',
-          summary: t('common.success'),
+          summary: t('common.messages.success'),
           detail: successMessage,
           life: 3000
         })
@@ -96,7 +96,7 @@ export function useConfirm() {
 
       toast.add({
         severity: 'error',
-        summary: t('common.error'),
+        summary: t('common.messages.error'),
         detail: fullMessage,
         life: 5000
       })

@@ -1,23 +1,28 @@
 {
-  "title": "Aree",
-  "description": "Gestisci le aree organizzative dei tuoi siti",
-  "create": "Crea Area",
-  "edit": "Modifica Area",
-  "deleteTitle": "Elimina Area",
-  "deleteMessage": "Sei sicuro di voler eliminare l'area \"{name}\"?",
-  "created": "Area creata con successo",
-  "updated": "Area aggiornata con successo",
-  "deleted": "Area eliminata con successo",
-  "saveError": "Errore nel salvataggio dell'area",
-  "searchPlaceholder": "Cerca aree...",
-  "basicInfo": "Informazioni Base",
-  "code": "Codice",
-  "typology": "Tipologia",
-  "namePlaceholder": "Inserisci il nome dell'area",
-  "codePlaceholder": "Es: ASM, PROD, OFFICE",
-  "typologyPlaceholder": "Es: Produzione, Uffici, Magazzino",
-  "notesPlaceholder": "Inserisci note aggiuntive sull'area",
-  "codeRequired": "Il codice è obbligatorio",
-  "noAreas": "Nessuna area trovata",
-  "noAreasForSite": "Nessuna area trovata per questo sito"
-} 
+    "title": "Aree",
+    "messages": {
+        "fetchError": "Errore nel caricamento delle aree",
+        "created": "Area creata con successo",
+        "createError": "Errore nella creazione dell'area",
+        "updated": "Area aggiornata con successo",
+        "updateError": "Errore nell'aggiornamento dell'area",
+        "deleted": "Area eliminato con successo",
+        "deleteError": "Errore nell'eliminazione dell'area",
+        "bulkUpdated": "Aree aggiornati con successo",
+        "bulkUpdateError": "Errore nell'aggiornamento delle aree",
+        "restored": "Area ripristinato con successo",
+        "restoreError": "Errore nel ripristino dell'area",
+        "hardDeleted": "Area eliminato definitivamente con successo",
+        "hardDeleteError": "Errore nell'eliminazione definitiva dell'area",
+        "trashEmptied": "Cestino svuotato con successo",
+        "emptyTrashError": "Errore nell'svuotamento del cestino"
+    },
+    "fields": {
+        "typology": "Tipologia",
+        "name": "Nome Area"
+    },
+    "strings": {
+        "select": "Seleziona",
+        "info": "Informazioni"
+    }
+}

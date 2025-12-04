@@ -1,20 +1,20 @@
 <template>
   <div class="asset-connections-table">
     <div class="flex align-items-center mb-2">
-      <span>{{ t('assetConnections.title') }}</span>
+      <span>{{ t('assets.connections.title') }}</span>
     </div>
     <table v-if="connections.length" class="conn-table">
       <thead>
         <tr>
-          <th>{{ t('assetConnections.assetA') }}</th>
-          <th>{{ t('assetConnections.interfaceA') }}</th>
-          <th>{{ t('assetConnections.logicalPortA') }}</th>
-          <th>{{ t('assetConnections.physicalPlugLabelA') }}</th>
-          <th>{{ t('assetConnections.physicalPlugLabelB') }}</th>
-          <th>{{ t('assetConnections.logicalPortB') }}</th>
-          <th>{{ t('assetConnections.interfaceB') }}</th>
-          <th>{{ t('assetConnections.assetB') }}</th>
-          <th>{{ t('common.actions') }}</th>
+          <th>{{ t('assets.connections.assetA') }}</th>
+          <th>{{ t('assets.connections.interfaceA') }}</th>
+          <th>{{ t('assets.connections.logicalPortA') }}</th>
+          <th>{{ t('assets.connections.physicalPlugLabelA') }}</th>
+          <th>{{ t('assets.connections.physicalPlugLabelB') }}</th>
+          <th>{{ t('assets.connections.logicalPortB') }}</th>
+          <th>{{ t('assets.connections.interfaceB') }}</th>
+          <th>{{ t('assets.connections.assetB') }}</th>
+          <th>{{ t('common.strings.actions') }}</th>
         </tr>
       </thead>
       <tbody>
@@ -35,7 +35,7 @@
       </tbody>
     </table>
     <div v-else class="placeholder">
-      <span>{{ t('assetConnections.noConnections') }}</span>
+      <span>{{ t('assets.connections.noConnections') }}</span>
     </div>
   </div>
 </template>

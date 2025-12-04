@@ -5,46 +5,46 @@
 -->
 <template>
   <div class="p-4">
-    <Button icon="pi pi-arrow-left" :label="t('common.back')" class="mb-3" @click="goBack" />
+    <Button icon="pi pi-arrow-left" :label="t('common.actions.back')" class="mb-3" @click="goBack" />
     <h2 class="text-xl mb-4">{{ t('suppliers.title') }}</h2>
     
     <div class="mb-4">
-      <h3 class="text-lg font-semibold">{{ t('suppliers.info') }}</h3>
-      <p><strong>{{ t('common.name') }}:</strong> {{ supplier.name }}</p>
-      <p><strong>{{ t('common.description') }}:</strong> {{ supplier.description }}</p>
-      <p><strong>{{ t('common.vatNumber') }}:</strong> {{ supplier.vat_number || '-' }}</p>
-      <p><strong>{{ t('common.taxCode') }}:</strong> {{ supplier.tax_code || '-' }}</p>
-      <p><strong>{{ t('common.address') }}:</strong> {{ supplier.address || '-' }}</p>
-      <p><strong>{{ t('common.city') }}:</strong> {{ supplier.city || '-' }}</p>
-      <p><strong>{{ t('common.zipCode') }}:</strong> {{ supplier.zip_code || '-' }}</p>
-      <p><strong>{{ t('common.state') }}:</strong> {{ supplier.province || '-' }}</p>
-      <p><strong>{{ t('common.country') }}:</strong> {{ supplier.country || '-' }}</p>
-      <p><strong>{{ t('common.phone') }}:</strong> {{ supplier.phone || '-' }}</p>
-      <p><strong>{{ t('common.email') }}:</strong> {{ supplier.email || '-' }}</p>
-      <p><strong>{{ t('common.website') }}:</strong> <a v-if="supplier.website" :href="supplier.website" target="_blank">{{ supplier.website }}</a><span v-else>-</span></p>
-      <p><strong>{{ t('common.notes') }}:</strong> {{ supplier.notes || '-' }}</p>
+      <h3 class="text-lg font-semibold">{{ t('common.strings.info') }}</h3>
+      <p><strong>{{ t('common.fields.name') }}:</strong> {{ supplier.name }}</p>
+      <p><strong>{{ t('common.fields.description') }}:</strong> {{ supplier.description }}</p>
+      <p><strong>{{ t('suppliers.fields.vatNumber') }}:</strong> {{ supplier.vat_number || '-' }}</p>
+      <p><strong>{{ t('suppliers.fields.taxCode') }}:</strong> {{ supplier.tax_code || '-' }}</p>
+      <p><strong>{{ t('suppliers.fields.address') }}:</strong> {{ supplier.address || '-' }}</p>
+      <p><strong>{{ t('common.fields.city') }}:</strong> {{ supplier.city || '-' }}</p>
+      <p><strong>{{ t('common.fields.zipCode') }}:</strong> {{ supplier.zip_code || '-' }}</p>
+      <p><strong>{{ t('common.fields.state') }}:</strong> {{ supplier.province || '-' }}</p>
+      <p><strong>{{ t('common.fields.country') }}:</strong> {{ supplier.country || '-' }}</p>
+      <p><strong>{{ t('common.fields.phone') }}:</strong> {{ supplier.phone || '-' }}</p>
+      <p><strong>{{ t('common.fields.email') }}:</strong> {{ supplier.email || '-' }}</p>
+      <p><strong>{{ t('common.fields.website') }}:</strong> <a v-if="supplier.website" :href="supplier.website" target="_blank">{{ supplier.website }}</a><span v-else>-</span></p>
+      <p><strong>{{ t('common.fields.notes') }}:</strong> {{ supplier.notes || '-' }}</p>
     </div>
 
     <!-- Sezione Contatti associati -->
     <div class="mb-4">
       <h3 class="text-lg font-semibold">{{ t('contacts.title') }}</h3>
       <div v-if="canWrite('suppliers')" class="flex align-items-center gap-2 mb-2">
-        <MultiSelect v-model="selectedContactIds" :options="allContacts" optionLabel="fullName" optionValue="id" :placeholder="t('contacts.add')" display="chip" class="mr-2" style="min-width:250px" />
-        <Button :label="t('common.save')" icon="pi pi-check" class="p-button-sm" @click="updateSupplierContacts" />
-        <Button :label="t('common.new')" icon="pi pi-plus" class="p-button-sm" @click="showContactDialog = true" />
+        <MultiSelect v-model="selectedContactIds" :options="allContacts" optionLabel="fullName" optionValue="id" :placeholder="t('common.actions.add')" display="chip" class="mr-2" style="min-width:250px" />
+        <Button :label="t('common.actions.save')" icon="pi pi-check" class="p-button-sm" @click="updateSupplierContacts" />
+        <Button :label="t('common.actions.create')" icon="pi pi-plus" class="p-button-sm" @click="showContactDialog = true" />
       </div>
-              <DataTable :value="supplierContacts" :loading="loadingContacts" emptyMessage="No associated contacts">
-        <Column field="fullName" :header="t('common.fullName')" />
-        <Column field="email" :header="t('common.email')" />
-        <Column field="phone" :header="t('common.phone')" />
-        <Column field="type" :header="t('common.type')" />
-        <Column v-if="canWrite('suppliers')" :header="t('common.actions')">
+              <DataTable :value="supplierContacts" :loading="loadingContacts" :emptyMessage="t('contacts.messages.noContacts')">
+        <Column field="fullName" :header="t('contacts.fields.fullName')" />
+        <Column field="email" :header="t('common.fields.email')" />
+        <Column field="phone" :header="t('common.fields.phone')" />
+        <Column field="type" :header="t('common.fields.type')" />
+        <Column v-if="canWrite('suppliers')" :header="t('common.strings.actions')">
           <template #body="{ data }">
-            <Button icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger" @click="removeContact(data.id)" :title="t('common.remove')" />
+            <Button icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger" @click="removeContact(data.id)" :title="t('common.actions.remove')" />
           </template>
         </Column>
       </DataTable>
-      <Dialog v-model:visible="showContactDialog" :header="t('common.new')" :modal="true" :style="{ width: '30vw' }">
+      <Dialog v-model:visible="showContactDialog" :header="t('common.actions.create')" :modal="true" :style="{ width: '30vw' }">
         <ContactForm @submit="createContact" @cancel="showContactDialog = false" />
       </Dialog>
     </div>
@@ -58,15 +58,15 @@
         @upload="fetchDocuments"
         :auto="true"
         :customUpload="false"
-        :chooseLabel="t('common.upload')"
+        :chooseLabel="t('common.actions.upload')"
       />
 
       <DataTable :value="documents" class="mt-4" tableStyle="min-width: 100%">
-        <Column field="filename" :header="t('common.filename')" />
-        <Column field="uploaded_at" :header="t('common.uploadedAt')" />
-        <Column :header="t('common.actions')">
+        <Column field="filename" :header="t('common.fields.filename')" />
+        <Column field="uploaded_at" :header="t('common.fields.uploadedAt')" />
+        <Column :header="t('common.strings.actions')">
           <template #body="{ data }">
-            <a :href="data.url" target="_blank" class="p-button p-button-text">{{ t('common.download') }}</a>
+            <a :href="data.url" target="_blank" class="p-button p-button-text">{{ t('common.actions.download') }}</a>
             <Button v-if="canWrite('suppliers')" icon="pi pi-trash" class="p-button-text p-button-danger" @click="deleteDocument(data.id)" />
           </template>
         </Column>

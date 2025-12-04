@@ -6,7 +6,7 @@
         <!-- Azioni principali -->
         <Button 
           v-if="canWrite('roles')"
-          :label="t('roles.new')" 
+          :label="t('common.actions.create')" 
           icon="pi pi-plus" 
           severity="success"
           @click="openCreateDialog" 
@@ -17,14 +17,14 @@
         <Button 
           v-if="canWrite('roles')"
           icon="pi pi-key" 
-          :label="t('roles.testPermissions')" 
+          :label="t('roles.actions.testPermissions')" 
           severity="info"
           @click="testPermissions" 
         />
         <!-- Refresh Permissions -->
         <Button 
           icon="pi pi-refresh" 
-          label="Refresh Permissions" 
+          :label="t('roles.actions.refreshPermissions')" 
           severity="warning"
           @click="refreshPermissions" 
         />
@@ -99,7 +99,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
-import { i18n } from '../locales/loader.js'
+import i18n from '../locales/loader-final.js'
 import { useToast } from 'primevue/usetoast'
 import { usePermissions } from '../composables/usePermissions'
 import { useApi } from '../composables/useApi'
@@ -140,14 +140,20 @@ const roles = ref([])
 const selectedRoles = ref([])
 
 const columnOptions = computed(() => [
-  { field: 'name', header: t('roles.name'), sortable: true },
-  { field: 'permissions_count', header: t('roles.permissions'), sortable: false },
-  { field: 'created_at_formatted', header: t('roles.createdAt'), sortable: true },
-  { field: 'actions', header: t('common.actions'), sortable: false }
+  { field: 'name', header: t('common.fields.name'), sortable: true },
+  { field: 'permissions_count', header: t('roles.fields.permissions'), sortable: false },
+  { field: 'created_at_formatted', header: t('common.fields.createdAt'), sortable: true },
+  { field: 'actions', header: t('common.strings.actions'), sortable: false }
 ])
 
 const filteredRoles = computed(() => {
-  let filtered = roles.value
+  // Assicurati che roles.value sia sempre un array
+  if (!Array.isArray(roles.value)) {
+    console.warn('roles.value is not an array:', roles.value)
+    return []
+  }
+  
+  let filtered = [...roles.value]
   
   // Aggiungi il campo permissions_count e formatta le date per la visualizzazione
   filtered = filtered.map(role => ({
@@ -169,7 +175,7 @@ const filteredRoles = computed(() => {
 })
 
 const dialogTitle = computed(() => 
-  editingRole.value ? t('roles.edit') : t('roles.new')
+  editingRole.value ? t('common.actions.edit') : t('common.actions.create')
 )
 
 onMounted(async () => {
@@ -179,20 +185,21 @@ onMounted(async () => {
 async function fetchRoles() {
   await execute(async () => {
     const response = await api.getRoles()
-    roles.value = response.data
+    // Il backend restituisce direttamente un array List[Dict[str, Any]]
+    roles.value = Array.isArray(response.data) ? response.data : []
     return response
   }, {
-    errorContext: t('roles.fetchError'),
+    errorContext: t('roles.messages.fetchError'),
     showToast: false
   })
 }
 
 function openCreateDialog() {
-  openCreate(t('roles.new'), null)
+  openCreate(t('common.actions.create'), null)
 }
 
 function openEditDialog(role) {
-  openEdit(t('roles.edit'), role)
+  openEdit(t('common.actions.edit'), role)
 }
 
 function goToDetail(id) {
@@ -201,15 +208,15 @@ function goToDetail(id) {
 
 function deleteRole(id) {
   confirmDelete(
-    t('roles.deleteConfirm'),
-    t('roles.deleteWarning'),
+    t('common.messages.deleteConfirm'),
+    t('common.messages.deleteWarning'),
     async () => {
       await execute(async () => {
         await api.deleteRole(id)
         await fetchRoles()
       }, {
-        successMessage: t('roles.deleted'),
-        errorContext: t('roles.deleteError')
+        successMessage: t('common.messages.deleted'),
+        errorContext: t('common.messages.deleteError')
       })
     }
   )
@@ -223,8 +230,8 @@ async function saveRole(data) {
       close()
       await fetchRoles()
     }, {
-      successMessage: t('roles.updated'),
-      errorContext: t('roles.updateError')
+      successMessage: t('common.messages.updated'),
+      errorContext: t('common.messages.updateError')
     })
   } else {
     // Modalità creazione
@@ -233,8 +240,8 @@ async function saveRole(data) {
       close()
       await fetchRoles()
     }, {
-      successMessage: t('roles.created'),
-      errorContext: t('roles.createError')
+      successMessage: t('common.messages.created'),
+      errorContext: t('common.messages.createError')
     })
   }
 }
@@ -262,7 +269,7 @@ async function testPermissions() {
     // Mostra toast personalizzato con i dati
     toast.add({
       severity: 'info',
-      summary: 'Test Permessi',
+      summary: t('common.messages.info'),
       detail: `Ruolo: ${response.data.role_name}, Permessi: ${JSON.stringify(response.data.effective_permissions)}`,
       life: 8000
     })
@@ -270,7 +277,7 @@ async function testPermissions() {
     return response
   }, {
     showToast: false, // Disabilitiamo il toast automatico
-    errorContext: t('roles.testPermissionsError')
+    errorContext: t('roles.messages.testPermissionsError')
   })
 }
 
@@ -279,15 +286,15 @@ async function refreshPermissions() {
     await refreshUserPermissions()
     toast.add({
       severity: 'success',
-      summary: 'Permessi Aggiornati',
-      detail: 'I permessi utente sono stati aggiornati. Ricarica la pagina per vedere le modifiche.',
+      summary: t('common.messages.success'),
+      detail: t('roles.messages.permissionsUpdated'),
       life: 5000
     })
   } catch (error) {
     toast.add({
       severity: 'error',
-      summary: 'Errore',
-      detail: 'Errore durante l\'aggiornamento dei permessi',
+      summary: t('common.messages.error'),
+      detail: t('roles.messages.permissionsUpdateError'),
       life: 3000
     })
   }

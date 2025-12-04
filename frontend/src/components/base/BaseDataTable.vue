@@ -37,7 +37,7 @@
               <InputText 
                 id="global_search"
                 v-model="safeFilters.global.value" 
-                :placeholder="t('common.search')" 
+                :placeholder="t('common.actions.search')" 
                 class="w-12rem"
               />
             </span>
@@ -51,7 +51,7 @@
             <Button 
               v-if="showExport"
               icon="pi pi-file-excel" 
-              :label="t('common.exportCsv')" 
+              :label="t('common.actions.exportCsv')" 
               class="p-button-sm" 
               @click="exportCsv" 
             />
@@ -61,7 +61,7 @@
               icon="pi pi-sliders-h" 
               class="p-button-sm" 
               @click="toggleColumnPanel" 
-              v-tooltip="t('common.chooseColumns')" 
+              v-tooltip="t('common.actions.chooseColumns')" 
             />
             
             <!-- Azioni personalizzate -->
@@ -125,12 +125,12 @@
     <!-- Panel per selezione colonne -->
     <OverlayPanel ref="columnPanel" v-if="showColumnSelector">
       <div style="min-width: 250px">
-        <h4 class="mb-3">{{ t('common.chooseColumns') }}</h4>
+        <h4 class="mb-3">{{ t('common.actions.chooseColumns') }}</h4>
         <MultiSelect 
           v-model="selectedColumns" 
           :options="allColumns" 
           optionLabel="header" 
-          :placeholder="t('common.chooseColumns')" 
+          :placeholder="t('common.actions.chooseColumns')" 
           display="chip" 
           class="w-full" 
         />

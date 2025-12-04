@@ -7,13 +7,13 @@
   <div class="utility-page">
     <Card>
       <template #title>
-        <h3 class="m-0">{{ t('utility.uploadPcap') }}</h3>
+        <h3 class="m-0">{{ t('pcap.title') }}</h3>
       </template>
       <template #content>
         <div class="pcap-upload-section">
           <div class="site-selection mb-4">
             <label for="site-dropdown" class="block text-900 font-medium mb-2">
-              {{ t('utility.selectSite') }}:
+              {{ t('pcap.strings.selectSite') }}:
             </label>
             <Dropdown
               id="site-dropdown"
@@ -21,19 +21,19 @@
               :options="sites"
               optionLabel="name"
               optionValue="id"
-              :placeholder="t('utility.selectSite')"
+              :placeholder="t('pcap.strings.selectSite')"
               class="w-full"
               :class="{ 'p-invalid': !selectedSiteId && showValidation }"
             />
             <small v-if="!selectedSiteId && showValidation" class="p-error">
-              {{ t('utility.selectSiteBeforeUpload') }}
+              {{ t('pcap.strings.selectSiteBeforeUpload') }}
             </small>
           </div>
 
           <div class="file-upload-section">
             <div class="mb-2">
               <small class="text-gray-600">
-                {{ t('utility.pcapFileLimit') }}: 50MB per file
+                {{ t('pcap.strings.pcapFileLimit') }}: 50MB per file
               </small>
             </div>
             <FileUpload
@@ -42,8 +42,8 @@
               :multiple="true"
               :auto="true"
               accept=".pcap"
-              :chooseLabel="t('utility.selectPcap')"
-              :uploadLabel="t('utility.preview')"
+              :chooseLabel="t('pcap.strings.selectPcap')"
+              :uploadLabel="t('pcap.strings.preview')"
               @uploader="previewFiles"
               :disabled="loading || !selectedSiteId"
               class="mb-3"
@@ -52,27 +52,27 @@
 
           <div v-if="loading" class="loading-indicator">
             <ProgressSpinner />
-            <span>{{ t('utility.processing') }}</span>
+            <span>{{ t('pcap.strings.processing') }}</span>
           </div>
 
           <div v-if="previewResult && !loading" class="preview-section">
-            <h4 class="text-xl font-semibold mb-3">{{ t('utility.previewTitle') }}</h4>
+            <h4 class="text-xl font-semibold mb-3">{{ t('pcap.strings.previewTitle') }}</h4>
             
             <div v-if="previewResult.manufacturers_to_create.length" class="mb-4">
-              <h5 class="text-lg font-medium mb-2">{{ t('utility.newManufacturers') }}</h5>
+              <h5 class="text-lg font-medium mb-2">{{ t('pcap.strings.newManufacturers') }}</h5>
               <ul class="list-disc list-inside">
                 <li v-for="m in previewResult.manufacturers_to_create" :key="m">{{ m }}</li>
               </ul>
             </div>
             
             <div v-if="previewResult.to_create.length" class="mb-4">
-              <h5 class="text-lg font-medium mb-2">{{ t('utility.assetsToCreate') }}</h5>
+              <h5 class="text-lg font-medium mb-2">{{ t('pcap.strings.assetsToCreate') }}</h5>
               <DataTable :value="previewResult.to_create" class="mb-3">
-                <Column field="name" :header="t('utility.name')" />
-                <Column field="ip" :header="t('utility.ip')" />
-                <Column field="mac" :header="t('utility.mac')" />
-                <Column field="vendor" :header="t('utility.vendor')" />
-                <Column field="protocols" :header="t('utility.protocols')">
+                <Column field="name" :header="t('pcap.strings.name')" />
+                <Column field="ip" :header="t('pcap.strings.ip')" />
+                <Column field="mac" :header="t('pcap.strings.mac')" />
+                <Column field="vendor" :header="t('pcap.strings.vendor')" />
+                <Column field="protocols" :header="t('pcap.strings.protocols')">
                   <template #body="{ data }">
                     {{ data.protocols.join(', ') }}
                   </template>
@@ -81,18 +81,18 @@
             </div>
             
             <div v-if="previewResult.to_update.length" class="mb-4">
-              <h5 class="text-lg font-medium mb-2">{{ t('utility.assetsToUpdate') }}</h5>
+              <h5 class="text-lg font-medium mb-2">{{ t('pcap.strings.assetsToUpdate') }}</h5>
               <DataTable :value="previewResult.to_update" class="mb-3">
-                <Column field="name" :header="t('utility.name')" />
-                <Column field="ip" :header="t('utility.ip')" />
-                <Column field="mac" :header="t('utility.mac')" />
-                <Column field="vendor" :header="t('utility.vendor')" />
-                <Column field="protocols" :header="t('utility.protocols')">
+                <Column field="name" :header="t('pcap.strings.name')" />
+                <Column field="ip" :header="t('pcap.strings.ip')" />
+                <Column field="mac" :header="t('pcap.strings.mac')" />
+                <Column field="vendor" :header="t('pcap.strings.vendor')" />
+                <Column field="protocols" :header="t('pcap.strings.protocols')">
                   <template #body="{ data }">
                     {{ data.protocols.join(', ') }}
                   </template>
                 </Column>
-                <Column :header="t('utility.changes')">
+                <Column :header="t('pcap.strings.changes')">
                   <template #body="{ data }">
                     <div v-for="(change, field) in data.diff" :key="field" class="text-sm">
                       <b>{{ field }}</b>: <span class="text-gray-500">{{ change.old }}</span> → <span class="text-green-600">{{ change.new }}</span>
@@ -104,13 +104,13 @@
             
             <div class="flex gap-2">
               <Button 
-                :label="t('utility.confirmImport')" 
+                :label="t('pcap.strings.confirmImport')" 
                 @click="confirmImport" 
                 :disabled="loading"
                 severity="success"
               />
               <Button 
-                :label="t('common.cancel')" 
+                :label="t('common.actions.cancel')" 
                 @click="resetPreview" 
                 :disabled="loading"
                 severity="secondary"
@@ -125,11 +125,11 @@
                 <i class="pi pi-check-circle"></i>
               </template>
               <div>
-                <p class="font-semibold mb-2">{{ t('utility.filesUploaded') }}</p>
+                <p class="font-semibold mb-2">{{ t('pcap.strings.filesUploaded') }}</p>
                 <ul class="list-disc list-inside">
-                  <li>{{ t('utility.devicesFound') }}: {{ report.total_devices_found }}</li>
-                  <li>{{ t('utility.newDevicesCreated') }}: {{ report.created }}</li>
-                  <li>{{ t('utility.devicesUpdated') }}: {{ report.updated }}</li>
+                  <li>{{ t('pcap.strings.devicesFound') }}: {{ report.total_devices_found }}</li>
+                  <li>{{ t('pcap.strings.newDevicesCreated') }}: {{ report.created }}</li>
+                  <li>{{ t('pcap.strings.devicesUpdated') }}: {{ report.updated }}</li>
                 </ul>
               </div>
             </Message>
@@ -171,7 +171,7 @@ onMounted(async () => {
     const res = await api.getSites()
     sites.value = res.data
   } catch (e) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('utility.fetchSitesError') })
+    toast.add({ severity: 'error', summary: t('common.error'), detail: t('pcap.strings.fetchSitesError') })
   }
 })
 
@@ -187,7 +187,7 @@ async function uploadFiles(event) {
     
     toast.add({ 
       severity: 'error', 
-      summary: t('utility.fileTooLarge'), 
+      summary: t('pcap.strings.fileTooLarge'), 
       detail: errorMessage 
     });
     return;
@@ -196,7 +196,7 @@ async function uploadFiles(event) {
   loading.value = true;
   if (!selectedSiteId.value) {
     showValidation.value = true
-    toast.add({ severity: 'warn', summary: t('utility.missingSelection'), detail: t('utility.selectSiteBeforeUpload') })
+    toast.add({ severity: 'warn', summary: t('pcap.strings.missingSelection'), detail: t('pcap.strings.selectSiteBeforeUpload') })
     loading.value = false
     return
   }
@@ -212,8 +212,8 @@ async function uploadFiles(event) {
     console.error('Errore:', err.response?.data || err.message);
     toast.add({
       severity: 'error',
-      summary: t('common.error'),
-      detail: t('utility.uploadError') + (err.response?.data?.detail || err.message),
+      summary: t('common.messages.error'),
+      detail: t('pcap.strings.uploadError') + (err.response?.data?.detail || err.message),
     });
   } finally {
     loading.value = false;
@@ -249,7 +249,7 @@ const previewFiles = async (event) => {
     
     toast.add({ 
       severity: 'error', 
-      summary: t('utility.fileTooLarge'), 
+      summary: t('pcap.strings.fileTooLarge'), 
       detail: errorMessage 
     });
     return;
@@ -262,7 +262,7 @@ const previewFiles = async (event) => {
   
   if (!selectedSiteId.value) {
     showValidation.value = true
-    toast.add({ severity: 'warn', summary: t('utility.missingSelection'), detail: t('utility.selectSiteBeforeUpload') })
+    toast.add({ severity: 'warn', summary: t('pcap.strings.missingSelection'), detail: t('pcap.strings.selectSiteBeforeUpload') })
     loading.value = false
     return
   }
@@ -276,7 +276,7 @@ const previewFiles = async (event) => {
     const res = await api.previewPcapImport(formData)
     previewResult.value = res.data
   } catch (err) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('utility.uploadError') + (err.response?.data?.detail || err.message) })
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('pcap.strings.uploadError') + (err.response?.data?.detail || err.message) })
   } finally {
     loading.value = false
   }
@@ -298,9 +298,9 @@ const confirmImport = async () => {
     report.value = res.data
     previewResult.value = null
     selectedFiles.value = []
-    toast.add({ severity: 'success', summary: t('common.success'), detail: t('utility.importSuccess') })
+    toast.add({ severity: 'success', summary: t('common.messages.success'), detail: t('pcap.strings.importSuccess') })
   } catch (err) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('utility.uploadError') + (err.response?.data?.detail || err.message) })
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('pcap.strings.uploadError') + (err.response?.data?.detail || err.message) })
   } finally {
     loading.value = false
   }

@@ -5,14 +5,14 @@
       <!-- Azioni principali -->
               <Button 
           v-if="!trashMode && canWrite('assets')"
-          :label="t('assets.newAsset')" 
+          :label="t('common.actions.create')" 
           icon="pi pi-plus" 
           severity="success"
           @click="$emit('create')" 
         />
         <Button 
           v-if="!trashMode && canWrite('assets')"
-          :label="t('assets.import')" 
+          :label="t('common.actions.import')" 
           icon="pi pi-upload" 
           severity="info"
           @click="$emit('import')" 
@@ -25,7 +25,7 @@
         <Button 
           v-if="canDelete('assets')"
           icon="pi pi-trash" 
-          :label="trashMode ? t('common.showActive') : t('common.showTrash')" 
+          :label="trashMode ? t('common.actions.showActive') : t('common.actions.showTrash')" 
           severity="secondary"
           @click="$emit('toggleTrash')"
         />

@@ -13,7 +13,7 @@
     </div>
     <div ref="networkContainer" class="network-container"></div>
     <div v-if="!nodes.length || !edges.length" class="placeholder">
-      <span>{{ t('assetCommunications.noGraphData') }}</span>
+      <span>{{ t('assets.communications.noGraphData') }}</span>
     </div>
   </div>
 </template>

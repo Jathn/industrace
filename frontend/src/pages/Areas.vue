@@ -1,78 +1,93 @@
 <template>
   <div class="areas-page">
     <div class="page-header">
-      <div class="header-content">
-        <h1>{{ t('areas.title') }}</h1>
-        <p class="page-description">{{ t('areas.description') }}</p>
-      </div>
-      <div class="header-actions">
+        <h1>{{ t('areas.title') }}</h1> 
+      <div class="flex gap-2">
+        <!-- Azioni principali -->
         <Button 
-          :label="t('areas.create')" 
+          v-if="!trashMode && canWrite('areas')"
+          :label="t('common.actions.create')" 
           icon="pi pi-plus" 
+          severity="success"
           @click="openCreateDialog"
-          class="p-button-primary"
+        />
+        <div class="w-px h-8 bg-gray-300 mx-2"></div>
+        <Button 
+          icon="pi pi-trash" 
+          :label="trashMode ? t('common.actions.showActive') : t('common.actions.showTrash')" 
+          severity="secondary"
+          @click="toggleTrashMode"
         />
       </div>
     </div>
 
-    <!-- Filtri -->
-    <div class="filters-section">
-      <div class="filters-row">
-        <div class="filter-group">
-          <label>{{ t('common.site') }}</label>
-          <Dropdown
-            v-model="filters.site_id.value"
-            :options="sites"
-            optionLabel="name"
-            optionValue="id"
-            :placeholder="t('common.selectSite')"
-            class="w-full"
-            @change="loadAreas"
-          />
-        </div>
-      </div>
-    </div>
-
-    <!-- Tabella Aree -->
-    <div class="table-section">
       <BaseDataTable
         :data="areas"
         :loading="loading"
         :columns="columns"
         :filters="filters"
-        :selected-columns="selectedColumns"
-        :show-column-selector="true"
-        @row-select="onRowSelect"
+      :globalFilterFields="['name','code','typology','site_name']"
+      :selectionMode="!trashMode && canWrite('areas') ? 'multiple' : null"
+      :selection="selectedAreas"
+      :showExport="false"
+      @selection-change="selectedAreas = $event"
         @filter-change="updateFilter"
-      >
+      @refresh="loadAreas"
+    >
+      <template #filters>
+        <Dropdown 
+          v-if="!trashMode"
+          v-model="filters['site_id'].value" 
+          :options="siteOptions" 
+          optionLabel="name" 
+          optionValue="id" 
+          :placeholder="t('common.fields.site')" 
+          showClear 
+          style="min-width: 150px" 
+          @change="loadAreas"
+        />
+      </template>
+      
         <template #body-actions="{ data }">
-          <div class="action-buttons">
+        <div class="flex gap-2">
             <Button
+            v-if="!trashMode && canWrite('areas')"
               icon="pi pi-pencil"
-              class="p-button-text p-button-sm"
+            size="small"
               @click="editArea(data)"
-              :title="t('common.edit')"
             />
             <Button
+            v-if="!trashMode && canDelete('areas')"
               icon="pi pi-trash"
-              class="p-button-text p-button-danger p-button-sm"
-              @click="confirmDelete(data)"
-              :title="t('common.delete')"
+            size="small"
+            severity="danger"
+            @click="deleteArea(data.id)" 
+          />
+          <Button 
+            v-if="trashMode && canWrite('areas')"
+            icon="pi pi-undo" 
+            size="small"
+            severity="success"
+            @click="restoreArea(data.id)" 
+          />
+          <Button 
+            v-if="trashMode && canDelete('areas')"
+            icon="pi pi-times" 
+            size="small"
+            severity="danger"
+            @click="hardDeleteArea(data.id)" 
             />
           </div>
         </template>
       </BaseDataTable>
-    </div>
 
-    <!-- Dialog Creazione/Modifica -->
     <BaseDialog
       v-model:visible="dialogVisible"
-      :title="dialogTitle"
+      :title="editingArea ? t('common.actions.edit') : t('common.actions.create')"
       :showFooter="false"
       @close="closeDialog"
     >
       <AreaForm
-        v-if="dialogVisible"
         :area="editingArea"
         :sites="sites"
         @submit="handleFormSubmit"
@@ -80,15 +95,11 @@
       />
     </BaseDialog>
 
-    <!-- Dialog Conferma Eliminazione -->
     <BaseConfirmDialog
-      v-model:showConfirmDialog="deleteDialogVisible"
-      :confirm-data="{
-        type: 'delete',
-        title: t('areas.deleteTitle'),
-        message: t('areas.deleteMessage', { name: areaToDelete?.name })
-      }"
-      @confirm="deleteArea"
+      v-model:showConfirmDialog="showConfirmDialog"
+      :confirmData="confirmData"
+      @execute="executeConfirmedAction"
+      @close="closeConfirmDialog"
     />
   </div>
 </template>
@@ -96,288 +107,194 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useToast } from 'primevue/usetoast'
-import { useApi } from '@/composables/useApi'
-import { useConfirm } from '@/composables/useConfirm'
 import { usePermissions } from '@/composables/usePermissions'
+import { useApi } from '@/composables/useApi'
 import { useFilters } from '@/composables/useFilters'
+import { useDialog } from '@/composables/useDialog'
+import { useConfirm } from '@/composables/useConfirm'
 import api from '@/api/api'
 
-import Button from 'primevue/button'
-import InputText from 'primevue/inputtext'
-import Dropdown from 'primevue/dropdown'
 import BaseDataTable from '@/components/base/BaseDataTable.vue'
 import BaseDialog from '@/components/base/BaseDialog.vue'
 import BaseConfirmDialog from '@/components/base/BaseConfirmDialog.vue'
 import AreaForm from '@/components/forms/AreaForm.vue'
+import Button from 'primevue/button'
+import Dropdown from 'primevue/dropdown'
 
 const { t } = useI18n()
+const { canWrite, canDelete } = usePermissions()
 
-
-const toast = useToast()
+// Composables
 const { loading, execute } = useApi()
-const { canRead, canWrite, canDelete } = usePermissions()
+const { filters, globalSearch, selectedColumns, filterData, getApiParams } = useFilters({
+  global: { value: null, matchMode: 'contains' },
+  site_id: { value: null, matchMode: 'equals' }
+}, 'areas')
+
+const { isVisible: dialogVisible, data: editingArea, openCreate, openEdit, close: closeDialog } = useDialog()
+const { 
+  showConfirmDialog, 
+  confirmData, 
+  confirmDelete, 
+  executeConfirmedAction,
+  closeConfirmDialog 
+} = useConfirm()
 
 // Data
 const areas = ref([])
 const sites = ref([])
-const selectedArea = ref(null)
+const selectedAreas = ref([])
+const trashMode = ref(false)
 
-// Filters
-const { filters, globalSearch, selectedColumns, filterData, getApiParams } = useFilters({
-  site_id: { value: null, matchMode: 'equals' },
-  global: { value: '', matchMode: 'contains' }
-}, 'areas', ['name', 'code', 'typology', 'site_name', 'created_at', 'actions'])
-
-// Dialog states
-const dialogVisible = ref(false)
-const deleteDialogVisible = ref(false)
-const submitting = ref(false)
-const editingArea = ref(null)
-const areaToDelete = ref(null)
-
-// Computed
-const dialogTitle = computed(() => {
-  return editingArea.value ? t('areas.edit') : t('areas.create')
+const columns = computed(() => {
+  const cols = [
+    { field: 'name', header: t('common.fields.name'), sortable: true },
+    { field: 'code', header: t('common.fields.code'), sortable: true },
+    { field: 'typology', header: t('areas.fields.typology'), sortable: true },
+    { field: 'site_name', header: t('common.fields.site'), sortable: true },
+    { field: 'created_at', header: t('common.fields.createdAt'), sortable: true }
+  ]
+  
+  // Aggiungi colonna azioni solo se l'utente ha permessi
+  if (canWrite('areas') || canDelete('areas')) {
+    cols.push({ field: 'actions', header: t('common.strings.actions'), sortable: false })
+  }
+  
+  return cols
 })
 
-const columns = computed(() => [
-  { field: 'name', header: t('common.name') },
-  { field: 'code', header: t('areas.code') },
-  { field: 'typology', header: t('areas.typology') },
-  { field: 'site_name', header: t('common.site') },
-  { field: 'created_at', header: t('common.createdAt') },
-  { field: 'actions', header: t('common.actions') }
-])
+const siteOptions = computed(() => {
+  return sites.value.map(site => ({
+    id: site.id,
+    name: site.name
+  }))
+})
 
-// selectedColumns è già definito dal composable useFilters
+onMounted(async () => {
+  await Promise.all([loadSites(), loadAreas()])
+})
 
-// Methods
+async function loadSites() {
+  await execute(async () => {
+    const response = await api.getSites()
+    sites.value = response.data
+    return response
+  }, {
+    errorContext: t('areas.messages.fetchError'),
+    showToast: false
+  })
+}
+
 async function loadAreas() {
+  await execute(async () => {
   const params = getApiParams()
+    let response
+    if (trashMode.value) {
+      response = await api.getAreasTrash(params)
+    } else {
   if (filters.value.site_id && filters.value.site_id.value) {
     params.site_id = filters.value.site_id.value
   }
-  
-  const response = await execute(() => api.getAreas(params))
-  if (response) {
+      response = await api.getAreas(params)
+    }
     areas.value = response.data
-  }
-}
-
-async function loadSites() {
-  const response = await execute(() => api.getSites())
-  if (response) {
-    sites.value = response.data
-  }
+    return response
+  }, {
+    errorContext: t('areas.messages.fetchError'),
+    showToast: false
+  })
 }
 
 function openCreateDialog() {
-  if (!canWrite('areas')) {
-    toast.add({
-      severity: 'error',
-      summary: t('common.error'),
-      detail: t('common.noPermission'),
-      life: 3000
-    })
-    return
-  }
-  
-  editingArea.value = null
-  dialogVisible.value = true
+  openCreate(t('common.actions.create'), null)
 }
 
 function editArea(area) {
-  if (!canWrite('areas')) {
-    toast.add({
-      severity: 'error',
-      summary: t('common.error'),
-      detail: t('common.noPermission'),
-      life: 3000
-    })
-    return
-  }
-  
-  editingArea.value = { ...area }
-  dialogVisible.value = true
-}
-
-function confirmDelete(area) {
-  if (!canDelete('areas')) {
-    toast.add({
-      severity: 'error',
-      summary: t('common.error'),
-      detail: t('common.noPermission'),
-      life: 3000
-    })
-    return
-  }
-  
-  areaToDelete.value = area
-  deleteDialogVisible.value = true
+  openEdit(t('common.actions.edit'), area)
 }
 
 async function handleFormSubmit(formData) {
-  submitting.value = true
-  
-  try {
     if (editingArea.value) {
       // Update
-      const response = await execute(() => api.updateArea(editingArea.value.id, formData))
-      if (response) {
-        toast.add({
-          severity: 'success',
-          summary: t('common.success'),
-          detail: t('areas.updated'),
-          life: 3000
-        })
-        await loadAreas()
-        closeDialog()
-      }
+    await execute(async () => {
+      await api.updateArea(editingArea.value.id, formData)
+      closeDialog()
+      await loadAreas()
+    }, {
+      successMessage: t('areas.messages.updated'),
+      errorContext: t('areas.messages.updateError')
+    })
     } else {
       // Create
-      const response = await execute(() => api.createArea(formData))
-      if (response) {
-        toast.add({
-          severity: 'success',
-          summary: t('common.success'),
-          detail: t('areas.created'),
-          life: 3000
-        })
+    await execute(async () => {
+      await api.createArea(formData)
+      closeDialog()
         await loadAreas()
-        closeDialog()
-      }
+    }, {
+      successMessage: t('areas.messages.created'),
+      errorContext: t('areas.messages.createError')
+    })
+  }
+}
+
+async function deleteArea(id) {
+  await confirmDelete(
+    t('common.messages.confirmDelete'),
+    t('common.messages.warningDelete'),
+    async () => {
+      await execute(async () => {
+        await api.deleteArea(id)
+        await loadAreas()
+      }, {
+        successMessage: t('areas.messages.deleted'),
+        errorContext: t('areas.messages.deleteError')
+      })
     }
-  } catch (error) {
-    toast.add({
-      severity: 'error',
-      summary: t('common.error'),
-      detail: t('areas.saveError'),
-      life: 5000
-    })
-  } finally {
-    submitting.value = false
-  }
+  )
 }
 
-async function deleteArea() {
-  if (!areaToDelete.value) return
-  
-  const response = await execute(() => api.deleteArea(areaToDelete.value.id))
-  if (response) {
-    toast.add({
-      severity: 'success',
-      summary: t('common.success'),
-      detail: t('areas.deleted'),
-      life: 3000
-    })
+function toggleTrashMode() {
+  trashMode.value = !trashMode.value
+  selectedAreas.value = []
+  areas.value = []
+  loadAreas()
+}
+
+async function restoreArea(id) {
+  await execute(async () => {
+    await api.restoreArea(id)
     await loadAreas()
-  }
-  
-  areaToDelete.value = null
-  deleteDialogVisible.value = false
+  }, {
+    successMessage: t('areas.messages.restored'),
+    errorContext: t('areas.messages.restoreError')
+  })
 }
 
-function closeDialog() {
-  dialogVisible.value = false
-  editingArea.value = null
+async function hardDeleteArea(id) {
+  await execute(async () => {
+    await api.hardDeleteArea(id)
+    await loadAreas()
+  }, {
+    successMessage: t('areas.messages.hardDeleted'),
+    errorContext: t('areas.messages.hardDeleteError')
+  })
 }
 
 function updateFilter(newFilters) {
   Object.assign(filters.value, newFilters)
   loadAreas()
 }
-
-function onRowSelect(event) {
-  selectedArea.value = event.data
-}
-
-// La ricerca globale è gestita dal composable useFilters
-
-// Lifecycle
-onMounted(async () => {
-  await Promise.all([loadSites(), loadAreas()])
-})
 </script>
 
 <style scoped>
 .areas-page {
-  padding: 2rem;
-  max-width: 1400px;
-  margin: 0 auto;
+  padding: 1rem;
 }
 
 .page-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 2rem;
-  gap: 2rem;
-}
-
-.header-content h1 {
-  margin: 0 0 0.5rem 0;
-  font-size: 2rem;
-  font-weight: 600;
-  color: var(--text-color);
-}
-
-.page-description {
-  margin: 0;
-  color: var(--text-color-secondary);
-  font-size: 1rem;
-}
-
-.filters-section {
-  background: var(--surface-card);
-  border: 1px solid var(--surface-border);
-  border-radius: 8px;
-  padding: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.filters-row {
-  display: flex;
-  gap: 1rem;
-  align-items: end;
-}
-
-.filter-group {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.filter-group label {
-  font-weight: 500;
-  color: var(--text-color);
-}
-
-.table-section {
-  background: var(--surface-card);
-  border: 1px solid var(--surface-border);
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.action-buttons {
-  display: flex;
-  gap: 0.5rem;
-}
-
-@media (max-width: 768px) {
-  .areas-page {
-    padding: 1rem;
-  }
-  
-  .page-header {
-    flex-direction: column;
-    gap: 1rem;
-  }
-  
-  .filters-row {
-    flex-direction: column;
-  }
+  align-items: center;
+  margin-bottom: 1.5rem;
 }
 </style> 

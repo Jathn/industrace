@@ -8,7 +8,11 @@
     "preview": "vite preview",
     "test": "vitest",
     "test:unit": "vitest run",
-    "test:e2e": "cypress run"
+    "test:e2e": "cypress run",
+    "i18n:consolidate": "node scripts/consolidate-translations.js",
+    "i18n:find-hardcoded": "node scripts/find-hardcoded-strings.js",
+    "i18n:validate": "node scripts/validate-translations.js",
+    "i18n:stats": "node scripts/translation-stats.js"
   },
   "dependencies": {
     "@vueup/vue-quill": "^1.2.0",

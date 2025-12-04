@@ -5,10 +5,10 @@
 -->
 <template>
   <div>
-    <h3 class="mb-2 font-semibold">{{ t('assetCommunications.title') }}</h3>
+    <h3 class="mb-2 font-semibold">{{ t('assets.communications.title') }}</h3>
 
     <DataTable :value="communications">
-      <Column :header="t('assetCommunications.connectedAsset')">
+      <Column :header="t('assets.communications.connectedAsset')">
         <template #body="{ data }">
           <router-link
             :to="`/assets/${data.linked_asset_id}`"
@@ -18,8 +18,8 @@
           </router-link>
         </template>
       </Column>
-      <Column field="packet_count" :header="t('assetCommunications.packets')" />
-      <Column field="direction" :header="t('assetCommunications.direction')" />
+      <Column field="packet_count" :header="t('assets.communications.packets')" />
+      <Column field="direction" :header="t('assets.communications.direction')" />
     </DataTable>
   </div>
 </template>
@@ -46,7 +46,7 @@ const fetchCommunications = async () => {
     const res = await api.getAssetCommunications(assetId.value)
     communications.value = res.data
   } catch (err) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assetCommunications.fetchError') })
+    toast.add({ severity: 'error', summary: t('common.strings.error'), detail: t('assets.communications.fetchError') })
   }
 }
 

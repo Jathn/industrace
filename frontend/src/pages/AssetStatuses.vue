@@ -4,26 +4,26 @@
       <h1>{{ t('assetstatuses.title') }}</h1>
       <Button 
         v-if="canWrite('asset_statuses')" 
-        :label="t('common.new')" 
+        :label="t('common.actions.create')" 
         icon="pi pi-plus" 
         @click="showDialog = true" 
       />
     </div>
     <DataTable :value="statuses" :loading="loading" paginator :rows="10" :rowsPerPageOptions="[5, 10, 25]">
-      <Column field="name" :header="t('common.name')" sortable></Column>
-      <Column field="description" :header="t('common.description')"></Column>
-      <Column field="color" :header="t('common.color')">
+      <Column field="name" :header="t('common.fields.name')" sortable></Column>
+      <Column field="description" :header="t('common.fields.description')"></Column>
+      <Column field="color" :header="t('common.fields.color')">
         <template #body="{ data }">
           <span :style="{ background: data.color, color: '#fff', padding: '0.2rem 0.5rem', borderRadius: '4px' }">{{ data.color }}</span>
         </template>
       </Column>
-      <Column field="order" :header="t('common.order')" sortable></Column>
-      <Column field="active" :header="t('common.active')">
+      <Column field="order" :header="t('common.fields.order')" sortable></Column>
+      <Column field="active" :header="t('common.fields.active')">
         <template #body="{ data }">
           <i :class="data.active ? 'pi pi-check text-green-500' : 'pi pi-times text-red-500'" />
         </template>
       </Column>
-      <Column v-if="canWrite('asset_statuses') || canDelete('asset_statuses')" :header="t('common.actions')">
+      <Column v-if="canWrite('asset_statuses') || canDelete('asset_statuses')" :header="t('common.strings.actions')">
         <template #body="{ data }">
           <Button 
             v-if="canWrite('asset_statuses')"
@@ -40,10 +40,10 @@
         </template>
       </Column>
     </DataTable>
-    <Dialog v-model:visible="showDialog" :header="t('common.new')" :modal="true" :style="{ width: '30vw' }">
+    <Dialog v-model:visible="showDialog" :header="t('common.actions.create')" :modal="true" :style="{ width: '30vw' }">
       <AssetStatusForm @submit="createStatus" @cancel="showDialog = false" />
     </Dialog>
-    <Dialog v-model:visible="editDialog" :header="t('common.edit')" :modal="true" :style="{ width: '30vw' }">
+    <Dialog v-model:visible="editDialog" :header="t('common.actions.edit')" :modal="true" :style="{ width: '30vw' }">
       <AssetStatusForm :status="editingStatus" @submit="updateStatus" @cancel="onEditCancel" />
     </Dialog>
   </div>
@@ -81,7 +81,7 @@ async function fetchStatuses() {
     const response = await api.getAssetStatuses()
     statuses.value = response.data
   } catch (error) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assetStatuses.fetchError'), life: 3000 })
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('assetStatuses.messages.fetchError'), life: 3000 })
   } finally {
     loading.value = false
   }
@@ -100,22 +100,22 @@ function onEditCancel() {
 async function createStatus(data) {
   try {
     await api.createAssetStatus(data)
-    toast.add({ severity: 'success', summary: t('common.success'), detail: t('assetStatuses.created'), life: 3000 })
+    toast.add({ severity: 'success', summary: t('common.messages.success'), detail: t('assetStatuses.messages.created'), life: 3000 })
     showDialog.value = false
     fetchStatuses()
   } catch (err) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assetStatuses.createError'), life: 3000 })
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('assetStatuses.messages.createError'), life: 3000 })
   }
 }
 
 async function updateStatus(data) {
   try {
     await api.updateAssetStatus(editingStatus.value.id, data)
-    toast.add({ severity: 'success', summary: t('common.updated'), detail: t('assetStatuses.updated'), life: 3000 })
+    toast.add({ severity: 'success', summary: t('common.messages.updated'), detail: t('assetStatuses.messages.updated'), life: 3000 })
     editDialog.value = false
     fetchStatuses()
   } catch (err) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assetStatuses.updateError'), life: 3000 })
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('assetStatuses.messages.updateError'), life: 3000 })
   }
 }
 
@@ -123,10 +123,10 @@ async function deleteStatus(id) {
   if (!confirm(t('assetStatuses.deleteConfirm'))) return
   try {
     await api.deleteAssetStatus(id)
-    toast.add({ severity: 'success', summary: t('common.deleted'), detail: t('assetStatuses.deleted'), life: 3000 })
+    toast.add({ severity: 'success', summary: t('common.messages.deleted'), detail: t('assetStatuses.messages.deleted'), life: 3000 })
     fetchStatuses()
   } catch (err) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assetStatuses.deleteError'), life: 3000 })
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('assetStatuses.messages.deleteError'), life: 3000 })
   }
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h2>{{ t('assetDetail.communicationsStats') }}</h2>
+    <h2>{{ t('assets.communications.title') }}</h2>
     <AssetCommunicationGraph :nodes="communicationsNodes" :edges="communicationsEdges" />
     <AssetCommunicationTable :rows="communications" />
   </div>
@@ -66,8 +66,8 @@ async function fetchCommunications() {
   } catch (e) {
     toast.add({ 
       severity: 'error', 
-      summary: t('common.error'), 
-      detail: t('assetDetail.fetchAssetCommunicationsError'), 
+      summary: t('common.strings.error'), 
+      detail: t('assets.communications.fetchError'), 
       life: 3000 
     })
   }

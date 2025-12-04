@@ -2,42 +2,42 @@
   <form @submit.prevent="handleSubmit">
     <div class="p-fluid">
       <div class="p-field">
-        <label for="name">{{ t('common.name') }}</label>
+        <label for="name">{{ t('common.fields.name') }}</label>
         <InputText id="name" v-model="form.name" required />
       </div>
       
       <div class="p-field">
-        <label for="code">{{ t('common.code') }}</label>
+        <label for="code">{{ t('common.fields.code') }}</label>
         <InputText id="code" v-model="form.code" required />
       </div>
       
       <div class="p-field">
-        <label for="address">{{ t('common.address') }}</label>
+        <label for="address">{{ t('common.fields.address') }}</label>
         <Textarea id="address" v-model="form.address" rows="3" />
       </div>
       
       <div class="p-field">
-        <label for="description">{{ t('common.description') }}</label>
+        <label for="description">{{ t('common.fields.description') }}</label>
         <Textarea id="description" v-model="form.description" rows="3" />
       </div>
       
       <div class="p-field">
-        <label for="parent_id">{{ t('sites.parent') }}</label>
+        <label for="parent_id">{{ t('sites.fields.parent') }}</label>
         <Dropdown
           id="parent_id"
           v-model="form.parent_id"
           :options="parentOptionsWithNone"
           optionLabel="name"
           optionValue="id"
-          :placeholder="t('common.select')"
+          :placeholder="t('common.strings.select')"
           class="w-full"
           :showClear="true"
         />
       </div>
       
       <div class="flex justify-content-end gap-2 mt-4">
-        <Button :label="t('common.cancel')" class="p-button-text" @click="handleCancel" />
-        <Button :label="t('common.save')" type="submit" />
+        <Button :label="t('common.actions.cancel')" class="p-button-text" @click="handleCancel" />
+        <Button :label="t('common.actions.save')" type="submit" />
       </div>
     </div>
   </form>
@@ -106,7 +106,7 @@ const parentOptions = computed(() => {
 
 const parentOptionsWithNone = computed(() => {
   const options = [
-    { id: null, name: t('sites.noParent') },
+    { id: null, name: t('sites.messages.noParent') },
     ...parentOptions.value
   ]
   return options

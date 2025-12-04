@@ -134,22 +134,22 @@ async function addConnection() {
       local_interface_id: newConnection.value.local_interface_id,
       remote_interface_id: newConnection.value.remote_interface_id
     })
-    toast.add({ severity: 'success', summary: t('common.success'), detail: t('assetConnections.addConnectionSuccess') })
+    toast.add({ severity: 'success', summary: t('common.messages.success'), detail: t('assetConnections.addConnectionSuccess') })
     showAddDialog.value = false
     resetForm()
     await fetchConnections()
   } catch {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assetConnections.addConnectionError') })
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('assetConnections.addConnectionError') })
   }
 }
 
 async function deleteConnection(id) {
   try {
     await api.deleteAssetConnection(props.assetId, id)
-    toast.add({ severity: 'success', summary: t('common.success'), detail: t('assetConnections.deleteConnectionSuccess'), life: 3000 })
+    toast.add({ severity: 'success', summary: t('common.messages.success'), detail: t('assetConnections.deleteConnectionSuccess'), life: 3000 })
     fetchConnections()
   } catch {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assetConnections.deleteConnectionError'), life: 3000 })
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('assetConnections.deleteConnectionError'), life: 3000 })
   }
 }
 

@@ -12,19 +12,18 @@
         <template #title>
           <div class="flex align-items-center">
             <i class="pi pi-info-circle mr-2"></i>
-            {{ t('areas.basicInfo') }}
+            {{ t('common.strings.info') }}
           </div>
         </template>
         <template #content>
           <div class="grid">
             <div class="col-12 md:col-6">
               <div class="field">
-                <label for="name" class="required">{{ t('common.name') }}</label>
+                <label for="name" class="required">{{ t('common.fields.name') }}</label>
                 <InputText
                   id="name"
                   v-model="form.name"
                   :class="{ 'p-invalid': errors.name }"
-                  :placeholder="t('areas.namePlaceholder')"
                   class="w-full"
                 />
                 <small v-if="errors.name" class="p-error">{{ errors.name }}</small>
@@ -32,12 +31,11 @@
             </div>
             <div class="col-12 md:col-6">
               <div class="field">
-                <label for="code" class="required">{{ t('areas.code') }}</label>
+                <label for="code" class="required">{{ t('common.fields.code') }}</label>
                 <InputText
                   id="code"
                   v-model="form.code"
                   :class="{ 'p-invalid': errors.code }"
-                  :placeholder="t('areas.codePlaceholder')"
                   class="w-full"
                 />
                 <small v-if="errors.code" class="p-error">{{ errors.code }}</small>
@@ -45,25 +43,24 @@
             </div>
             <div class="col-12 md:col-6">
               <div class="field">
-                <label for="typology">{{ t('areas.typology') }}</label>
+                <label for="typology">{{ t('areas.fields.typology') }}</label>
                 <InputText
                   id="typology"
                   v-model="form.typology"
-                  :placeholder="t('areas.typologyPlaceholder')"
                   class="w-full"
                 />
               </div>
             </div>
             <div class="col-12 md:col-6">
               <div class="field">
-                <label for="site_id" class="required">{{ t('common.site') }}</label>
+                <label for="site_id" class="required">{{ t('common.fields.site') }}</label>
                 <Dropdown
                   id="site_id"
                   v-model="form.site_id"
                   :options="sites"
                   optionLabel="name"
                   optionValue="id"
-                  :placeholder="t('common.selectSite')"
+                  :placeholder="t('common.strings.select')"
                   :class="{ 'p-invalid': errors.site_id }"
                   class="w-full"
                 />
@@ -72,11 +69,10 @@
             </div>
             <div class="col-12">
               <div class="field">
-                <label for="notes">{{ t('common.notes') }}</label>
+                <label for="notes">{{ t('common.fields.notes') }}</label>
                 <Textarea
                   id="notes"
                   v-model="form.notes"
-                  :placeholder="t('areas.notesPlaceholder')"
                   rows="3"
                   class="w-full"
                 />
@@ -159,7 +155,7 @@ async function handleSubmit() {
     emit('submit', formData)
   }, {
     successMessage: null, // Disabilitiamo i toast qui, li gestisce il parent
-    errorContext: t('areas.saveError')
+    errorContext: t('common.messages.error')
   })
 }
 
@@ -169,16 +165,8 @@ function validateAreaData(areaData) {
   
   // Required fields
   if (!areaData.name || areaData.name.trim() === '') {
-    errors.name = t('common.nameRequired')
-  }
-  
-  if (!areaData.code || areaData.code.trim() === '') {
-    errors.code = t('areas.codeRequired')
-  }
-  
-  if (!areaData.site_id) {
-    errors.site_id = t('common.siteRequired')
-  }
+    errors.name = t('common.fields.nameRequired')
+  } 
   
   return errors
 }

@@ -396,10 +396,10 @@ async function savePosition() {
     await api.updatePosition(marker.id, { map_x: marker.x, map_y: marker.y })
     marker.originalX = marker.x
     marker.originalY = marker.y
-    toast.add({ severity: 'success', summary: t('common.success'), detail: t('assetDetail.positionSaved') })
+    toast.add({ severity: 'success', summary: t('common.messages.success'), detail: t('assetDetail.positionSaved') })
     emit('position-saved', { id: marker.id, map_x: marker.x, map_y: marker.y })
   } catch (err) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assetDetail.positionSaveError') })
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('assetDetail.positionSaveError') })
   }
 }
 

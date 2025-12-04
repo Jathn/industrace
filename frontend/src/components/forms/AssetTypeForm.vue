@@ -7,23 +7,23 @@
   <form @submit.prevent="handleSubmit">
     <div class="p-fluid">
       <div class="p-field">
-        <label for="name">{{ t('common.name') }}</label>
+        <label for="name">{{ t('common.fields.name') }}</label>
         <InputText id="name" v-model="form.name" required />
       </div>
 
       <div class="p-field">
-        <label for="description">{{ t('common.description') }}</label>
+        <label for="description">{{ t('common.fields.description') }}</label>
         <Textarea id="description" v-model="form.description" autoResize />
       </div>
 
       <div class="p-field">
-        <label for="purdue_level">{{ t('common.purdueLevel') }}</label>
-        <Dropdown id="purdue_level" v-model="form.purdue_level" :options="purdueLevels" optionLabel="label" optionValue="value" :placeholder="t('common.selectPurdueLevel')" />
+        <label for="purdue_level">{{ t('assettypes.fields.purdueLevel') }}</label>
+        <Dropdown id="purdue_level" v-model="form.purdue_level" :options="purdueLevels" optionLabel="label" optionValue="value" :placeholder="t('assettypes.strings.selectPurdueLevel')" />
       </div>
 
       <div class="flex justify-content-end gap-2 mt-4">
-        <Button :label="t('common.cancel')" class="p-button-text" @click="emit('cancel')" />
-        <Button :label="t('common.save')" type="submit" />
+        <Button :label="t('common.actions.cancel')" class="p-button-text" @click="emit('cancel')" />
+        <Button :label="t('common.actions.save')" type="submit" />
       </div>
     </div>
 

@@ -1,53 +1,53 @@
 <template>
   <div class="contact-detail" v-if="contact">
     <div class="page-header">
-      <Button icon="pi pi-arrow-left" :label="t('common.back')" class="p-button-text" @click="router.go(-1)" />
+      <Button icon="pi pi-arrow-left" :label="t('common.actions.back')" class="p-button-text" @click="router.go(-1)" />
       <h1>{{ contact.fullName }}</h1>
     </div>
     <Card>
-      <template #title>{{ t('common.info') }}</template>
+      <template #title>{{ t('contacts.strings.info') }}</template>
       <template #content>
         <div class="grid">
           <div class="col-12 md:col-6">
-            <p><strong>{{ t('common.firstName') }}:</strong> {{ contact.first_name }}</p>
-            <p><strong>{{ t('common.lastName') }}:</strong> {{ contact.last_name }}</p>
-            <p><strong>{{ t('common.email') }}:</strong> {{ contact.email || t('common.na') }}</p>
-            <p><strong>{{ t('common.phone1') }}:</strong> {{ contact.phone1 || t('common.na') }}</p>
-            <p><strong>{{ t('common.phone2') }}:</strong> {{ contact.phone2 || t('common.na') }}</p>
-            <p><strong>{{ t('common.type') }}:</strong> {{ contact.type || t('common.na') }}</p>
-            <p><strong>{{ t('common.notes') }}:</strong> {{ contact.notes || t('common.na') }}</p>
+            <p><strong>{{ t('contacts.fields.firstName') }}:</strong> {{ contact.first_name }}</p>
+            <p><strong>{{ t('contacts.fields.lastName') }}:</strong> {{ contact.last_name }}</p>
+            <p><strong>{{ t('common.fields.email') }}:</strong> {{ contact.email || t('common.strings.na') }}</p>
+            <p><strong>{{ t('contacts.fields.phone1') }}:</strong> {{ contact.phone1 || t('common.strings.na') }}</p>
+            <p><strong>{{ t('contacts.fields.phone2') }}:</strong> {{ contact.phone2 || t('common.strings.na') }}</p>
+            <p><strong>{{ t('contacts.fields.type') }}:</strong> {{ contact.type || t('common.strings.na') }}</p>
+            <p><strong>{{ t('contacts.fields.notes') }}:</strong> {{ contact.notes || t('common.strings.na') }}</p>
           </div>
         </div>
       </template>
     </Card>
     <div class="mt-5">
-      <h3 class="text-lg font-semibold mb-2">{{ t('common.linkedAssets') }}</h3>
+      <h3 class="text-lg font-semibold mb-2">{{ t('common.strings.linkedAssets') }}</h3>
       <ul>
         <li v-for="asset in assets" :key="asset.id">
           <RouterLink :to="`/assets/${asset.id}`">{{ asset.name || asset.id }}</RouterLink>
         </li>
-        <li v-if="assets.length === 0">{{ t('common.na') }}</li>
+        <li v-if="assets.length === 0">{{ t('common.strings.na') }}</li>
       </ul>
-      <h3 class="text-lg font-semibold mt-4 mb-2">{{ t('common.linkedSites') }}</h3>
+      <h3 class="text-lg font-semibold mt-4 mb-2">{{ t('common.strings.linkedSites') }}</h3>
       <ul>
         <li v-for="site in sites" :key="site.id">
           <RouterLink :to="`/sites/${site.id}`">{{ site.name || site.id }}</RouterLink>
         </li>
-        <li v-if="sites.length === 0">{{ t('common.na') }}</li>
+        <li v-if="sites.length === 0">{{ t('common.strings.na') }}</li>
       </ul>
-      <h3 class="text-lg font-semibold mt-4 mb-2">{{ t('common.linkedLocations') }}</h3>
+      <h3 class="text-lg font-semibold mt-4 mb-2">{{ t('common.strings.linkedLocations') }}</h3>
       <ul>
         <li v-for="location in locations" :key="location.id">
           <RouterLink :to="`/locations/${location.id}`">{{ location.name || location.id }}</RouterLink>
         </li>
-        <li v-if="locations.length === 0">{{ t('common.na') }}</li>
+        <li v-if="locations.length === 0">{{ t('common.strings.na') }}</li>
       </ul>
-      <h3 class="text-lg font-semibold mt-4 mb-2">{{ t('common.linkedSuppliers') }}</h3>
+      <h3 class="text-lg font-semibold mt-4 mb-2">{{ t('common.strings.linkedSuppliers') }}</h3>
       <ul>
         <li v-for="supplier in suppliers" :key="supplier.id">
           <RouterLink :to="`/suppliers/${supplier.id}`">{{ supplier.name || supplier.id }}</RouterLink>
         </li>
-        <li v-if="suppliers.length === 0">{{ t('common.na') }}</li>
+        <li v-if="suppliers.length === 0">{{ t('common.strings.na') }}</li>
       </ul>
     </div>
   </div>

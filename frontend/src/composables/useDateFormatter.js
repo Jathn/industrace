@@ -4,22 +4,22 @@ export function useDateFormatter() {
   const { t } = useI18n()
 
   function formatDate(dateString) {
-    if (!dateString) return t('common.na')
+    if (!dateString) return t('common.strings.na')
     try {
       const date = new Date(dateString)
       return date.toLocaleDateString('it-IT')
     } catch (e) {
-      return t('common.na')
+      return t('common.strings.na')
     }
   }
 
   function formatDateTime(dateString) {
-    if (!dateString) return t('common.na')
+    if (!dateString) return t('common.strings.na')
     try {
       const date = new Date(dateString)
       return date.toLocaleString('it-IT')
     } catch (e) {
-      return t('common.na')
+      return t('common.strings.na')
     }
   }
 

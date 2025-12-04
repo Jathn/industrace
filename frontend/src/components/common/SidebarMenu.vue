@@ -1,10 +1,3 @@
-<!--
-  - SidebarMenu.vue
-  - Componente per la sidebar del menu
-  - Utilizza PanelMenu per la gestione del menu
-  - Utilizza router per la navigazione tra le pagine
-  - Utilizza i18n per la gestione delle lingue
--->
 <template>
   <nav :class="['modern-sidebar', { collapsed }]">
     <div class="sidebar-header">
@@ -13,6 +6,7 @@
         <i :class="collapsed ? 'pi pi-angle-right' : 'pi pi-angle-left'"></i>
       </button>
     </div>
+    
     <div class="sidebar-sections">
       <div v-for="section in menuSections" :key="section.label" class="sidebar-section">
         <div class="section-title" v-if="!collapsed">{{ section.label }}</div>
@@ -23,18 +17,18 @@
       </div>
     </div>
     <div class="sidebar-lang" v-if="!collapsed">
-      <label for="sidebar_language_select" class="sr-only">{{ t('common.language') }}</label>
+      <label for="sidebar_language_select" class="sr-only">Lingua</label>
       <span class="lang-flag" v-if="locale === 'it'">🇮🇹</span>
       <span class="lang-flag" v-else>🇬🇧</span>
-      <select id="sidebar_language_select" v-model="locale" @change="changeLocale" class="lang-select" :aria-label="t('common.language')">
+      <select id="sidebar_language_select" v-model="locale" @change="changeLocale" class="lang-select" aria-label="Lingua">
         <option value="it">Italiano</option>
         <option value="en">English</option>
       </select>
     </div>
     <div class="sidebar-logout">
-      <router-link to="/logout" class="sidebar-link logout-link" :title="t('menu.logout')">
+      <router-link to="/logout" class="sidebar-link logout-link" :title="t('menu.navigation.logout')">
         <i class="pi pi-sign-out sidebar-icon"></i>
-        <span v-if="!collapsed">{{ t('menu.logout') }}</span>
+        <span v-if="!collapsed">{{ t('menu.navigation.logout') }}</span>
       </router-link>
     </div>
   </nav>
@@ -58,17 +52,17 @@ const menuSections = computed(() => {
 
   // Sezione Dashboard (sempre prima)
   sections.push({
-    label: t('menu.section.dashboard'),
+    label: 'Dashboard',
     items: [
-      { label: t('menu.dashboard'), icon: 'pi-chart-bar', to: '/' }
+      { label: t('menu.navigation.dashboard'), icon: 'pi-chart-bar', to: '/' }
     ]
   })
 
   // Sezione Management
   const managementItems = []
-  if (canRead('assets')) managementItems.push({ label: t('menu.assets'), icon: 'pi-server', to: '/assets' })
-  if (canRead('asset_types')) managementItems.push({ label: t('menu.assettypes'), icon: 'pi-tags', to: '/asset-types' })
-  if (canRead('asset_statuses')) managementItems.push({ label: t('menu.assetstatuses'), icon: 'pi-list', to: '/asset-statuses' })
+  if (canRead('assets')) managementItems.push({ label: t('menu.navigation.assets'), icon: 'pi-server', to: '/assets' })
+  if (canRead('asset_types')) managementItems.push({ label: t('menu.navigation.assettypes'), icon: 'pi-tags', to: '/asset-types' })
+  if (canRead('asset_statuses')) managementItems.push({ label: t('menu.navigation.assetstatuses'), icon: 'pi-list', to: '/asset-statuses' })
   
   if (managementItems.length > 0) {
     sections.push({
@@ -79,14 +73,14 @@ const menuSections = computed(() => {
 
   // Sezione Registry
   const registryItems = []
-  if (canRead('sites')) registryItems.push({ label: t('menu.sites'), icon: 'pi-building', to: '/sites' })
+  if (canRead('sites')) registryItems.push({ label: t('menu.navigation.sites'), icon: 'pi-building', to: '/sites' })
   
-  if (canRead('areas')) registryItems.push({ label: t('menu.areas'), icon: 'pi-sitemap', to: '/areas' })
+  if (canRead('areas')) registryItems.push({ label: t('menu.navigation.areas'), icon: 'pi-sitemap', to: '/areas' })
   
-  if (canRead('locations')) registryItems.push({ label: t('menu.locations'), icon: 'pi-map', to: '/locations' })
-  if (canRead('suppliers')) registryItems.push({ label: t('menu.suppliers'), icon: 'pi-briefcase', to: '/suppliers' })
-  if (canRead('manufacturers')) registryItems.push({ label: t('menu.manufacturers'), icon: 'pi-cog', to: '/manufacturers' })
-  if (canRead('contacts')) registryItems.push({ label: t('contacts.title'), icon: 'pi-id-card', to: '/contacts' })
+  if (canRead('locations')) registryItems.push({ label: t('menu.navigation.locations'), icon: 'pi-map', to: '/locations' })
+  if (canRead('suppliers')) registryItems.push({ label: t('menu.navigation.suppliers'), icon: 'pi-briefcase', to: '/suppliers' })
+  if (canRead('manufacturers')) registryItems.push({ label: t('menu.navigation.manufacturers'), icon: 'pi-cog', to: '/manufacturers' })
+  if (canRead('contacts')) registryItems.push({ label: t('menu.navigation.contacts'), icon: 'pi-id-card', to: '/contacts' })
   
   if (registryItems.length > 0) {
     sections.push({
@@ -97,26 +91,26 @@ const menuSections = computed(() => {
 
   // Sezione Users
   const usersItems = []
-  if (canRead('users')) usersItems.push({ label: t('menu.users'), icon: 'pi-users', to: '/users' })
-  if (canRead('users')) usersItems.push({ label: t('menu.roles'), icon: 'pi-key', to: '/roles' })
+  if (canRead('users')) usersItems.push({ label: t('menu.navigation.users'), icon: 'pi-users', to: '/users' })
+  if (canRead('users')) usersItems.push({ label: t('menu.navigation.roles'), icon: 'pi-key', to: '/roles' })
   
   if (usersItems.length > 0) {
     sections.push({
-      label: t('menu.section.users'),
+      label: t('menu.navigation.users'),
       items: usersItems
     })
   }
 
   // Sezione Utility
   const utilityItems = []
-  utilityItems.push({ label: t('menu.networkMap'), icon: 'pi-sitemap', to: '/network-map' }) // Mappa di rete
-  utilityItems.push({ label: t('profile.title'), icon: 'pi-user', to: '/profile' }) // Profilo sempre visibile
-  if (canRead('utility')) utilityItems.push({ label: t('menu.pcap'), icon: 'pi-upload', to: '/utility' })
-  if (canRead('audit_logs')) utilityItems.push({ label: t('auditLogs.title'), icon: 'pi-history', to: '/audit-logs' })
+  utilityItems.push({ label: t('menu.navigation.networkMap'), icon: 'pi-sitemap', to: '/network-map' }) // Mappa di rete
+  utilityItems.push({ label: t('menu.navigation.profile'), icon: 'pi-user', to: '/profile' }) // Profilo sempre visibile
+  if (canRead('utility')) utilityItems.push({ label: t('menu.navigation.pcap'), icon: 'pi-upload', to: '/utility' })
+  if (canRead('audit_logs')) utilityItems.push({ label: t('menu.navigation.auditLogs'), icon: 'pi-history', to: '/audit-logs' })
   
   if (utilityItems.length > 0) {
     sections.push({
-      label: t('menu.section.utility'),
+      label: t('menu.navigation.utility'),
       items: utilityItems
     })
   }
@@ -124,9 +118,9 @@ const menuSections = computed(() => {
   // Sezione Setup (solo per admin)
   if (canRead('users')) {
     sections.push({
-      label: t('menu.section.setup'),
+      label: t('menu.navigation.setup'),
       items: [
-        { label: t('menu.setup'), icon: 'pi-wrench', to: '/setup' }
+        { label: t('menu.navigation.setup'), icon: 'pi-wrench', to: '/setup' }
       ]
     })
   }
@@ -136,6 +130,7 @@ const menuSections = computed(() => {
 
 function changeLocale(e) {
   locale.value = e.target.value
+  localStorage.setItem('user-lang', e.target.value)
 }
 </script>
 

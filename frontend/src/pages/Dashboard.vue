@@ -84,7 +84,7 @@
             />
           </div>
           <div v-else class="no-data">
-            {{ t('dashboard.messages.noData') }}
+            {{ t('common.messages.noData') }}
           </div>
         </div>
 
@@ -103,7 +103,7 @@
             />
           </div>
           <div v-else class="no-data">
-            {{ t('dashboard.messages.noData') }}
+            {{ t('common.messages.noData') }}
           </div>
         </div>
       </div>
@@ -119,7 +119,7 @@
             {{ t('dashboard.tables.topRiskyAssets') }}
           </div>
           <div v-if="riskyAssets.length === 0" class="no-data">
-            {{ t('dashboard.messages.noData') }}
+            {{ t('common.messages.noData') }}
           </div>
           <DataTable 
             v-else
@@ -128,14 +128,14 @@
             responsiveLayout="scroll"
             class="dashboard-table"
           >
-            <Column field="name" :header="t('dashboard.columns.name')" sortable>
+            <Column field="name" :header="t('common.fields.name')" sortable>
               <template #body="{ data }">
                 <router-link :to="`/assets/${data.id}`" class="asset-link">
                   {{ data.name }}
                 </router-link>
               </template>
             </Column>
-            <Column field="risk_score" :header="t('dashboard.columns.riskScore')" sortable>
+            <Column field="risk_score" :header="t('common.fields.riskScore')" sortable>
               <template #body="{ data }">
                 <Tag 
                   :value="data.risk_score" 
@@ -143,14 +143,14 @@
                 />
               </template>
             </Column>
-            <Column field="business_criticality" :header="t('dashboard.columns.businessCriticality')" sortable>
+            <Column field="business_criticality" :header="t('common.fields.businessCriticality')" sortable>
               <template #body="{ data }">
                 <CriticalityBadge :value="data.business_criticality" />
               </template>
             </Column>
-            <Column field="asset_type_name" :header="t('dashboard.columns.type')" />
-            <Column field="status_name" :header="t('dashboard.columns.status')" />
-            <Column field="site_name" :header="t('dashboard.columns.site')" />
+            <Column field="asset_type_name" :header="t('common.fields.type')" />
+            <Column field="status_name" :header="t('common.fields.status')" />
+            <Column field="site_name" :header="t('common.fields.site')" />
           </DataTable>
         </div>
 
@@ -161,7 +161,7 @@
             {{ t('dashboard.tables.latestAssets') }}
           </div>
           <div v-if="recentAssets.length === 0" class="no-data">
-            {{ t('dashboard.messages.noData') }}
+            {{ t('common.messages.noData') }}
           </div>
           <DataTable 
             v-else
@@ -170,17 +170,17 @@
             responsiveLayout="scroll"
             class="dashboard-table"
           >
-            <Column field="name" :header="t('dashboard.columns.name')" sortable>
+            <Column field="name" :header="t('common.fields.name')" sortable>
               <template #body="{ data }">
                 <router-link :to="`/assets/${data.id}`" class="asset-link">
                   {{ data.name }}
                 </router-link>
               </template>
             </Column>
-            <Column field="asset_type.name" :header="t('dashboard.columns.type')" />
-            <Column field="status.name" :header="t('dashboard.columns.status')" />
-            <Column field="site.name" :header="t('dashboard.columns.site')" />
-            <Column field="created_at" :header="t('dashboard.columns.created')" sortable>
+            <Column field="asset_type.name" :header="t('common.fields.type')" />
+            <Column field="status.name" :header="t('common.fields.status')" />
+            <Column field="site.name" :header="t('common.fields.site')" />
+            <Column field="created_at" :header="t('common.fields.createdAt')" sortable>
               <template #body="{ data }">
                 {{ formatDate(data.created_at) }}
               </template>
@@ -306,7 +306,7 @@ const recalculateRiskScores = async () => {
     // Mostra messaggio di successo
     toast.add({
       severity: 'success',
-      summary: t('common.success'),
+      summary: t('common.messages.success'),
       detail: response.data.message || 'Risk scores aggiornati con successo!',
       life: 3000
     })
@@ -314,7 +314,7 @@ const recalculateRiskScores = async () => {
     console.error('Errore durante il ricalcolo dei risk score:', error)
     toast.add({
       severity: 'error',
-      summary: t('common.error'),
+      summary: t('common.messages.error'),
       detail: 'Errore durante il ricalcolo dei risk score',
       life: 3000
     })

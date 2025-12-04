@@ -56,7 +56,13 @@ def create_asset(
     # Inserisco tenant_id nel body
     data = asset_in.dict()
     data["tenant_id"] = current_user.tenant_id
-    return crud_assets.create_asset(db, AssetCreate(**data), current_user.tenant_id)
+    result = crud_assets.create_asset(db, AssetCreate(**data), current_user.tenant_id)
+    
+    # Invalida cache dashboard dopo creazione asset
+    from app.services.dashboard_cache import invalidate_dashboard_cache
+    invalidate_dashboard_cache(str(current_user.tenant_id))
+    
+    return result
 
 
 # Schema per la risposta paginata
@@ -82,29 +88,31 @@ def list_assets(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    # Calcola il limite dinamico basato sul numero totale di asset
-    total_assets = db.query(Asset).filter(
-        Asset.tenant_id == current_user.tenant_id, 
-        Asset.deleted_at == None
-    ).count()
+    from sqlalchemy.orm import selectinload
+    from app.models.area import Area
+    from sqlalchemy import func, or_
     
-    # Usa sempre il totale + margine per vedere tutti gli asset
-    limit = total_assets + 50  # Margine di sicurezza
+    # PERFORMANCE: Usa un limite ragionevole per la paginazione
+    # Massimo 500 record per richiesta invece di caricare tutti gli asset
+    limit = min(limit, 500)
     
+    # PERFORMANCE: Usa selectinload invece di joinedload per ridurre le query duplicate
+    # selectinload esegue query separate ottimizzate invece di JOIN pesanti
     query = (
         db.query(Asset)
         .options(
-            joinedload(Asset.interfaces),
-            joinedload(Asset.site),
-            joinedload(Asset.location),
-            joinedload(Asset.status),
-            joinedload(Asset.manufacturer),
-            joinedload(Asset.asset_type),
+            selectinload(Asset.interfaces),  # Carica interfacce in una query separata
+            selectinload(Asset.site),
+            selectinload(Asset.location),
+            selectinload(Asset.status),
+            selectinload(Asset.manufacturer),
+            selectinload(Asset.asset_type),
+            selectinload(Asset.area),  # PERFORMANCE: Carica area qui per evitare N+1
         )
         .filter(Asset.tenant_id == current_user.tenant_id, Asset.deleted_at == None)
     )
 
-    # Filtri specifici
+    # Filtri specifici con indici database
     if status_id:
         query = query.filter(Asset.status_id == status_id)
     if site_id:
@@ -120,37 +128,42 @@ def list_assets(
     if risk_score_max is not None:
         query = query.filter(Asset.risk_score <= risk_score_max)
 
-    # Ricerca globale
+    # Ricerca globale ottimizzata
     if global_search:
         search_term = f"%{global_search}%"
-        from sqlalchemy import or_
+        query = query.filter(
+            or_(
+                Asset.name.ilike(search_term),
+                Asset.tag.ilike(search_term),
+                Asset.serial_number.ilike(search_term)
+            )
+        )
 
-        query = query.filter(or_(Asset.name.ilike(search_term)))
-
-    # Conta il totale degli asset (prima di applicare skip/limit)
-    total_count = query.count()
+    # PERFORMANCE: Usa count ottimizzato con func.count()
+    # Esegue COUNT(*) invece di caricare tutti i record
+    total_count = query.with_entities(func.count(Asset.id)).scalar()
     
+    # PERFORMANCE: Applica paginazione prima di caricare i dati
     assets = query.offset(skip).limit(limit).all()
+    
     if assets:
-        # Aggiungi i campi area_name e area_code a ogni asset
+        # PERFORMANCE: Processo batch invece di query N+1
         result = []
         for asset in assets:
             asset_dict = AssetRead.from_orm(asset).dict()
-            if asset.area_id:
-                from app.models.area import Area
-                area = db.query(Area).filter(Area.id == asset.area_id).first()
-                if area:
-                    asset_dict["area_name"] = area.name
-                    asset_dict["area_code"] = area.code
+            # L'area è già caricata tramite selectinload, nessuna query aggiuntiva
+            if asset.area:
+                asset_dict["area_name"] = asset.area.name
+                asset_dict["area_code"] = asset.area.code
             result.append(asset_dict)
         
-        # Restituisci sia gli asset che il conteggio totale
         return {
             "data": result,
             "total": total_count,
             "skip": skip,
             "limit": limit
         }
+    
     return {
         "data": [],
         "total": total_count,
@@ -213,8 +226,10 @@ def get_assets_by_location(
 def get_assets_for_network_map(
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
+    skip: int = 0,
+    limit: int = 1000,  # Limite ragionevole per la network map
 ):
-    """Get all assets for network map visualization (no limit, no validation)"""
+    """Get assets for network map visualization with pagination"""
     query = (
         db.query(Asset)
         .options(
@@ -226,6 +241,8 @@ def get_assets_for_network_map(
             joinedload(Asset.asset_type),
         )
         .filter(Asset.tenant_id == current_user.tenant_id, Asset.deleted_at == None)
+        .offset(skip)
+        .limit(limit)
     )
     
     assets = query.all()
@@ -1165,7 +1182,14 @@ def update_asset(
     asset = crud_assets.get_asset(db, asset_id)
     if not asset:
         raise ErrorCodeException(status_code=404, error_code=ErrorCode.ASSET_NOT_FOUND)
-    return crud_assets.update_asset(db, asset_id, asset_update, current_user.tenant_id)
+    
+    result = crud_assets.update_asset(db, asset_id, asset_update, current_user.tenant_id)
+    
+    # Invalida cache dashboard dopo aggiornamento asset
+    from app.services.dashboard_cache import invalidate_dashboard_cache
+    invalidate_dashboard_cache(str(current_user.tenant_id))
+    
+    return result
 
 
 # Soft delete
@@ -1189,6 +1213,11 @@ def soft_delete_asset(
         raise ErrorCodeException(status_code=404, error_code=ErrorCode.ASSET_NOT_FOUND)
     asset.deleted_at = datetime.utcnow()
     db.commit()
+    
+    # Invalida cache dashboard dopo soft delete
+    from app.services.dashboard_cache import invalidate_dashboard_cache
+    invalidate_dashboard_cache(str(current_user.tenant_id))
+    
     return {"detail": "Asset moved to trash"}
 
 

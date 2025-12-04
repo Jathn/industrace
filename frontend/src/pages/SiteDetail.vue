@@ -1,30 +1,30 @@
 <template>
   <div class="site-detail-page">
-    <Button icon="pi pi-arrow-left" :label="t('common.back')" class="mb-3" @click="goBack" />
+    <Button icon="pi pi-arrow-left" :label="t('common.actions.back')" class="mb-3" @click="goBack" />
 
-    <h2>{{ t('common.site') }}</h2>
+    <h2>{{ t('sites.title') }}</h2>
 
     <Card v-if="site" class="mb-4">
       <template #title>{{ site.name }}</template>
       <template #content>
-        <p><strong>{{ t('common.code') }}:</strong> {{ site.code }}</p>
-        <p><strong>{{ t('common.address') }}:</strong> {{ site.address || 'N/A' }}</p>
-        <p><strong>{{ t('common.description') }}:</strong> {{ site.description || 'N/A' }}</p>
+        <p><strong>{{ t('common.fields.code') }}:</strong> {{ site.code }}</p>
+        <p><strong>{{ t('common.fields.address') }}:</strong> {{ site.address || 'N/A' }}</p>
+        <p><strong>{{ t('common.fields.description') }}:</strong> {{ site.description || 'N/A' }}</p>
       </template>
     </Card>
 
     <h3>{{ t('locations.title') }}</h3>
     <div class="flex justify-content-between align-items-center mb-2">
   <Button 
-    :label="t('common.new')" 
+    :label="t('common.actions.create')" 
     icon="pi pi-plus" 
     class="p-button-sm" 
     @click="createNewLocation" 
   />
 </div>
     <DataTable :value="locations" :loading="loadingLocations" emptyMessage="No locations found">
-      <Column field="name" :header="t('common.name')" sortable />
-      <Column field="description" :header="t('common.description')" />
+      <Column field="name" :header="t('common.fields.name')" sortable />
+      <Column field="description" :header="t('common.fields.description')" />
       <Column field="area" :header="t('sites.area')" />
 <Column header="Planimetria">
   <template #body="{ data }">
@@ -39,7 +39,7 @@
     <div v-else>-</div>
   </template>
 </Column>
-      <Column :header="t('common.actions')">
+      <Column :header="t('common.strings.actions')">
         <template #body="{ data }">
           <Button icon="pi pi-pencil" class="p-button-rounded p-button-text p-button-info" @click="editLocation(data)" />
         </template>
@@ -48,7 +48,7 @@
 
 <Dialog 
   v-model:visible="editLocationDialog" 
-  :header="editingLocation ? t('common.edit') : t('common.new')" 
+  :header="editingLocation ? t('common.actions.edit') : t('common.actions.new')" 
   :modal="true" 
   :style="{ width: '40vw' }"
 >
@@ -68,24 +68,24 @@
 </template>
 </Dialog>
 
-    <h3>{{ t('contacts.contacts') }}</h3>
+    <h3>{{ t('contacts.title') }}</h3>
     <div class="flex align-items-center gap-2 mb-2">
-      <MultiSelect v-model="selectedContactIds" :options="allContacts" optionLabel="fullName" optionValue="id" :placeholder="t('contacts.addContacts')" display="chip" class="mr-2" style="min-width:250px" />
-      <Button :label="t('common.save')" icon="pi pi-check" class="p-button-sm" @click="updateSiteContacts" />
-      <Button :label="t('common.new')" icon="pi pi-plus" class="p-button-sm" @click="showContactDialog = true" />
+      <MultiSelect v-model="selectedContactIds" :options="allContacts" optionLabel="fullName" optionValue="id" :placeholder="t('contacts.strings.addContacts')" display="chip" class="mr-2" style="min-width:250px" />
+      <Button :label="t('common.actions.save')" icon="pi pi-check" class="p-button-sm" @click="updateSiteContacts" />
+      <Button :label="t('common.actions.create')" icon="pi pi-plus" class="p-button-sm" @click="showContactDialog = true" />
     </div>
             <DataTable :value="siteContacts" :loading="loadingContacts" emptyMessage="No associated contacts">
-      <Column field="fullName" :header="t('common.fullName')" />
-      <Column field="email" :header="t('common.email')" />
-      <Column field="phone1" :header="t('common.phone')" />
-      <Column field="type" :header="t('common.type')" />
-      <Column :header="t('common.actions')">
+      <Column field="fullName" :header="t('contacts.fields.fullName')" />
+      <Column field="email" :header="t('common.fields.email')" />
+      <Column field="phone1" :header="t('common.fields.phone')" />
+      <Column field="type" :header="t('common.fields.type')" />
+      <Column :header="t('common.strings.actions')">
         <template #body="{ data }">
           <Button icon="pi pi-trash" class="p-button-rounded p-button-text p-button-danger" @click="removeContact(data.id)" :title="t('common.delete')" />
         </template>
       </Column>
     </DataTable>
-    <Dialog v-model:visible="showContactDialog" :header="t('common.new')" :modal="true" :style="{ width: '30vw' }">
+    <Dialog v-model:visible="showContactDialog" :header="t('common.actions.create')" :modal="true" :style="{ width: '30vw' }">
       <ContactForm @submit="createContact" @cancel="showContactDialog = false" />
     </Dialog>
   </div>
@@ -141,7 +141,7 @@ async function fetchSite() {
     site.value = response.data
     // console.log('Fetched site:', site.value)
   } catch (error) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('siteDetail.fetchError'), life: 3000 })
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('sites.messages.fetchError'), life: 3000 })
   }
 }
 
@@ -152,7 +152,7 @@ async function fetchLocations() {
     locations.value = response.data
           // console.log('Locations fetched:', response.data)
   } catch (error) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('siteDetail.fetchLocationsError'), life: 3000 })
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('sites.messages.fetchLocationsError'), life: 3000 })
   } finally {
     loadingLocations.value = false
   }
@@ -205,8 +205,8 @@ async function saveLocation(data) {
     .then(() => {
       toast.add({
         severity: 'success',
-        summary: t('common.success'),
-        detail: editingLocation.value ? t('siteDetail.locationUpdated') : t('siteDetail.locationCreated'),
+        summary: t('common.messages.success'),
+        detail: editingLocation.value ? t('sites.messages.locationUpdated') : t('sites.messages.locationCreated'),
         life: 3000
       })
       editLocationDialog.value = false
@@ -216,8 +216,8 @@ async function saveLocation(data) {
     .catch(() => {
       toast.add({
         severity: 'error',
-        summary: t('common.error'),
-        detail: t('siteDetail.saveLocationError'),
+        summary: t('common.messages.error'),
+        detail: t('sites.messages.updateLocationError'),
         life: 3000
       })
     })

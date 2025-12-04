@@ -1,0 +1,27 @@
+{
+    "strings": {
+        "placeholder": "Cerca in tutti i moduli",
+        "results": "Risultati",
+        "noResults": "Nessun risultato trovato",
+        "loading": "Caricamento...",
+        "search": "Cerca",
+        "clear": "Pulisci",
+        "select": "Seleziona",
+        "view": "Visualizza",
+        "edit": "Modifica",
+        "delete": "Elimina",
+        "restore": "Ripristina",
+        "startTyping": "Inizia a digitare per cercare...",
+        "loginRequired": "Per utilizzare questa funzione, effettua il login"
+    },
+    "types": {
+        "asset": "Dispositivi",
+        "site": "Siti",
+        "location": "Località",
+        "manufacturer": "Produttori",
+        "contact": "Contatti",
+        "role": "Ruoli",
+        "user": "Utenti",
+        "supplier": "Fornitori"
+    }
+}

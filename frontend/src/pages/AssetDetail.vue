@@ -36,7 +36,7 @@
       <TabPanel>
         <template #header>
           <span :title="t('assets.tabRiskTooltip')" style="display: flex; align-items: center; gap: 0.4em; white-space: nowrap;">
-            <i class="pi pi-exclamation-triangle"></i> {{ t('assets.tabRisk') }}
+            <i class="pi pi-exclamation-triangle"></i> {{ t('assets.tabs.risk') }}
           </span>
         </template>
         <AssetDetailRiskTab ref="riskTabRef" :assetId="asset.id" />
@@ -44,7 +44,7 @@
       <TabPanel>
         <template #header>
           <span :title="t('assets.tabDocumentsTooltip')" style="display: flex; align-items: center; gap: 0.4em; white-space: nowrap;">
-            <i class="pi pi-file"></i> {{ t('assets.tabDocuments') }}
+            <i class="pi pi-file"></i> {{ t('assets.tabs.documents') }}
           </span>
         </template>
         <AssetDetailDocumentsTab :assetId="asset.id" :readOnly="!canWrite('assets')" />
@@ -52,7 +52,7 @@
       <TabPanel>
         <template #header>
           <span :title="t('assets.tabContactsTooltip')" style="display: flex; align-items: center; gap: 0.4em; white-space: nowrap;">
-            <i class="pi pi-users"></i> {{ t('assets.tabContacts') }}
+            <i class="pi pi-users"></i> {{ t('assets.tabs.contacts') }}
           </span>
         </template>
         <AssetDetailContactsTab
@@ -63,18 +63,18 @@
       <TabPanel>
         <template #header>
           <span :title="t('assets.tabNotesTooltip')" style="display: flex; align-items: center; gap: 0.4em; white-space: nowrap;">
-            <i class="pi pi-sticky-note"></i> {{ t('assets.tabNotes') }}
+            <i class="pi pi-sticky-note"></i> {{ t('assets.tabs.notes') }}
           </span>
         </template>
         <div class="asset-notes" v-if="asset.description" v-html="sanitizedDescription"></div>
-        <div v-else class="asset-notes-empty">{{ t('assets.noNotes') }}</div>
-        <Button class="mt-3" icon="pi pi-pencil" :label="asset.description ? t('assets.editNote') : t('assets.addNote')" @click="showNoteDialog = true" v-if="canWrite('assets')" />
-        <Dialog v-model:visible="showNoteDialog" :header="t('assets.editNote')" modal style="width: 600px" :closable="true" :dismissableMask="true">
+        <div v-else class="asset-notes-empty">{{ t('assets.notes.noNotes') }}</div>
+        <Button class="mt-3" icon="pi pi-pencil" :label="asset.description ? t('assets.notes.editNote') : t('assets.notes.addNote')" @click="showNoteDialog = true" v-if="canWrite('assets')" />
+        <Dialog v-model:visible="showNoteDialog" :header="t('assets.notes.editNote')" modal style="width: 600px" :closable="true" :dismissableMask="true">
           <template #default>
             <QuillEditor v-model:content="noteDraft" contentType="html" style="min-height:200px" />
             <div class="flex justify-content-end gap-2 mt-3">
-              <Button :label="t('common.save')" icon="pi pi-check" class="p-button-sm" @click="saveNote" />
-              <Button :label="t('common.cancel')" icon="pi pi-times" class="p-button-secondary p-button-sm" @click="showNoteDialog = false" />
+              <Button :label="t('common.actions.save')" icon="pi pi-check" class="p-button-sm" @click="saveNote" />
+              <Button :label="t('common.actions.cancel')" icon="pi pi-times" class="p-button-secondary p-button-sm" @click="showNoteDialog = false" />
             </div>
           </template>
         </Dialog>
@@ -83,7 +83,7 @@
       <TabPanel>
         <template #header>
           <span :title="t('assets.tabConnectionsTooltip')" style="display: flex; align-items: center; gap: 0.4em; white-space: nowrap;">
-            <i class="pi pi-link"></i> {{ t('assets.tabConnections') }}
+            <i class="pi pi-link"></i> {{ t('assets.tabs.connections') }}
           </span>
         </template>
         <AssetDetailConnectionsTab :assetId="asset.id" :assetInterfaces="asset.interfaces || []" />
@@ -92,7 +92,7 @@
       <TabPanel>
         <template #header>
           <span :title="t('assets.tabCommunicationsTooltip')" style="display: flex; align-items: center; gap: 0.4em; white-space: nowrap;">
-            <i class="pi pi-share-alt"></i> {{ t('assets.tabCommunications') }}
+            <i class="pi pi-share-alt"></i> {{ t('assets.tabs.communications') }}
           </span>
         </template>
         <AssetDetailCommunicationsTab :assetId="asset.id" />
@@ -100,7 +100,7 @@
       <TabPanel>
         <template #header>
           <span :title="t('assets.tabSuppliersTooltip')" style="display: flex; align-items: center; gap: 0.4em; white-space: nowrap;">
-            <i class="pi pi-briefcase"></i> {{ t('assets.tabSuppliers') }}
+            <i class="pi pi-briefcase"></i> {{ t('assets.tabs.suppliers') }}
           </span>
         </template>
         <AssetSuppliersTab :assetId="asset.id" :readOnly="!canWrite('assets')" />
@@ -108,7 +108,7 @@
       <TabPanel>
         <template #header>
           <span :title="t('assets.tabCustomFieldsTooltip')" style="display: flex; align-items: center; gap: 0.4em; white-space: nowrap;">
-            <i class="pi pi-list"></i> {{ t('assets.tabCustomFields') }}
+            <i class="pi pi-list"></i> {{ t('assets.tabs.customFields') }}
           </span>
         </template>
         <AssetCustomFields :assetId="asset.id" :customFields="asset.custom_fields" :readOnly="!canWrite('assets')" @saved="onCustomFieldsSaved" />
@@ -116,7 +116,7 @@
       <TabPanel>
         <template #header>
           <span :title="t('assets.tabTimelineTooltip')" style="display: flex; align-items: center; gap: 0.4em; white-space: nowrap;">
-            <i class="pi pi-clock"></i> {{ t('assets.tabTimeline') }}
+            <i class="pi pi-clock"></i> {{ t('assets.tabs.timeline') }}
           </span>
         </template>
         <AssetDetailTimelineTab :assetId="asset.id" />
@@ -124,7 +124,7 @@
     </TabView>
 
     <!-- Dialogs -->
-    <Dialog v-model:visible="showEditDialog" :header="t('common.edit') + ' ' + asset?.name" modal style="width: 60vw; max-width: 700px" :closable="true" :dismissableMask="true">
+    <Dialog v-model:visible="showEditDialog" :header="t('common.actions.edit') + ' ' + asset?.name" modal style="width: 60vw; max-width: 700px" :closable="true" :dismissableMask="true">
       <AssetForm v-if="asset" :asset="asset" :sites="sites" :assetTypes="assetTypes" :allLocations="allLocations" :allAreas="allAreas" :manufacturers="manufacturers" :assetStatusOptions="assetStatusOptions" @submit="onAssetEditSubmit" @cancel="showEditDialog = false" />
     </Dialog>
     <PrintDialog v-model:visible="showPrintDialog" :data="asset" />
@@ -294,8 +294,8 @@ async function fetchAsset() {
   } catch {
     toast.add({ 
       severity: 'error', 
-      summary: t('common.error'), 
-      detail: t('assets.fetchError'), 
+      summary: t('common.messages.error'), 
+      detail: t('assets.messages.fetchError'), 
       life: 3000 
     })
     router.push('/assets')
@@ -322,8 +322,8 @@ async function openPrintDialog() {
   if (!asset.value) {
     toast.add({ 
       severity: 'warn', 
-      summary: t('common.attention'), 
-      detail: t('assets.assetNotLoaded') 
+      summary: t('common.messages.warning'), 
+      detail: t('assets.messages.notLoaded') 
     })
     return
   }
@@ -353,8 +353,8 @@ function onCustomFieldsSaved(updatedFields) {
   }
   toast.add({ 
     severity: 'success', 
-    summary: t('common.success'), 
-    detail: t('assets.customFieldsUpdated') 
+    summary: t('common.messages.success'), 
+    detail: t('assets.messages.customFieldsUpdated') 
   })
 }
 
@@ -366,11 +366,11 @@ function editAsset() {
 async function onAssetEditSubmit(updatedAsset) {
   try {
     await api.updateAsset(asset.value.id, updatedAsset)
-    toast.add({ severity: 'success', summary: t('common.success'), detail: t('assets.updated') })
+    toast.add({ severity: 'success', summary: t('common.messages.success'), detail: t('assets.messages.updated') })
     showEditDialog.value = false
     await fetchAsset()
   } catch (err) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assets.updateError') })
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('assets.messages.updateError') })
   }
 }
 
@@ -410,26 +410,26 @@ function getManufacturerName(manufacturer) {
 
 function getPhysicalAccessLabel(value) {
   switch (value) {
-    case 'internal': return t('assets.physicalAccessInternal')
-    case 'dmz': return t('assets.physicalAccessDMZ')
-    case 'external': return t('assets.physicalAccessExternal')
+    case 'internal': return t('assets.strings.physicalAccessInternal')
+    case 'dmz': return t('assets.strings.physicalAccessDMZ')
+    case 'external': return t('assets.strings.physicalAccessExternal')
     default: return value || '-'
   }
 }
 function getBusinessCriticalityLabel(value) {
   switch (value) {
-    case 'low': return t('assets.businessCriticalityLow')
-    case 'medium': return t('assets.businessCriticalityMedium')
-    case 'high': return t('assets.businessCriticalityHigh')
-    case 'critical': return t('assets.businessCriticalityCritical')
-    default: return t('common.na')
+    case 'low': return t('assets.strings.businessCriticalityLow')
+    case 'medium': return t('assets.strings.businessCriticalityMedium')
+    case 'high': return t('assets.strings.businessCriticalityHigh')
+    case 'critical': return t('assets.strings.businessCriticalityCritical')
+    default: return t('common.strings.na')
   }
 }
 function getRemoteAccessTypeLabel(value) {
   switch (value) {
-    case 'none': return t('assets.remoteAccessTypeNone')
-    case 'attended': return t('assets.remoteAccessTypeAttended')
-    case 'unattended': return t('assets.remoteAccessTypeUnattended')
+    case 'none': return t('assets.strings.remoteAccessTypeNone')
+    case 'attended': return t('assets.strings.remoteAccessTypeAttended')
+    case 'unattended': return t('assets.strings.remoteAccessTypeUnattended')
     default: return value || '-'
   }
 }
@@ -445,9 +445,9 @@ async function saveNote() {
     await api.updateAsset(asset.value.id, { description: noteDraft.value })
     asset.value.description = noteDraft.value
     showNoteDialog.value = false
-    toast.add({ severity: 'success', summary: t('common.success'), detail: t('assets.noteSaved'), life: 2000 })
+    toast.add({ severity: 'success', summary: t('common.messages.success'), detail: t('assets.messages.noteSaved'), life: 2000 })
   } catch (e) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assets.noteSaveError'), life: 3000 })
+    toast.add({ severity: 'error', summary: t('common.messages.error'), detail: t('assets.messages.noteSaveError'), life: 3000 })
   }
 }
 

@@ -8,9 +8,9 @@
     class="print-dialog"
   >
     <div class="print-dialog-content-simple">
-      <p>{{ t('print.confirmPrint') }}</p>
+      <p>{{ t('print.dialogTitle') }}</p>
       <Button 
-        :label="t('print.print')" 
+        :label="t('common.actions.print')" 
         icon="pi pi-print" 
         @click="handlePrint"
         :loading="isPrinting"

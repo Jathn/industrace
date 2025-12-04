@@ -1,24 +1,22 @@
 {
-  "title": "Asset Types",
-  "newAssetType": "New Asset Type",
-  "create": "Create new asset type",
-  "edit": "Edit asset type",
-  "name": "Type Name",
-  "description": "Description",
-  "color": "Color",
-  "order": "Order",
-  "createSuccess": "Asset type created successfully",
-  "updateSuccess": "Asset type updated successfully",
-  "deleteSuccess": "Asset type deleted successfully",
-  "createError": "Error creating asset type",
-  "updateError": "Error updating asset type",
-  "deleteError": "Error deleting asset type",
-  "fetchError": "Error loading asset types",
-  "updated": "Asset type updated successfully",
-  "level0": "Level 0 (Physical Processes)",
-  "level1": "Level 1 (Basic Control)",
-  "level2": "Level 2 (Supervisor Control)",
-  "level3": "Level 3 (Production Operations)",
-  "level4": "Level 4 (Logistics and Business)",
-  "level1_5": "Level 1.5 (Data Access Interface / OT Gateway)"
-} 
+    "title": "Asset Types",
+    "fields": {
+        "purdueLevel": "Purdue Level"
+    },
+    "messages": {
+        "fetchError": "Error loading asset types",
+        "created": "Asset type created successfully",
+        "createError": "Error creating asset type",
+        "updated": "Asset type updated successfully",
+        "updateError": "Error updating asset type"
+    },
+    "strings": {
+        "selectPurdueLevel": "Select Purdue Level"
+    },
+    "level0": "0",
+    "level1": "1",
+    "level1_5": "1.5",
+    "level2": "2",
+    "level3": "3",
+    "level4": "4"
+}

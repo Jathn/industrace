@@ -95,8 +95,8 @@ const globalErrors = computed(() => {
   )
 })
 
-const submitLabelComputed = computed(() => props.submitLabel ?? t('common.save'))
-const cancelLabelComputed = computed(() => props.cancelLabel ?? t('common.cancel'))
+const submitLabelComputed = computed(() => props.submitLabel ?? t('common.actions.save'))
+const cancelLabelComputed = computed(() => props.cancelLabel ?? t('common.actions.cancel'))
 
 // Methods
 const handleSubmit = () => {

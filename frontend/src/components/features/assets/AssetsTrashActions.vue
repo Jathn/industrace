@@ -2,7 +2,7 @@
   <div v-if="trashMode && canDelete('assets')" class="mt-4 flex justify-content-end">
     <Button 
       icon="pi pi-times" 
-      :label="t('common.emptyTrash')" 
+      :label="t('common.actions.clearTrash')" 
       severity="danger"
       @click="$emit('emptyTrash')"
     />

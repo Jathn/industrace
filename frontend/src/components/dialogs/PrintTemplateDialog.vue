@@ -10,46 +10,46 @@
   >
     <form @submit.prevent="saveTemplate" class="template-form">
       <div class="form-section">
-        <h3>{{ $t('setup.printTemplates.basicInfo') }}</h3>
+        <h3>{{ $t('setup.strings.printTemplates.basicInfo') }}</h3>
         
         <div class="form-row">
           <div class="form-field">
-            <label>{{ $t('setup.printTemplates.templateKey') }} *</label>
+            <label>{{ $t('setup.strings.printTemplates.templateKey') }} *</label>
             <InputText 
               v-model="form.key" 
-              :placeholder="$t('setup.printTemplates.keyPlaceholder')"
+              :placeholder="$t('setup.strings.printTemplates.keyPlaceholder')"
               :disabled="isEditing"
               :class="{ 'p-invalid': errors.key }"
             />
             <small class="p-error" v-if="errors.key">{{ errors.key }}</small>
           </div>
           <div class="form-field">
-            <label>{{ $t('setup.printTemplates.icon') }}</label>
+            <label>{{ $t('setup.strings.printTemplates.icon') }}</label>
             <Dropdown 
               v-model="form.icon" 
               :options="iconOptions"
               optionLabel="label"
               optionValue="value"
-              :placeholder="$t('setup.printTemplates.selectIcon')"
+              :placeholder="$t('setup.strings.printTemplates.selectIcon')"
             />
           </div>
         </div>
 
         <div class="form-row">
           <div class="form-field">
-            <label>{{ $t('setup.printTemplates.templateName') }} ({{ $t('common.italian') }}) *</label>
+            <label>{{ $t('setup.strings.printTemplates.templateName') }} ({{ $t('common.italian') }}) *</label>
             <InputText 
               v-model="form.name_translations.it" 
-              :placeholder="$t('setup.printTemplates.namePlaceholder')"
+              :placeholder="$t('setup.strings.printTemplates.namePlaceholder')"
               :class="{ 'p-invalid': errors.name }"
             />
             <small class="p-error" v-if="errors.name">{{ errors.name }}</small>
           </div>
           <div class="form-field">
-            <label>{{ $t('setup.printTemplates.templateName') }} ({{ $t('common.english') }}) *</label>
+            <label>{{ $t('setup.strings.printTemplates.templateName') }} ({{ $t('common.english') }}) *</label>
             <InputText 
               v-model="form.name_translations.en" 
-              :placeholder="$t('setup.printTemplates.namePlaceholder')"
+              :placeholder="$t('setup.strings.printTemplates.namePlaceholder')"
               :class="{ 'p-invalid': errors.name }"
             />
           </div>
@@ -57,15 +57,15 @@
 
         <div class="form-row">
           <div class="form-field">
-            <label>{{ $t('setup.printTemplates.templateDescription') }} ({{ $t('common.italian') }})</label>
+            <label>{{ $t('setup.strings.printTemplates.templateDescription') }} ({{ $t('common.strings.italian') }})</label>
             <Textarea 
               v-model="form.description_translations.it" 
-              :placeholder="$t('setup.printTemplates.descriptionPlaceholder')"
+              :placeholder="$t('setup.strings.printTemplates.descriptionPlaceholder')"
               rows="3"
             />
           </div>
           <div class="form-field">
-            <label>{{ $t('setup.printTemplates.templateDescription') }} ({{ $t('common.english') }})</label>
+            <label>{{ $t('setup.strings.printTemplates.templateDescription') }} ({{ $t('common.strings.english') }})</label>
             <Textarea 
               v-model="form.description_translations.en" 
               :placeholder="$t('setup.printTemplates.descriptionPlaceholder')"
@@ -76,17 +76,17 @@
       </div>
 
       <div class="form-section">
-        <h3>{{ $t('setup.printTemplates.printOptions') }}</h3>
+        <h3>{{ $t('setup.strings.printTemplates.printOptions') }}</h3>
         
         <div class="form-row">
           <div class="form-field">
-            <label>{{ $t('setup.printTemplates.component') }}</label>
+            <label>{{ $t('setup.strings.printTemplates.component') }}</label>
             <Dropdown 
               v-model="form.component" 
               :options="componentOptions"
               optionLabel="label"
               optionValue="value"
-              :placeholder="$t('setup.printTemplates.selectComponent')"
+              :placeholder="$t('setup.strings.printTemplates.selectComponent')"
             />
           </div>
         </div>
@@ -95,42 +95,42 @@
           <div class="option-item">
             <label class="checkbox-label">
               <Checkbox v-model="form.options.includePhoto" :binary="true" />
-              {{ $t('setup.printTemplates.includePhoto') }}
+              {{ $t('setup.strings.printTemplates.includePhoto') }}
             </label>
           </div>
           
           <div class="option-item">
             <label class="checkbox-label">
               <Checkbox v-model="form.options.includeQR" :binary="true" />
-              {{ $t('setup.printTemplates.includeQR') }}
+              {{ $t('setup.strings.printTemplates.includeQR') }}
             </label>
           </div>
           
           <div class="option-item">
             <label class="checkbox-label">
               <Checkbox v-model="form.options.includeConnections" :binary="true" />
-              {{ $t('setup.printTemplates.includeConnections') }}
+              {{ $t('setup.strings.printTemplates.includeConnections') }}
             </label>
           </div>
           
           <div class="option-item">
             <label class="checkbox-label">
               <Checkbox v-model="form.options.includeRiskMatrix" :binary="true" />
-              {{ $t('setup.printTemplates.includeRiskMatrix') }}
+              {{ $t('setup.strings.printTemplates.includeRiskMatrix') }}
             </label>
           </div>
           
           <div class="option-item">
             <label class="checkbox-label">
               <Checkbox v-model="form.options.includeCustomFields" :binary="true" />
-              {{ $t('setup.printTemplates.includeCustomFields') }}
+              {{ $t('setup.strings.printTemplates.includeCustomFields') }}
             </label>
           </div>
           
           <div class="option-item">
             <label class="checkbox-label">
               <Checkbox v-model="form.options.includeAuditLog" :binary="true" />
-              {{ $t('setup.printTemplates.includeAuditLog') }}
+              {{ $t('setup.strings.printTemplates.includeAuditLog') }}
             </label>
           </div>
         </div>
@@ -138,21 +138,21 @@
 
       <!-- Nuova sezione per la configurazione avanzata dei campi -->
       <div class="form-section">
-        <h3>{{ $t('setup.printTemplates.advancedFields') }}</h3>
-        <p class="section-description">{{ $t('setup.printTemplates.advancedFieldsDescription') }}</p>
+        <h3>{{ $t('setup.strings.printTemplates.advancedFields') }}</h3>
+        <p class="section-description">{{ $t('setup.strings.printTemplates.advancedFieldsDescription') }}</p>
         
         <div class="fields-configuration">
           <div class="fields-header">
             <Button 
               type="button"
-              :label="$t('setup.printTemplates.addField')" 
+              :label="$t('setup.strings.printTemplates.addField')" 
               icon="pi pi-plus" 
               size="small"
               @click="addField"
             />
             <Button 
               type="button"
-              :label="$t('setup.printTemplates.resetToDefault')" 
+              :label="$t('setup.strings.printTemplates.resetToDefault')" 
               icon="pi pi-refresh" 
               size="small"
               severity="secondary"
@@ -184,30 +184,30 @@
               <div class="field-config">
                 <div class="field-row">
                   <div class="field-field">
-                    <label>{{ $t('setup.printTemplates.fieldName') }}</label>
+                    <label>{{ $t('setup.strings.printTemplates.fieldName') }}</label>
                     <Dropdown 
                       v-model="field.name" 
                       :options="availableFields"
                       optionLabel="label"
                       optionValue="value"
-                      :placeholder="$t('setup.printTemplates.selectField')"
+                      :placeholder="$t('setup.strings.printTemplates.selectField')"
                     />
                   </div>
                   <div class="field-field">
-                    <label>{{ $t('setup.printTemplates.fieldLabel') }}</label>
+                    <label>{{ $t('setup.strings.printTemplates.fieldLabel') }}</label>
                     <InputText 
                       v-model="field.label" 
-                      :placeholder="$t('setup.printTemplates.fieldLabelPlaceholder')"
+                      :placeholder="$t('setup.strings.printTemplates.fieldLabelPlaceholder')"
                     />
                   </div>
                   <div class="field-field">
-                    <label>{{ $t('setup.printTemplates.fieldSection') }}</label>
+                    <label>{{ $t('setup.strings.printTemplates.fieldSection') }}</label>
                     <Dropdown 
                       v-model="field.section" 
                       :options="sectionOptions"
                       optionLabel="label"
                       optionValue="value"
-                      :placeholder="$t('setup.printTemplates.selectSection')"
+                      :placeholder="$t('setup.strings.printTemplates.selectSection')"
                     />
                   </div>
                 </div>
@@ -216,11 +216,11 @@
                   <div class="field-field">
                     <label class="checkbox-label">
                       <Checkbox v-model="field.visible" :binary="true" />
-                      {{ $t('setup.printTemplates.fieldVisible') }}
+                      {{ $t('setup.strings.printTemplates.fieldVisible') }}
                     </label>
                   </div>
                   <div class="field-field">
-                    <label>{{ $t('setup.printTemplates.fieldWidth') }}</label>
+                    <label>{{ $t('setup.strings.printTemplates.fieldWidth') }}</label>
                     <Dropdown 
                       v-model="field.width" 
                       :options="widthOptions"
@@ -238,13 +238,13 @@
       <div class="form-actions">
         <Button 
           type="button"
-          :label="$t('common.cancel')" 
+          :label="$t('common.actions.cancel')" 
           text 
           @click="onHide"
         />
         <Button 
           type="submit"
-          :label="$t('common.save')" 
+          :label="$t('common.actions.save')" 
           icon="pi pi-save" 
           :loading="saving"
         />
@@ -387,13 +387,13 @@ const validateForm = () => {
   errors.name = ''
   
   if (!form.key.trim()) {
-    errors.key = t('setup.printTemplates.keyRequired')
+    errors.key = t('setup.strings.printTemplates.keyRequired')
   } else if (!/^[a-z0-9-]+$/.test(form.key)) {
-    errors.key = t('setup.printTemplates.keyFormat')
+    errors.key = t('setup.strings.printTemplates.keyFormat')
   }
   
   if (!form.name_translations.it.trim() || !form.name_translations.en.trim()) {
-    errors.name = t('setup.printTemplates.nameRequired')
+    errors.name = t('setup.strings.printTemplates.nameRequired')
   }
   
   return !errors.key && !errors.name
@@ -420,16 +420,16 @@ const saveTemplate = async () => {
       await api.updatePrintTemplate(props.template.id, templateData)
       toast.add({
         severity: 'success',
-        summary: t('common.success'),
-        detail: t('setup.printTemplates.templateUpdated'),
+        summary: t('common.messages.success'),
+        detail: t('setup.strings.printTemplates.templateUpdated'),
         life: 3000
       })
     } else {
       await api.createPrintTemplate(templateData)
       toast.add({
         severity: 'success',
-        summary: t('common.success'),
-        detail: t('setup.printTemplates.templateCreated'),
+        summary: t('common.messages.success'),
+        detail: t('setup.strings.printTemplates.templateCreated'),
         life: 3000
       })
     }
@@ -441,8 +441,8 @@ const saveTemplate = async () => {
           console.error('Error saving template:', error)
     toast.add({
       severity: 'error',
-      summary: t('common.error'),
-      detail: t('setup.printTemplates.saveError'),
+      summary: t('common.messages.error'),
+      detail: t('setup.strings.printTemplates.saveError'),
       life: 3000
     })
   } finally {

@@ -36,7 +36,7 @@
         <template #title>
           <div class="flex align-items-center">
             <i class="pi pi-wifi mr-2"></i>
-            {{ t('assets.networkConnection') }}
+            {{ t('assets.strings.networkConnection') }}
           </div>
         </template>
         <template #content>
@@ -188,8 +188,8 @@ async function handleSubmit() {
   if (validationErrors.length > 0) {
     toast.add({
       severity: 'error',
-      summary: t('common.error'),
-      detail: `Required fields missing:\n${validationErrors.join('\n')}`,
+      summary: t('common.messages.error'),
+      detail: t('common.messages.requiredFieldsMissing', { fields: validationErrors.join('\n') }),
       life: 5000
     })
     return
@@ -233,8 +233,8 @@ async function handleSubmit() {
     // console.log('Dati finali da inviare:', dataWithFormattedDates)
     emit('submit', dataWithFormattedDates)
   }, {
-    successMessage: props.asset ? null : t('assets.created'), // Non mostrare toast per update
-    errorContext: t('assets.saveError')
+    successMessage: props.asset ? null : t('assets.messages.created'), // Non mostrare toast per update
+    errorContext: t('assets.messages.saveError')
   })
 }
 
@@ -244,16 +244,16 @@ function validateAssetData(assetData) {
   
   // Required fields
   const requiredFields = [
-    { field: 'name', label: t('common.name') },
-    { field: 'site_id', label: t('common.site') },
-    { field: 'asset_type_id', label: t('common.type') },
-    { field: 'status_id', label: t('common.status') },
-    { field: 'manufacturer_id', label: t('common.manufacturer') }
+    { field: 'name', label: t('common.fields.name') },
+    { field: 'site_id', label: t('common.fields.site') },
+    { field: 'asset_type_id', label: t('common.fields.type') },
+    { field: 'status_id', label: t('common.fields.status') },
+    { field: 'manufacturer_id', label: t('common.fields.manufacturer') }
   ]
   
   requiredFields.forEach(({ field, label }) => {
     if (!assetData[field] || assetData[field] === '' || assetData[field] === null) {
-      errors.push(`${label} is required`)
+      errors.push(t('common.messages.required', { field: label }))
     }
   })
   

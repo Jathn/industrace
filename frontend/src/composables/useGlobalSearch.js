@@ -17,7 +17,8 @@ export function useGlobalSearch() {
   const hasResults = computed(() => searchResults.value.length > 0)
   
   const search = async (query) => {
-    if (!query || query.trim().length < 2) {
+    const trimmedQuery = query ? query.trim() : ''
+    if (!trimmedQuery || trimmedQuery.length < 2) {
       searchResults.value = []
       return
     }
@@ -36,14 +37,17 @@ export function useGlobalSearch() {
     isLoading.value = true
     
     try {
-      const response = await api.globalSearch(query.trim(), 5)
-      searchResults.value = response.data.results || []
+      const response = await api.globalSearch(trimmedQuery, 5)
+      // La risposta API ha struttura { results: [...] }
+      searchResults.value = response.data?.results || []
+      console.log('Search results:', searchResults.value)
     } catch (error) {
       console.error('Errore durante la ricerca:', error)
+      console.error('Error response:', error.response?.data)
       toast.add({
         severity: 'error',
         summary: 'Errore',
-        detail: 'Errore durante la ricerca',
+        detail: error.response?.data?.detail || 'Errore durante la ricerca',
         life: 3000
       })
       searchResults.value = []
@@ -53,8 +57,11 @@ export function useGlobalSearch() {
   }
   
   const handleSearch = async () => {
-    if (searchQuery.value.trim()) {
-      await search(searchQuery.value)
+    const query = searchQuery.value?.trim() || ''
+    if (query.length >= 2) {
+      await search(query)
+    } else {
+      searchResults.value = []
     }
   }
   

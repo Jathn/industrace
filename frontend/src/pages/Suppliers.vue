@@ -11,21 +11,21 @@
         <!-- Azioni principali -->
         <Button 
           v-if="!trashMode && canWrite('suppliers')"
-          :label="t('suppliers.new')" 
+          :label="t('common.actions.create')" 
           icon="pi pi-plus" 
           severity="success"
           @click="openCreateDialog" 
         />
         <Button 
           v-if="!trashMode && canWrite('suppliers')"
-          :label="t('suppliers.import')" 
+          :label="t('common.actions.import')" 
           icon="pi pi-upload" 
           severity="info"
           @click="showImportDialog = true" 
         />
         <Button 
           v-if="!trashMode"
-          :label="t('common.exportCsv')" 
+          :label="t('common.actions.exportCsv')" 
           icon="pi pi-file-excel" 
           severity="secondary"
           @click="exportCsv" 
@@ -37,7 +37,7 @@
         <!-- Gestione cestino -->
         <Button 
           icon="pi pi-trash" 
-          :label="trashMode ? t('common.showActive') : t('common.showTrash')" 
+          :label="trashMode ? t('common.actions.showActive') : t('common.actions.showTrash')" 
           severity="secondary"
           @click="toggleTrashMode"
         />
@@ -63,7 +63,7 @@
           :options="countryOptions" 
           optionLabel="label" 
           optionValue="value" 
-          :placeholder="t('common.country')" 
+          :placeholder="t('common.fields.country')" 
           showClear 
           style="min-width: 150px" 
         />
@@ -72,7 +72,7 @@
           :options="cityOptions" 
           optionLabel="label" 
           optionValue="value" 
-          :placeholder="t('common.city')" 
+          :placeholder="t('common.fields.city')" 
           showClear 
           style="min-width: 150px" 
         />
@@ -81,7 +81,7 @@
       <template #actions>
         <Button 
           v-if="!trashMode && canWrite('suppliers')"
-          :label="t('common.bulkEdit')" 
+          :label="t('common.actions.bulkEdit')" 
           icon="pi pi-pencil" 
           severity="warning"
           :disabled="!selectedSuppliers.length" 
@@ -139,7 +139,7 @@
 
     <BaseDialog
       v-model:visible="showDialog"
-      :title="editingSupplier ? t('common.edit') : t('common.new')"
+      :title="editingSupplier ? t('common.actions.edit') : t('common.actions.create')"
       :showFooter="false"
       @close="close"
     >
@@ -152,38 +152,38 @@
 
     <BaseDialog
       v-model:visible="showBulkDialog"
-      :title="t('common.bulkEdit')"
+      :title="t('common.actions.bulkEdit')"
       :showFooter="false"
       @close="closeBulkDialog"
     >
       <div class="bulk-edit-form">
         <div class="mb-4">
           <p class="text-sm text-gray-600">
-            {{ t('common.bulkEditInfo', { count: selectedSuppliers.length }) }}
+            {{ t('common.actions.bulkEditInfo', { count: selectedSuppliers.length }) }}
           </p>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="field">
-            <label class="block text-sm font-medium mb-2">{{ t('common.country') }}</label>
+            <label class="block text-sm font-medium mb-2">{{ t('common.fields.country') }}</label>
             <Dropdown
               v-model="bulkData.country"
               :options="countryOptions"
               option-label="label"
               option-value="value"
-              :placeholder="t('common.select')"
+              :placeholder="t('common.strings.select')"
               class="w-full"
             />
           </div>
           
           <div class="field">
-            <label class="block text-sm font-medium mb-2">{{ t('common.city') }}</label>
+            <label class="block text-sm font-medium mb-2">{{ t('common.fields.city') }}</label>
             <Dropdown
               v-model="bulkData.city"
               :options="cityOptions"
               option-label="label"
               option-value="value"
-              :placeholder="t('common.select')"
+              :placeholder="t('common.strings.select')"
               class="w-full"
             />
           </div>
@@ -191,12 +191,12 @@
         
         <div class="flex justify-end gap-2 mt-6">
           <Button 
-            :label="t('common.cancel')" 
+            :label="t('common.actions.cancel')" 
             severity="secondary"
             @click="closeBulkDialog" 
           />
           <Button 
-            :label="t('common.save')" 
+            :label="t('common.actions.save')" 
             @click="saveBulkEdit" 
           />
         </div>
@@ -282,17 +282,17 @@ const bulkData = ref({
 
 const columnOptions = computed(() => {
   const columns = [
-    { field: 'name', header: t('common.name'), sortable: true },
-    { field: 'description', header: t('common.description'), sortable: false },
-    { field: 'vat_number', header: t('common.vatNumber'), sortable: false },
-    { field: 'city', header: t('common.city'), sortable: true },
-    { field: 'country', header: t('common.country'), sortable: true },
-    { field: 'email', header: t('common.email'), sortable: false },
-    { field: 'phone', header: t('common.phone'), sortable: false }
+    { field: 'name', header: t('common.fields.name'), sortable: true },
+    { field: 'description', header: t('common.fields.description'), sortable: false },
+    { field: 'vat_number', header: t('suppliers.fields.vatNumber'), sortable: false },
+    { field: 'city', header: t('common.fields.city'), sortable: true },
+    { field: 'country', header: t('common.fields.country'), sortable: true },
+    { field: 'email', header: t('common.fields.email'), sortable: false },
+    { field: 'phone', header: t('common.fields.phone'), sortable: false }
   ]
   
   // Aggiungi colonna azioni sempre, perché il pulsante "Visualizza" è sempre disponibile
-  columns.push({ field: 'actions', header: t('common.actions'), sortable: false })
+  columns.push({ field: 'actions', header: t('common.strings.actions'), sortable: false })
   
   return columns
 })
@@ -357,11 +357,11 @@ async function fetchSuppliers() {
 }
 
 function openCreateDialog() {
-  openCreate(t('suppliers.new'), null)
+  openCreate(t('common.actions.create'), null)
 }
 
 function openEditDialog(supplier) {
-  openEdit(t('suppliers.edit'), supplier)
+  openEdit(t('common.actions.edit'), supplier)
 }
 
 function openBulkEditDialog() {
@@ -394,8 +394,8 @@ async function saveBulkEdit() {
     closeBulkDialog()
     await fetchSuppliers()
   }, {
-    successMessage: t('common.bulkUpdated'),
-    errorContext: t('common.bulkError')
+    successMessage: t('common.messages.bulkUpdated'),
+    errorContext: t('common.messages.bulkError')
   })
 }
 
@@ -407,8 +407,8 @@ async function saveSupplier(data) {
       close()
       await fetchSuppliers()
     }, {
-      successMessage: t('common.updated'),
-      errorContext: t('common.updateError')
+      successMessage: t('common.messages.updated'),
+      errorContext: t('common.messages.updateError')
     })
   } else {
     // Modalità creazione
@@ -417,26 +417,26 @@ async function saveSupplier(data) {
       close()
       await fetchSuppliers()
     }, {
-      successMessage: t('common.created'),
-      errorContext: t('common.createError')
+      successMessage: t('common.messages.created'),
+      errorContext: t('common.messages.createError')
     })
   }
 }
 
 async function deleteSupplier(id) {
   await confirmDelete(
-    t('suppliers.deleteConfirm'),
-    t('suppliers.deleteWarning'),
+    t('common.messages.deleteConfirm'),
+    t('common.messages.deleteWarning'),
     async () => {
       await execute(async () => {
         await api.deleteSupplier(id)
         await fetchSuppliers()
       }, {
-        errorContext: t('common.deleteError')
+        errorContext: t('common.messages.deleteError')
       })
     },
     {
-      successMessage: t('common.deleted')
+      successMessage: t('common.messages.deleted')
     }
   )
 }
@@ -469,8 +469,8 @@ async function restoreSupplier(id) {
     await api.restoreSupplier(id)
     await fetchSuppliers()
   }, {
-    successMessage: t('common.restored'),
-    errorContext: t('common.restoreError')
+    successMessage: t('common.messages.restored'),
+    errorContext: t('common.messages.restoreError')
   })
 }
 
@@ -479,8 +479,8 @@ async function hardDeleteSupplier(id) {
     await api.hardDeleteSupplier(id)
     await fetchSuppliers()
   }, {
-    successMessage: t('common.hardDeleted'),
-    errorContext: t('common.hardDeleteError')
+    successMessage: t('common.messages.hardDeleted'),
+    errorContext: t('common.messages.hardDeleteError')
   })
 }
 
@@ -491,15 +491,15 @@ async function emptyTrash() {
     }
     await fetchSuppliers()
   }, {
-    successMessage: t('common.trashEmptied'),
-    errorContext: t('common.emptyTrashError')
+    successMessage: t('common.messages.trashEmptied'),
+    errorContext: t('common.messages.emptyTrashError')
   })
 }
 
 async function handleEmptyTrash() {
   await confirmEmptyTrash(
-    t('common.emptyTrashConfirm'),
-    t('common.emptyTrashWarning'),
+    t('common.messages.emptyTrashConfirm'),
+    t('common.messages.emptyTrashWarning'),
     emptyTrash
   )
 }
@@ -519,7 +519,7 @@ async function exportCsv() {
     window.URL.revokeObjectURL(url);
   } catch (e) {
     // Mostra errore
-    alert('Errore durante l\'esportazione CSV');
+    alert(t('common.messages.exportError'));
   }
 }
 

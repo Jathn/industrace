@@ -6,7 +6,7 @@
 <template>
   <div class="user-detail-page">
     <div class="page-header">
-      <Button icon="pi pi-arrow-left" :label="t('common.back')" class="mb-3" @click="goBack" />
+      <Button icon="pi pi-arrow-left" :label="t('common.actions.back')" class="mb-3" @click="goBack" />
       <h1>{{ t('users.title') }}</h1>
     </div>
 
@@ -15,22 +15,22 @@
       <template #content>
         <div class="grid">
           <div class="col-12 md:col-6">
-            <p><strong>{{ t('common.name') }}:</strong> {{ user.name }}</p>
-            <p><strong>{{ t('common.email') }}:</strong> {{ user.email }}</p>
-            <p><strong>{{ t('users.role') }}:</strong> {{ user.role?.name || t('common.na') }}</p>
-            <p><strong>{{ t('common.status') }}:</strong> 
-              <Tag :value="user.is_active ? t('common.active') : t('common.inactive')" 
+            <p><strong>{{ t('common.fields.name') }}:</strong> {{ user.name }}</p>
+            <p><strong>{{ t('common.fields.email') }}:</strong> {{ user.email }}</p>
+            <p><strong>{{ t('users.fields.role') }}:</strong> {{ user.role?.name || t('common.strings.na') }}</p>
+            <p><strong>{{ t('common.fields.status') }}:</strong> 
+              <Tag :value="user.is_active ? t('users.strings.active') : t('users.strings.inactive')" 
                    :severity="user.is_active ? 'success' : 'danger'" />
             </p>
-            <p><strong>{{ t('common.createdAt') }}:</strong> {{ formatDate(user.created_at) }}</p>
-            <p><strong>{{ t('users.lastLogin') }}:</strong> {{ user.last_login ? formatDate(user.last_login) : t('common.na') }}</p>
+            <p><strong>{{ t('common.fields.createdAt') }}:</strong> {{ formatDate(user.created_at) }}</p>
+            <p><strong>{{ t('users.fields.lastLogin') }}:</strong> {{ user.last_login ? formatDate(user.last_login) : t('common.strings.na') }}</p>
           </div>
         </div>
       </template>
     </Card>
 
     <div v-if="!user && !loading" class="text-center">
-      <p>{{ t('users.userNotFound') }}</p>
+      <p>{{ t('users.messages.userNotFound') }}</p>
     </div>
 
     <div v-if="loading" class="text-center">
@@ -65,7 +65,7 @@ function goBack() {
 }
 
 function formatDate(dateString) {
-  if (!dateString) return t('common.na')
+  if (!dateString) return t('common.strings.na')
   return new Date(dateString).toLocaleDateString('it-IT', {
     year: 'numeric',
     month: 'long',
@@ -83,8 +83,8 @@ async function fetchUser() {
   } catch (error) {
     toast.add({
       severity: 'error',
-      summary: t('common.error'),
-      detail: t('users.fetchError'),
+      summary: t('common.messages.error'),
+      detail: t('users.messages.fetchError'),
       life: 3000
     })
     user.value = null

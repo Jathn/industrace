@@ -1,26 +1,26 @@
 <template>
   <div class="contacts-section">
     <div class="contacts-header">
-      <h4>{{ t('assetDetail.contacts') }}</h4>
+      <h4>{{ t('assets.contacts.title') }}</h4>
       <div class="contacts-actions" v-if="canWrite">
         <MultiSelect 
           v-model="selectedContactIds" 
           :options="allContactsWithFullName" 
           optionLabel="fullName" 
           optionValue="id" 
-          :placeholder="t('assetDetail.addContacts')" 
+          :placeholder="t('assets.contacts.addContacts')" 
           display="chip" 
           class="mr-2" 
           style="min-width:250px" 
         />
         <Button 
-          :label="t('common.save')" 
+          :label="t('common.actions.save')" 
           icon="pi pi-check" 
           size="small"
           @click="updateAssetContacts" 
         />
         <Button 
-          :label="t('common.new')" 
+          :label="t('common.actions.create')" 
           icon="pi pi-plus" 
           size="small"
           class="ml-2"
@@ -31,50 +31,50 @@
     <div class="contacts-list mt-3">
       <DataTable 
         :value="contactsWithFullName" 
-        :emptyMessage="t('assetDetail.noContacts')"
+        :emptyMessage="t('assets.contacts.noContacts')"
         class="p-datatable-sm"
       >
-        <Column field="fullName" :header="t('common.fullName')" />
-        <Column field="email" :header="t('common.email')" />
-        <Column field="phone1" :header="t('common.phone')" />
-        <Column field="type" :header="t('common.type')" />
-        <Column v-if="canWrite" :header="t('common.actions')">
+        <Column field="fullName" :header="t('contacts.fields.fullName')" />
+        <Column field="email" :header="t('common.fields.email')" />
+        <Column field="phone1" :header="t('common.fields.phone')" />
+        <Column field="type" :header="t('common.fields.type')" />
+        <Column v-if="canWrite" :header="t('common.strings.actions')">
           <template #body="{ data }">
             <Button 
               icon="pi pi-trash" 
               class="p-button-rounded p-button-text p-button-danger" 
               @click="removeContact(data.id)" 
-              :title="t('assetDetail.removeContact')" 
+              :title="t('assets.contacts.removeContact')" 
             />
           </template>
         </Column>
       </DataTable>
     </div>
-    <Dialog v-model:visible="showContactDialog" :header="t('contactForm.newContact')" modal :closable="true" :dismissableMask="true">
+    <Dialog v-model:visible="showContactDialog" :header="t('assets.contacts.newContact')" modal :closable="true" :dismissableMask="true">
       <div class="p-fluid">
         <div class="field">
-          <label>{{ t('common.firstName') }}</label>
+          <label>{{ t('contacts.fields.firstName') }}</label>
           <input v-model="newContact.first_name" type="text" class="p-inputtext" />
         </div>
         <div class="field">
-          <label>{{ t('common.lastName') }}</label>
+          <label>{{ t('contacts.fields.lastName') }}</label>
           <input v-model="newContact.last_name" type="text" class="p-inputtext" />
         </div>
         <div class="field">
-          <label>{{ t('common.email') }}</label>
+          <label>{{ t('common.fields.email') }}</label>
           <input v-model="newContact.email" type="email" class="p-inputtext" />
         </div>
         <div class="field">
-          <label>{{ t('common.phone') }}</label>
+          <label>{{ t('common.fields.phone') }}</label>
           <input v-model="newContact.phone1" type="text" class="p-inputtext" />
         </div>
         <div class="field">
-          <label>{{ t('common.type') }}</label>
+          <label>{{ t('common.fields.type') }}</label>
           <input v-model="newContact.type" type="text" class="p-inputtext" />
         </div>
         <div class="flex justify-content-end gap-2 mt-3">
-          <Button :label="t('common.save')" icon="pi pi-check" class="p-button-sm" @click="createContact" />
-          <Button :label="t('common.cancel')" icon="pi pi-times" class="p-button-secondary p-button-sm" @click="showContactDialog = false" />
+          <Button :label="t('common.actions.save')" icon="pi pi-check" class="p-button-sm" @click="createContact" />
+          <Button :label="t('common.actions.cancel')" icon="pi pi-times" class="p-button-secondary p-button-sm" @click="showContactDialog = false" />
         </div>
       </div>
     </Dialog>

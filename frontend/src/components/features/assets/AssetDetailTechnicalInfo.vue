@@ -1,16 +1,16 @@
 <template>
   <div>
-    <div class="section-title">{{ t('assets.technicalInfo') }}</div>
+    <div class="section-title">{{ t('assets.strings.technicalInfo') }}</div>
     <div class="info-list">
-      <div><span class="label">{{ t('assets.firmwareVersion') }}:</span> <span class="value">{{ asset.firmware_version || t('common.na') }}</span></div>
-      <div><span class="label">{{ t('assets.installationDate') }}:</span> <span class="value">{{ formatDate(asset.installation_date) }}</span></div>
-      <div><span class="label">{{ t('assets.lastMaintenanceDate') }}:</span> <span class="value">{{ formatDate(asset.last_update_date) }}</span></div>
-      <div><span class="label">{{ t('assets.remoteAccess') }}:</span> <span class="value">{{ asset.remote_access ? t('common.yes') : t('common.no') }}</span></div>
-      <div><span class="label">{{ t('assets.remoteAccessType') }}:</span> <span class="value">{{ asset.remote_access_type ? getRemoteAccessTypeLabel(asset.remote_access_type) : t('common.na') }}</span></div>
-      <div><span class="label">{{ t('assets.physicalAccessEase') }}:</span> <span class="value">{{ asset.physical_access_ease ? getPhysicalAccessLabel(asset.physical_access_ease) : t('common.na') }}</span></div>
-      <div><span class="label">{{ t('assets.businessCriticality') }}:</span> <span class="value"><CriticalityBadge :value="asset.business_criticality" /></span></div>
+      <div><span class="label">{{ t('assets.fields.firmwareVersion') }}:</span> <span class="value">{{ asset.firmware_version || t('common.strings.na') }}</span></div>
+      <div><span class="label">{{ t('assets.fields.installationDate') }}:</span> <span class="value">{{ formatDate(asset.installation_date) }}</span></div>
+      <div><span class="label">{{ t('assets.fields.lastMaintenanceDate') }}:</span> <span class="value">{{ formatDate(asset.last_update_date) }}</span></div>
+      <div><span class="label">{{ t('assets.fields.remoteAccess') }}:</span> <span class="value">{{ asset.remote_access ? t('common.strings.yes') : t('common.strings.no') }}</span></div>
+      <div><span class="label">{{ t('assets.fields.remoteAccessType') }}:</span> <span class="value">{{ asset.remote_access_type ? getRemoteAccessTypeLabel(asset.remote_access_type) : t('common.strings.na') }}</span></div>
+      <div><span class="label">{{ t('assets.fields.physicalAccessEase') }}:</span> <span class="value">{{ asset.physical_access_ease ? getPhysicalAccessLabel(asset.physical_access_ease) : t('common.strings.na') }}</span></div>
+      <div><span class="label">{{ t('assets.fields.businessCriticality') }}:</span> <span class="value"><CriticalityBadge :value="asset.business_criticality" /></span></div>
       <div v-if="asset.protocols && asset.protocols.length">
-        <span class="label">{{ t('assets.protocols') }}:</span>
+        <span class="label">{{ t('assets.fields.protocols') }}:</span>
         <span class="value">
           <span v-for="(protocol, idx) in asset.protocols" :key="protocol + idx" class="protocol-badge">
             {{ protocol }}<span v-if="idx < asset.protocols.length - 1">, </span>
@@ -18,11 +18,11 @@
         </span>
       </div>
     </div>
-    <div class="section-title">{{ t('assets.positionInfo') }}</div>
+    <div class="section-title">{{ t('assets.strings.positionInfo') }}</div>
     <div class="info-list">
-      <div><span class="label">{{ t('common.site') }}:</span> <span class="value">{{ asset.site?.name || t('common.na') }}</span></div>
-      <div><span class="label">{{ t('common.area') }}:</span> <span class="value">{{ asset.area_name || t('common.na') }}</span></div>
-      <div><span class="label">{{ t('common.location') }}:</span> <span class="value">{{ asset.location?.name || t('common.na') }}</span></div>
+      <div><span class="label">{{ t('assets.fields.site') }}:</span> <span class="value">{{ asset.site?.name || t('common.strings.na') }}</span></div>
+      <div><span class="label">{{ t('assets.fields.area') }}:</span> <span class="value">{{ asset.area_name || t('common.strings.na') }}</span></div>
+      <div><span class="label">{{ t('assets.fields.location') }}:</span> <span class="value">{{ asset.location?.name || t('common.strings.na') }}</span></div>
     </div>
   </div>
 </template>

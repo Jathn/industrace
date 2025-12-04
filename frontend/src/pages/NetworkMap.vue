@@ -1,8 +1,8 @@
 <template>
   <div class="network-map-page">
     <div class="page-header">
-      <h1>{{ t('networkMap.title') }}</h1>
-      <p class="page-description">{{ t('networkMap.description') }}</p>
+      <h1>{{ $t('networkmap.title') }}</h1>
+      <p class="page-description">{{ $t('networkmap.strings.description') }}</p>
     </div>
 
     <!-- Filtri -->
@@ -10,43 +10,43 @@
       <Card>
         <template #title>
           <i class="pi pi-filter"></i>
-          {{ t('networkMap.filters') }}
+          {{ $t('networkmap.strings.filters') }}
         </template>
         <template #content>
           <div class="filters-grid">
             <div class="filter-item">
-              <label>{{ t('networkMap.filterBySite') }}</label>
+              <label>{{ $t('networkmap.strings.filterBySite') }}</label>
               <Dropdown 
                 v-model="filters.siteId" 
                 :options="sites" 
                 optionLabel="name" 
                 optionValue="id" 
-                :placeholder="t('networkMap.allSites')"
+                :placeholder="$t('networkmap.strings.allSites')"
                 @change="applyFilters"
               />
             </div>
             <div class="filter-item">
-              <label>{{ t('networkMap.filterByAssetType') }}</label>
+              <label>{{ $t('networkmap.strings.filterByAssetType') }}</label>
               <Dropdown 
                 v-model="filters.assetTypeId" 
                 :options="assetTypes" 
                 optionLabel="name" 
                 optionValue="id" 
-                :placeholder="t('networkMap.allTypes')"
+                :placeholder="$t('networkmap.strings.allTypes')"
                 @change="applyFilters"
               />
             </div>
             <div class="filter-item">
-              <label>{{ t('networkMap.filterByProtocol') }}</label>
+              <label>{{ $t('networkmap.strings.filterByProtocol') }}</label>
               <MultiSelect 
                 v-model="filters.protocols" 
                 :options="availableProtocols" 
-                :placeholder="t('networkMap.allProtocols')"
+                :placeholder="$t('networkmap.strings.allProtocols')"
                 @change="applyFilters"
               />
             </div>
             <div class="filter-item">
-              <label>{{ t('networkMap.showOnlyConnected') }}</label>
+              <label>{{ $t('networkmap.strings.showOnlyConnected') }}</label>
               <Checkbox 
                 v-model="filters.showOnlyConnected" 
                 :binary="true"
@@ -56,13 +56,13 @@
           </div>
           <div class="filters-actions">
             <Button 
-              :label="t('networkMap.clearFilters')" 
+              :label="$t('networkmap.strings.clearFilters')" 
               icon="pi pi-times" 
               severity="secondary" 
               @click="clearFilters"
             />
             <Button 
-              :label="t('networkMap.exportMap')" 
+              :label="$t('networkmap.strings.exportMap')" 
               icon="pi pi-download" 
               @click="exportMap"
             />
@@ -76,19 +76,19 @@
       <div class="stats-grid">
         <div class="stat-card">
           <div class="stat-number">{{ networkStats.totalAssets }}</div>
-          <div class="stat-label">{{ t('networkMap.totalAssets') }}</div>
+          <div class="stat-label">{{ $t('networkmap.strings.totalAssets') }}</div>
         </div>
         <div class="stat-card">
           <div class="stat-number">{{ networkStats.connectedAssets }}</div>
-          <div class="stat-label">{{ t('networkMap.connectedAssets') }}</div>
+          <div class="stat-label">{{ $t('networkmap.strings.connectedAssets') }}</div>
         </div>
         <div class="stat-card">
           <div class="stat-number">{{ networkStats.totalConnections }}</div>
-          <div class="stat-label">{{ t('networkMap.totalConnections') }}</div>
+          <div class="stat-label">{{ $t('networkmap.strings.totalConnections') }}</div>
         </div>
         <div class="stat-card">
           <div class="stat-number">{{ networkStats.isolatedAssets }}</div>
-          <div class="stat-label">{{ t('networkMap.isolatedAssets') }}</div>
+          <div class="stat-label">{{ $t('networkmap.strings.isolatedAssets') }}</div>
         </div>
       </div>
     </div>
@@ -98,13 +98,13 @@
       <Card>
         <template #title>
           <div class="map-header">
-            <span>{{ t('networkMap.networkTopology') }}</span>
+            <span>{{ $t('networkmap.strings.networkTopology') }}</span>
             <div class="map-controls">
-              <Button icon="pi pi-plus" size="small" @click="zoomIn" :title="t('networkMap.zoomIn')" />
-              <Button icon="pi pi-minus" size="small" @click="zoomOut" :title="t('networkMap.zoomOut')" />
-              <Button icon="pi pi-refresh" size="small" @click="resetView" :title="t('networkMap.resetView')" />
-              <Button icon="pi pi-arrows-alt" size="small" @click="fitToScreen" :title="t('networkMap.fitToScreen')" />
-              <Button icon="pi pi-sitemap" size="small" @click="togglePhysics" :title="t('networkMap.togglePhysics')" />
+              <Button icon="pi pi-plus" size="small" @click="zoomIn" :title="$t('networkmap.strings.zoomIn')" />
+              <Button icon="pi pi-minus" size="small" @click="zoomOut" :title="$t('networkmap.strings.zoomOut')" />
+              <Button icon="pi pi-refresh" size="small" @click="resetView" :title="$t('networkmap.strings.resetView')" />
+              <Button icon="pi pi-arrows-alt" size="small" @click="fitToScreen" :title="$t('networkmap.strings.fitToScreen')" />
+              <Button icon="pi pi-sitemap" size="small" @click="togglePhysics" :title="$t('networkmap.strings.togglePhysics')" />
             </div>
           </div>
         </template>
@@ -112,7 +112,7 @@
           <div ref="networkContainer" class="network-container"></div>
           <div v-if="loading" class="loading-overlay">
             <ProgressSpinner />
-            <span>{{ t('networkMap.loading') }}</span>
+            <span>{{ $t('networkmap.strings.loading') }}</span>
           </div>
         </template>
       </Card>
@@ -121,34 +121,34 @@
     <!-- Dialog per dettagli asset -->
     <Dialog 
       v-model:visible="showAssetDetails" 
-      :header="selectedAsset?.name || t('networkMap.assetDetails')" 
+      :header="selectedAsset?.name || $t('networkmap.strings.assetDetails')" 
       modal 
       style="width: 600px"
     >
       <div v-if="selectedAsset" class="asset-details">
         <div class="detail-row">
-          <strong>{{ t('networkMap.assetType') }}:</strong>
+          <strong>{{ $t('networkmap.strings.assetType') }}:</strong>
           <span>{{ selectedAsset.asset_type?.name || '-' }}</span>
         </div>
         <div class="detail-row">
-          <strong>{{ t('networkMap.site') }}:</strong>
+          <strong>{{ $t('networkmap.strings.site') }}:</strong>
           <span>{{ selectedAsset.site?.name || '-' }}</span>
         </div>
         <div class="detail-row">
-          <strong>{{ t('networkMap.status') }}:</strong>
+          <strong>{{ $t('networkmap.strings.status') }}:</strong>
           <span>{{ selectedAsset.status?.name || '-' }}</span>
         </div>
         <div class="detail-row">
-          <strong>{{ t('networkMap.riskScore') }}:</strong>
+          <strong>{{ $t('networkmap.strings.riskScore') }}:</strong>
           <span>{{ selectedAsset.risk_score || '-' }}</span>
         </div>
         <div class="detail-row">
-          <strong>{{ t('networkMap.connections') }}:</strong>
+          <strong>{{ $t('networkmap.strings.connections') }}:</strong>
           <span>{{ selectedAsset.connectionCount || 0 }}</span>
         </div>
         <div class="detail-actions">
           <Button 
-            :label="t('networkMap.viewDetails')" 
+            :label="$t('networkmap.strings.viewDetails')" 
             icon="pi pi-external-link" 
             @click="viewAssetDetails"
           />
@@ -442,8 +442,8 @@ function exportMap() {
   // TODO: Implementare esportazione PNG/SVG
   toast.add({
     severity: 'info',
-    summary: t('networkMap.exportInfo'),
-    detail: t('networkMap.exportNotImplemented'),
+    summary: $t('networkmap.strings.exportInfo'),
+    detail: $t('networkmap.strings.exportNotImplemented'),
     life: 3000
   })
 }
@@ -483,8 +483,8 @@ async function fetchData() {
   } catch (error) {
     toast.add({
       severity: 'error',
-      summary: t('common.error'),
-      detail: t('networkMap.fetchError'),
+      summary: $t('common.messages.error'),
+      detail: $t('networkmap.messages.fetchError'),
       life: 5000
     })
   } finally {

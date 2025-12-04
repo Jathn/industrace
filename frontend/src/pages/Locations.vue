@@ -5,7 +5,7 @@
       <div class="flex gap-2">
         <Button 
           v-if="!trashMode && canWrite('locations')"
-          :label="t('common.new')" 
+          :label="t('common.actions.create')" 
           icon="pi pi-plus" 
           severity="success"
           @click="openCreateDialog" 
@@ -15,7 +15,7 @@
 
         <Button 
           icon="pi pi-trash" 
-          :label="trashMode ? t('common.showActive') : t('common.showTrash')" 
+          :label="trashMode ? t('common.actions.showActive') : t('common.actions.showTrash')" 
           severity="secondary"
           @click="toggleTrashMode"
         />
@@ -41,7 +41,7 @@
           :options="siteOptions" 
           optionLabel="name" 
           optionValue="id" 
-          :placeholder="t('locations.filterBySite')" 
+          :placeholder="t('locations.messages.filterBySite')" 
           showClear 
           style="min-width: 150px" 
         />
@@ -50,7 +50,7 @@
           :options="floorplanOptions" 
           optionLabel="label" 
           optionValue="value" 
-          :placeholder="t('locations.filterByFloorplan')" 
+          :placeholder="t('locations.messages.filterByFloorplan')" 
           showClear 
           style="min-width: 150px" 
         />
@@ -59,7 +59,7 @@
       <template #actions>
         <Button 
           v-if="!trashMode && canWrite('locations')"
-          :label="t('common.bulkEdit')" 
+          :label="t('common.actions.bulkEdit')" 
           icon="pi pi-pencil" 
           severity="warning"
           :disabled="!selectedLocations.length" 
@@ -119,7 +119,7 @@
     
     <BaseDialog
       v-model:visible="showDialog"
-      :title="editingLocation ? t('common.edit') : t('common.new')"
+      :title="editingLocation ? t('common.actions.edit') : t('common.actions.create')"
       :showFooter="false"
       @close="close"
     >
@@ -141,35 +141,35 @@
 
     <BaseDialog
       v-model:visible="showBulkDialog"
-      :title="t('common.bulkEdit')"
+      :title="t('common.actions.bulkEdit')"
       :showFooter="false"
       @close="closeBulkDialog"
     >
       <div class="bulk-edit-form">
         <div class="mb-4">
           <p class="text-sm text-gray-600">
-            {{ t('common.bulkEditInfo', { count: selectedLocations.length }) }}
+            {{ t('common.actions.bulkEditInfo', { count: selectedLocations.length }) }}
           </p>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="field">
-            <label class="block text-sm font-medium mb-2">{{ t('common.site') }}</label>
+            <label class="block text-sm font-medium mb-2">{{ t('common.fields.site') }}</label>
             <Dropdown
               v-model="bulkData.site_id"
               :options="siteOptions"
               option-label="name"
               option-value="id"
-              :placeholder="t('common.select')"
+              :placeholder="t('common.strings.select')"
               class="w-full"
             />
           </div>
           
           <div class="field">
-            <label class="block text-sm font-medium mb-2">{{ t('sites.area') }}</label>
+            <label class="block text-sm font-medium mb-2">{{ t('locations.fields.area') }}</label>
             <InputText
               v-model="bulkData.area"
-              :placeholder="t('sites.area')"
+              :placeholder="t('locations.fields.area')"
               class="w-full"
             />
           </div>
@@ -177,12 +177,12 @@
         
         <div class="flex justify-end gap-2 mt-6">
           <Button 
-            :label="t('common.cancel')" 
+            :label="t('common.actions.cancel')" 
             severity="secondary"
             @click="closeBulkDialog" 
           />
           <Button 
-            :label="t('common.save')" 
+            :label="t('common.actions.save')" 
             @click="saveBulkEdit" 
           />
         </div>
@@ -192,13 +192,13 @@
     <!-- TODO: Implementare LocationImportDialog -->
     <BaseDialog
       v-model:visible="showFloorplanDialog"
-      :title="t('common.floorplan')"
+      :title="t('locations.fields.floorplan')"
       @close="showFloorplanDialog = false"
     >
       <Image 
         v-if="selectedFloorplan" 
         :src="getFloorplanThumbnailUrl(selectedFloorplan)" 
-        alt="Planimetria" 
+        alt="t('locations.fields.floorplan')" 
         width="100%" 
         preview 
       />
@@ -221,17 +221,17 @@
       <div v-if="viewingLocation" class="location-detail">
         <!-- Informazioni base della posizione -->
         <div class="location-info mb-4">
-          <h3 class="text-lg font-semibold mb-3">{{ t('common.info') }}</h3>
+          <h3 class="text-lg font-semibold mb-3">{{ t('common.strings.info') }}</h3>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div><b>{{ t('common.name') }}:</b> {{ viewingLocation.name }}</div>
-            <div><b>{{ t('common.code') }}:</b> {{ viewingLocation.code || '-' }}</div>
-            <div><b>{{ t('common.description') }}:</b> {{ viewingLocation.description || '-' }}</div>
-            <div><b>{{ t('locations.area') }}:</b> {{ viewingLocation.area || '-' }}</div>
-            <div><b>{{ t('common.site') }}:</b> {{ viewingLocation.site?.name || '-' }}</div>
-            <div><b>{{ t('locations.floorplan') }}:</b> {{ viewingLocation.floorplan ? t('locations.floorplanPresent') : t('locations.floorplanAbsent') }}</div>
+            <div><b>{{ t('common.fields.name') }}:</b> {{ viewingLocation.name }}</div>
+            <div><b>{{ t('common.fields.code') }}:</b> {{ viewingLocation.code || '-' }}</div>
+            <div><b>{{ t('common.fields.description') }}:</b> {{ viewingLocation.description || '-' }}</div>
+            <div><b>{{ t('locations.fields.area') }}:</b> {{ viewingLocation.area || '-' }}</div>
+            <div><b>{{ t('common.fields.site') }}:</b> {{ viewingLocation.site?.name || '-' }}</div>
+            <div><b>{{ t('locations.fields.floorplan') }}:</b> {{ viewingLocation.floorplan ? t('locations.strings.floorplanPresent') : t('locations.strings.floorplanAbsent') }}</div>
           </div>
           <div v-if="viewingLocation.notes" class="mt-3">
-            <b>{{ t('common.notes') }}:</b> {{ viewingLocation.notes }}
+            <b>{{ t('common.fields.notes') }}:</b> {{ viewingLocation.notes }}
           </div>
         </div>
 
@@ -240,11 +240,11 @@
           <h3 class="text-lg font-semibold mb-3">{{ t('assets.title') }}</h3>
           <div v-if="loadingAssets" class="text-center py-4">
             <i class="pi pi-spinner pi-spin" style="font-size: 1.5rem;"></i>
-            <p class="mt-2">{{ t('common.loading') }}</p>
+            <p class="mt-2">{{ t('common.messages.loading') }}</p>
           </div>
           <div v-else-if="locationAssets.length === 0" class="text-center py-4 text-gray-500">
             <i class="pi pi-info-circle" style="font-size: 1.5rem;"></i>
-            <p class="mt-2">{{ t('locations.noAssets') }}</p>
+            <p class="mt-2">{{ t('common.messages.noData') }}</p>
           </div>
           <div v-else class="assets-grid">
             <div 
@@ -265,7 +265,7 @@
                 <div class="asset-manufacturer">{{ asset.manufacturer?.name || '-' }}</div>
                 <div v-if="asset.risk_score !== null" class="asset-risk">
                   <i class="pi pi-shield"></i>
-                  {{ t('assets.riskScore') }}: {{ asset.risk_score.toFixed(1) }}
+                  {{ t('assets.fields.riskScore') }}: {{ asset.risk_score.toFixed(1) }}
                 </div>
               </div>
             </div>
@@ -354,16 +354,16 @@ const selectedFloorplan = ref(null)
 
 const columnOptions = computed(() => {
   const columns = [
-    { field: 'name', header: t('common.name'), sortable: true },
-    { field: 'code', header: t('common.code'), sortable: true },
-    { field: 'description', header: t('common.description'), sortable: false },
-    { field: 'area_name', header: t('locations.area'), sortable: false },
-    { field: 'site.name', header: t('common.site'), sortable: false },
-    { field: 'floorplan_status', header: t('locations.floorplan'), sortable: false }
+    { field: 'name', header: t('common.fields.name'), sortable: true },
+    { field: 'code', header: t('common.fields.code'), sortable: true },
+    { field: 'description', header: t('common.fields.description'), sortable: false },
+    { field: 'area_name', header: t('locations.fields.area'), sortable: false },
+    { field: 'site.name', header: t('common.fields.site'), sortable: false },
+    { field: 'floorplan_status', header: t('locations.fields.floorplan'), sortable: false }
   ]
   
   // Aggiungi colonna azioni sempre, perché il pulsante "Visualizza" è sempre disponibile
-  columns.push({ field: 'actions', header: t('common.actions'), sortable: false })
+  columns.push({ field: 'actions', header: t('common.strings.actions'), sortable: false })
   
   return columns
 })
@@ -371,8 +371,8 @@ const columnOptions = computed(() => {
 const siteOptions = computed(() => sites.value)
 
 const floorplanOptions = computed(() => [
-  { label: t('locations.floorplanPresent'), value: 'Presente' },
-  { label: t('locations.floorplanAbsent'), value: 'Assente' }
+  { label: t('locations.strings.floorplanPresent'), value: 'present' },
+  { label: t('locations.strings.floorplanAbsent'), value: 'absent' }
 ])
 
 const filteredLocations = computed(() => {
@@ -381,7 +381,7 @@ const filteredLocations = computed(() => {
   // Aggiungi il campo floorplan_status per la visualizzazione
   filtered = filtered.map(location => ({
     ...location,
-    floorplan_status: location.floorplan ? 'Presente' : 'Assente'
+    floorplan_status: location.floorplan ? 'present' : 'absent'
   }))
   
   // Filtro per sito
@@ -437,7 +437,8 @@ async function fetchAreas(siteId = null) {
 }
 
 async function handleSiteChanged(siteId) {
-  await fetchAreas(siteId)
+  // Areas are filtered by computed in LocationForm, no need to reload
+  // This is just for potential future use if we need to do something else
 }
 
 async function fetchLocations() {
@@ -458,10 +459,14 @@ async function fetchLocations() {
 }
 
 function openCreateDialog() {
-  openCreate(t('common.new'), null)
+  // Load all areas when opening create dialog
+  fetchAreas()
+  openCreate(t('common.actions.create'), null)
 }
 
 function openEditDialog(location) {
+  // Load all areas when opening edit dialog
+  fetchAreas()
   openEdit(t('common.edit'), location)
 }
 
@@ -495,8 +500,8 @@ async function saveBulkEdit() {
     closeBulkDialog()
     await fetchLocations()
   }, {
-    successMessage: t('common.bulkUpdated'),
-    errorContext: t('common.bulkError')
+    successMessage: t('common.messages.bulkUpdated'),
+    errorContext: t('common.messages.bulkError')
   })
 }
 
@@ -510,8 +515,8 @@ async function saveLocation(data) {
       close()
       await fetchLocations()
     }, {
-      successMessage: t('common.updated'),
-      errorContext: t('common.updateError')
+      successMessage: t('common.messages.updated'),
+      errorContext: t('common.messages.updateError')
     })
   } else {
     // Modalità creazione
@@ -520,23 +525,23 @@ async function saveLocation(data) {
       close()
       await fetchLocations()
     }, {
-      successMessage: t('common.created'),
-      errorContext: t('common.createError')
+      successMessage: t('common.messages.created'),
+      errorContext: t('common.messages.createError')
     })
   }
 }
 
 async function deleteLocation(id) {
   await confirmDelete(
-    t('common.confirmDelete'),
-    t('common.warningDelete'),
+    t('common.actions.confirmDelete'),
+    t('common.actions.warningDelete'),
     async () => {
       await execute(async () => {
         await api.deleteLocation(id)
         await fetchLocations()
       }, {
-        successMessage: t('common.deleted'),
-        errorContext: t('common.deleteError')
+        successMessage: t('common.messages.deleted'),
+        errorContext: t('common.messages.deleteError')
       })
     }
   )
@@ -605,8 +610,8 @@ async function restoreLocation(id) {
     await api.restoreLocation(id)
     await fetchLocations()
   }, {
-    successMessage: t('common.restored'),
-    errorContext: t('common.restoreError')
+    successMessage: t('common.messages.restored'),
+    errorContext: t('common.messages.restoreError')
   })
 }
 
@@ -615,8 +620,8 @@ async function hardDeleteLocation(id) {
     await api.hardDeleteLocation(id)
     await fetchLocations()
   }, {
-    successMessage: t('common.hardDeleted'),
-    errorContext: t('common.hardDeleteError')
+    successMessage: t('common.messages.hardDeleted'),
+    errorContext: t('common.messages.hardDeleteError')
   })
 }
 
@@ -627,15 +632,15 @@ async function emptyTrash() {
     }
     await fetchLocations()
   }, {
-    successMessage: t('common.trashEmptied'),
-    errorContext: t('common.emptyTrashError')
+    successMessage: t('common.messages.trashEmptied'),
+    errorContext: t('common.messages.emptyTrashError')
   })
 }
 
 async function handleEmptyTrash() {
   await confirmEmptyTrash(
-    t('common.confirmEmptyTrash'),
-    t('common.warningEmptyTrash'),
+    t('common.messages.emptyTrashConfirm'),
+    t('common.messages.emptyTrashWarning'),
     emptyTrash
   )
 }

@@ -4,30 +4,30 @@
     <div class="p-fluid">
       <!-- Basic role information -->
       <div class="form-section">
-        <h3>{{ t('roleForm.basicInfo') }}</h3>
+        <h3>{{ t('roles.sections.basicInfo') }}</h3>
         <div class="p-field">
-          <label for="name">{{ t('roleForm.name') }} *</label>
+          <label for="name">{{ t('common.fields.name') }} *</label>
           <InputText id="name" v-model="form.name" required maxlength="50" />
         </div>
         
         <div class="p-field">
-          <label for="description">{{ t('roleForm.description') }}</label>
+          <label for="description">{{ t('common.fields.description') }}</label>
           <Textarea id="description" v-model="form.description" rows="3" maxlength="255" />
         </div>
 
         <div class="p-field">
-          <label for="parent_role">{{ t('roleForm.parentRole') }}</label>
+          <label for="parent_role">{{ t('roles.fields.parentRole') }}</label>
           <Dropdown 
             id="parent_role"
             v-model="form.parent_role_id" 
             :options="parentRoleOptions" 
             optionLabel="name" 
             optionValue="id" 
-            :placeholder="t('roleForm.selectParentRole')"
+            :placeholder="t('roles.strings.selectParentRole')"
             showClear
           />
           <small v-if="form.parent_role_id" class="p-text-secondary">
-            {{ t('roleForm.inheritanceInfo') }}
+            {{ t('roles.strings.inheritanceInfo') }}
           </small>
         </div>
 
@@ -39,10 +39,10 @@
               :binary="true"
             />
             <label for="is_inheritable" class="ml-2">
-              {{ t('roleForm.inheritable') }}
+              {{ t('roles.fields.inheritable') }}
             </label>
           </div>
-          <small class="p-text-secondary">{{ t('roleForm.inheritableDescription') }}</small>
+          <small class="p-text-secondary">{{ t('roles.strings.inheritableDescription') }}</small>
         </div>
 
         <div class="p-field">
@@ -53,7 +53,7 @@
               :binary="true"
             />
             <label for="is_active" class="ml-2">
-              {{ t('roleForm.active') }}
+              {{ t('common.fields.active') }}
             </label>
           </div>
         </div>
@@ -61,15 +61,15 @@
       
       <!-- Permission management -->
       <div class="form-section">
-        <h3>{{ t('roleForm.permissions') }}</h3>
+        <h3>{{ t('roles.sections.permissions') }}</h3>
         
         <!-- Preview inherited permissions -->
         <div v-if="inheritedPermissions.length > 0" class="inherited-permissions">
-          <h4>{{ t('roleForm.inheritedPermissions') }}</h4>
+          <h4>{{ t('roles.sections.inheritedPermissions') }}</h4>
           <div class="inherited-grid">
             <div v-for="perm in inheritedPermissions" :key="perm.section" class="inherited-item">
               <i class="pi pi-arrow-down text-primary"></i>
-              <span class="section-name">{{ t(`permissions.${perm.section}`) }}</span>
+              <span class="section-name">{{ t(`roles.permissions.${perm.section}`) }}</span>
               <Tag :value="getPermissionLabel(perm.level)" severity="info" />
             </div>
           </div>
@@ -79,14 +79,14 @@
         <div class="permissions-grid">
           <div v-for="(section, sectionKey) in permissionSections" :key="sectionKey" class="permission-section">
             <div class="permission-header">
-              <h4>{{ t(`permissions.${sectionKey}`) }}</h4>
+              <h4>{{ t(`roles.permissions.${sectionKey}`) }}</h4>
               <div class="permission-summary">
                 <Tag 
                   :value="getPermissionLabel(form.permissions[sectionKey] || 0)" 
                   :severity="getPermissionSeverity(form.permissions[sectionKey] || 0)"
                 />
                 <span v-if="isInherited(sectionKey)" class="inherited-badge">
-                  <i class="pi pi-arrow-down"></i> {{ t('roleForm.inherited') }}
+                  <i class="pi pi-arrow-down"></i> {{ t('roles.strings.inherited') }}
                 </span>
               </div>
             </div>
@@ -113,8 +113,8 @@
       
       <!-- Actions -->
       <div class="flex justify-content-end gap-2 mt-4">
-        <Button :label="t('roleForm.cancel')" class="p-button-text" @click="handleCancel" />
-        <Button :label="t('roleForm.save')" type="submit" />
+        <Button :label="t('common.actions.cancel')" class="p-button-text" @click="handleCancel" />
+        <Button :label="t('common.actions.save')" type="submit" />
       </div>
     </div>
   </form>
@@ -160,73 +160,73 @@ const parentRoleOptions = ref([])
 const permissionSections = {
   users: {
     levels: [
-      { value: 0, label: t('permissions.none'), description: t('permissions.noneDescription') },
-      { value: 1, label: t('permissions.read'), description: t('permissions.readDescription') },
-      { value: 2, label: t('permissions.write'), description: t('permissions.writeDescription') },
-      { value: 3, label: t('permissions.delete'), description: t('permissions.deleteDescription') }
+      { value: 0, label: t('roles.permissions.none'), description: t('roles.permissions.noneDescription') },
+      { value: 1, label: t('roles.permissions.read'), description: t('roles.permissions.readDescription') },
+      { value: 2, label: t('roles.permissions.write'), description: t('roles.permissions.writeDescription') },
+      { value: 3, label: t('roles.permissions.delete'), description: t('roles.permissions.deleteDescription') }
     ]
   },
   roles: {
     levels: [
-      { value: 0, label: t('permissions.none'), description: t('permissions.noneDescription') },
-      { value: 1, label: t('permissions.read'), description: t('permissions.readDescription') },
-      { value: 2, label: t('permissions.write'), description: t('permissions.writeDescription') },
-      { value: 3, label: t('permissions.delete'), description: t('permissions.deleteDescription') }
+      { value: 0, label: t('roles.permissions.none'), description: t('roles.permissions.noneDescription') },
+      { value: 1, label: t('roles.permissions.read'), description: t('roles.permissions.readDescription') },
+      { value: 2, label: t('roles.permissions.write'), description: t('roles.permissions.writeDescription') },
+      { value: 3, label: t('roles.permissions.delete'), description: t('roles.permissions.deleteDescription') }
     ]
   },
   assets: {
     levels: [
-      { value: 0, label: t('permissions.none'), description: t('permissions.noneDescription') },
-      { value: 1, label: t('permissions.read'), description: t('permissions.readDescription') },
-      { value: 2, label: t('permissions.write'), description: t('permissions.writeDescription') },
-      { value: 3, label: t('permissions.delete'), description: t('permissions.deleteDescription') },
-      { value: 4, label: t('permissions.bulk'), description: t('permissions.bulkDescription') }
+      { value: 0, label: t('roles.permissions.none'), description: t('roles.permissions.noneDescription') },
+      { value: 1, label: t('roles.permissions.read'), description: t('roles.permissions.readDescription') },
+      { value: 2, label: t('roles.permissions.write'), description: t('roles.permissions.writeDescription') },
+      { value: 3, label: t('roles.permissions.delete'), description: t('roles.permissions.deleteDescription') },
+      { value: 4, label: t('roles.permissions.bulk'), description: t('roles.permissions.bulkDescription') }
     ]
   },
   locations: {
     levels: [
-      { value: 0, label: t('permissions.none'), description: t('permissions.noneDescription') },
-      { value: 1, label: t('permissions.read'), description: t('permissions.readDescription') },
-      { value: 2, label: t('permissions.write'), description: t('permissions.writeDescription') },
-      { value: 3, label: t('permissions.delete'), description: t('permissions.deleteDescription') }
+      { value: 0, label: t('roles.permissions.none'), description: t('roles.permissions.noneDescription') },
+      { value: 1, label: t('roles.permissions.read'), description: t('roles.permissions.readDescription') },
+      { value: 2, label: t('roles.permissions.write'), description: t('roles.permissions.writeDescription') },
+      { value: 3, label: t('roles.permissions.delete'), description: t('roles.permissions.deleteDescription') }
     ]
   },
   sites: {
     levels: [
-      { value: 0, label: t('permissions.none'), description: t('permissions.noneDescription') },
-      { value: 1, label: t('permissions.read'), description: t('permissions.readDescription') },
-      { value: 2, label: t('permissions.write'), description: t('permissions.writeDescription') },
-      { value: 3, label: t('permissions.delete'), description: t('permissions.deleteDescription') }
+      { value: 0, label: t('roles.permissions.none'), description: t('roles.permissions.noneDescription') },
+      { value: 1, label: t('roles.permissions.read'), description: t('roles.permissions.readDescription') },
+      { value: 2, label: t('roles.permissions.write'), description: t('roles.permissions.writeDescription') },
+      { value: 3, label: t('roles.permissions.delete'), description: t('roles.permissions.deleteDescription') }
     ]
   },
   suppliers: {
     levels: [
-      { value: 0, label: t('permissions.none'), description: t('permissions.noneDescription') },
-      { value: 1, label: t('permissions.read'), description: t('permissions.readDescription') },
-      { value: 2, label: t('permissions.write'), description: t('permissions.writeDescription') },
-      { value: 3, label: t('permissions.delete'), description: t('permissions.deleteDescription') }
+      { value: 0, label: t('roles.permissions.none'), description: t('roles.permissions.noneDescription') },
+      { value: 1, label: t('roles.permissions.read'), description: t('roles.permissions.readDescription') },
+      { value: 2, label: t('roles.permissions.write'), description: t('roles.permissions.writeDescription') },
+      { value: 3, label: t('roles.permissions.delete'), description: t('roles.permissions.deleteDescription') }
     ]
   },
   manufacturers: {
     levels: [
-      { value: 0, label: t('permissions.none'), description: t('permissions.noneDescription') },
-      { value: 1, label: t('permissions.read'), description: t('permissions.readDescription') },
-      { value: 2, label: t('permissions.write'), description: t('permissions.writeDescription') },
-      { value: 3, label: t('permissions.delete'), description: t('permissions.deleteDescription') }
+      { value: 0, label: t('roles.permissions.none'), description: t('roles.permissions.noneDescription') },
+      { value: 1, label: t('roles.permissions.read'), description: t('roles.permissions.readDescription') },
+      { value: 2, label: t('roles.permissions.write'), description: t('roles.permissions.writeDescription') },
+      { value: 3, label: t('roles.permissions.delete'), description: t('roles.permissions.deleteDescription') }
     ]
   },
   contacts: {
     levels: [
-      { value: 0, label: t('permissions.none'), description: t('permissions.noneDescription') },
-      { value: 1, label: t('permissions.read'), description: t('permissions.readDescription') },
-      { value: 2, label: t('permissions.write'), description: t('permissions.writeDescription') },
-      { value: 3, label: t('permissions.delete'), description: t('permissions.deleteDescription') }
+      { value: 0, label: t('roles.permissions.none'), description: t('roles.permissions.noneDescription') },
+      { value: 1, label: t('roles.permissions.read'), description: t('roles.permissions.readDescription') },
+      { value: 2, label: t('roles.permissions.write'), description: t('roles.permissions.writeDescription') },
+      { value: 3, label: t('roles.permissions.delete'), description: t('roles.permissions.deleteDescription') }
     ]
   },
   reset_user_password: {
     levels: [
-      { value: 0, label: t('permissions.none'), description: t('permissions.noneDescription') },
-      { value: 1, label: t('permissions.resetPassword'), description: t('permissions.resetPasswordDescription') }
+      { value: 0, label: t('roles.permissions.none'), description: t('roles.permissions.noneDescription') },
+      { value: 1, label: t('roles.permissions.resetPassword'), description: t('roles.permissions.resetPasswordDescription') }
     ]
   }
 }
@@ -287,12 +287,12 @@ const inheritedLevel = (section) => {
 
 // Get the label for a permission level
 const getPermissionLabel = (level) => {
-  if (level === 0) return t('permissions.none')
-  if (level === 1) return t('permissions.read')
-  if (level === 2) return t('permissions.write')
-  if (level === 3) return t('permissions.delete')
-  if (level === 4) return t('permissions.bulk')
-  return t('permissions.none')
+  if (level === 0) return t('roles.permissions.none')
+  if (level === 1) return t('roles.permissions.read')
+  if (level === 2) return t('roles.permissions.write')
+  if (level === 3) return t('roles.permissions.delete')
+  if (level === 4) return t('roles.permissions.bulk')
+  return t('roles.permissions.none')
 }
 
 // Get the severity for a permission level

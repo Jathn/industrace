@@ -5,15 +5,15 @@
 -->
 <template>
   <Card>
-    <template #title>{{ t('assetPhotoUpload.title') }}</template>
+    <template #title>{{ t('assets.photoUpload.title') }}</template>
     <template #content>
       <div> 
         <FileUpload v-if="!readOnly" name="file" :customUpload="true" :multiple="true" :auto="true" accept="image/*"
-          :chooseLabel="t('assetPhotoUpload.chooseLabel')" :uploadLabel="t('assetPhotoUpload.uploadLabel')" @uploader="uploadPhotos" />
+          :chooseLabel="t('assets.photoUpload.chooseLabel')" :uploadLabel="t('assets.photoUpload.uploadLabel')" @uploader="uploadPhotos" />
 
         <div class="flex flex-wrap gap-3 mt-4">
           <div v-for="photo in photos" :key="photo.id" class="relative">
-            <Image :src="getPhotoUrl(photo)" :alt="t('assetPhotoUpload.photo')" width="150" preview />
+            <Image :src="getPhotoUrl(photo)" :alt="t('assets.photoUpload.photo')" width="150" preview />
             <Button v-if="!readOnly" icon="pi pi-trash" class="p-button-rounded p-button-danger p-button-sm absolute top-0 right-0"
               @click="deletePhoto(photo.id)" />
           </div>
@@ -47,7 +47,7 @@ const fetchPhotos = async () => {
     const res = await api.getAsset(props.assetId)
     photos.value = res.data.photos || []
   } catch (err) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assetPhotoUpload.fetchError') })
+    toast.add({ severity: 'error', summary: t('common.strings.error'), detail: t('assets.photoUpload.fetchError') })
   }
 }
 
@@ -59,20 +59,20 @@ const uploadPhotos = async ({ files }) => {
       await api.uploadAssetPhoto(props.assetId, formData)
     }
     await fetchPhotos()
-    toast.add({ severity: 'success', summary: t('assetPhotoUpload.photosUploaded') })
+    toast.add({ severity: 'success', summary: t('assets.photoUpload.photosUploaded') })
   } catch (err) {
     
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assetPhotoUpload.uploadError') })
+    toast.add({ severity: 'error', summary: t('common.strings.error'), detail: t('assets.photoUpload.uploadError') })
   }
 }
 
 const deletePhoto = async (photoId) => {
   try {
     await api.deleteAssetPhoto(props.assetId, photoId)
-    toast.add({ severity: 'success', summary: t('assetPhotoUpload.photoDeleted') })
+    toast.add({ severity: 'success', summary: t('assets.photoUpload.photoDeleted') })
     await fetchPhotos()
   } catch (err) {
-    toast.add({ severity: 'error', summary: t('common.error'), detail: t('assetPhotoUpload.deleteError') })
+    toast.add({ severity: 'error', summary: t('common.strings.error'), detail: t('assets.photoUpload.deleteError') })
   }
 }
 

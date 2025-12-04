@@ -1,29 +1,29 @@
 <template>
-  <Dialog :visible="visible" @update:visible="$emit('update:visible', $event)" :header="t('assets.advancedFilters') || 'Filtri avanzati'" :modal="true" :style="{ width: '400px' }">
+  <Dialog :visible="visible" @update:visible="$emit('update:visible', $event)" :header="t('assets.strings.advancedFilters')" :modal="true" :style="{ width: '400px' }">
     <div class="p-fluid">
       <div class="p-field">
-        <label for="advanced_business_criticality">{{ t('assetForm.businessCriticality') }}</label>
+        <label for="advanced_business_criticality">{{ t('assets.fields.businessCriticality') }}</label>
         <Dropdown
           id="advanced_business_criticality"
           v-model="localFilters.business_criticality"
           :options="businessCriticalityOptions"
           optionLabel="label"
           optionValue="value"
-          :placeholder="t('assetForm.businessCriticality')"
+          :placeholder="t('assets.fields.businessCriticality')"
           showClear
         />
       </div>
       <div class="p-field">
-        <label for="advanced_risk_score_min">{{ t('assets.riskScore') }}</label>
+        <label for="advanced_risk_score_min">{{ t('assets.fields.riskScore') }}</label>
         <div class="flex align-items-center gap-2">
-          <InputNumber id="advanced_risk_score_min" v-model="localFilters.risk_score_min" :placeholder="t('assets.riskScoreMin')" :min="0" :max="10" mode="decimal" style="width: 80px" />
+          <InputNumber id="advanced_risk_score_min" v-model="localFilters.risk_score_min" :placeholder="t('assets.strings.riskScoreMin')" :min="0" :max="10" mode="decimal" style="width: 80px" />
           <span>-</span>
-          <InputNumber id="advanced_risk_score_max" v-model="localFilters.risk_score_max" :placeholder="t('assets.riskScoreMax')" :min="0" :max="10" mode="decimal" style="width: 80px" />
+          <InputNumber id="advanced_risk_score_max" v-model="localFilters.risk_score_max" :placeholder="t('assets.strings.riskScoreMax')" :min="0" :max="10" mode="decimal" style="width: 80px" />
         </div>
       </div>
       <div class="p-field flex gap-2 mt-3">
-        <Button :label="t('common.confirm')" icon="pi pi-check" class="p-button-success" @click="applyFilters" />
-        <Button :label="t('common.clear')" icon="pi pi-times" class="p-button-text" @click="clearFilters" />
+        <Button :label="t('common.actions.confirm')" icon="pi pi-check" class="p-button-success" @click="applyFilters" />
+        <Button :label="t('common.actions.clear')" icon="pi pi-times" class="p-button-text" @click="clearFilters" />
       </div>
     </div>
   </Dialog>
@@ -47,10 +47,10 @@ const emit = defineEmits(['update:visible', 'apply', 'clear'])
 const { t } = useI18n()
 
 const businessCriticalityOptions = [
-  { label: t('assetForm.businessCriticalityLow'), value: 'low' },
-  { label: t('assetForm.businessCriticalityMedium'), value: 'medium' },
-  { label: t('assetForm.businessCriticalityHigh'), value: 'high' },
-  { label: t('assetForm.businessCriticalityCritical'), value: 'critical' }
+  { label: t('assets.strings.businessCriticalityLow'), value: 'low' },
+  { label: t('assets.strings.businessCriticalityMedium'), value: 'medium' },
+  { label: t('assets.strings.businessCriticalityHigh'), value: 'high' },
+  { label: t('assets.strings.businessCriticalityCritical'), value: 'critical' }
 ]
 
 const localFilters = ref({

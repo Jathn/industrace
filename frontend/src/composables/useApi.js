@@ -48,7 +48,7 @@ export function useApi() {
       if (showToast && successMessage) {
         toast.add({
           severity: 'success',
-          summary: t('common.success'),
+          summary: t('common.messages.success'),
           detail: successMessage,
           life: 3000
         })

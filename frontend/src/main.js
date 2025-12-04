@@ -28,7 +28,7 @@ const app = createApp(App)
 const pinia = createPinia()
 pinia.use(piniaPersistedState)
 
-import { i18n } from './locales/loader.js'
+import i18n from './locales/loader-final.js'
 
 app.use(createPinia())
 app.use(router)

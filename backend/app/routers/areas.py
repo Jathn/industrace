@@ -1,6 +1,6 @@
 from typing import List, Optional
 import uuid
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy.orm import Session
 
 from app.database import get_db
@@ -86,17 +86,90 @@ def update_area(
 
 
 @router.delete("/{area_id}")
-@audit_log_action("delete", "Area")
+@audit_log_action("soft_delete", "Area")
 def delete_area(
     area_id: uuid.UUID,
+    request: Request,
     current_user: User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    """Delete area"""
+    """Soft delete area"""
     success = crud_areas.delete_area(db, area_id, current_user.tenant_id)
     if not success:
         raise ErrorCodeException(status_code=404, error_code=ErrorCode.AREA_NOT_FOUND)
-    return {"message": "Area deleted successfully"}
+    return {"detail": "Area moved to trash"}
+
+
+@router.get("/trash", response_model=List[AreaList])
+def list_areas_trash(
+    skip: int = 0,
+    limit: int = 100,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """List all deleted areas for the current tenant"""
+    areas = crud_areas.get_areas_trash(db, current_user.tenant_id, skip, limit)
+    
+    # Convert to AreaList format with site name
+    result = []
+    for area in areas:
+        result.append(AreaList(
+            id=area.id,
+            name=area.name,
+            code=area.code,
+            typology=area.typology,
+            site_id=area.site_id,
+            site_name=area.site.name if area.site else None,
+            created_at=area.created_at,
+            updated_at=area.updated_at
+        ))
+    
+    return result
+
+
+@router.patch("/{area_id}/restore")
+@audit_log_action("restore", "Area")
+def restore_area(
+    area_id: uuid.UUID,
+    request: Request,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Restore area from trash"""
+    success = crud_areas.restore_area(db, area_id, current_user.tenant_id)
+    if not success:
+        raise ErrorCodeException(status_code=404, error_code=ErrorCode.AREA_NOT_FOUND)
+    return {"detail": "Area restored"}
+
+
+@router.delete("/{area_id}/hard")
+@audit_log_action("hard_delete", "Area")
+def hard_delete_area(
+    area_id: uuid.UUID,
+    request: Request,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Hard delete area (permanently remove from trash)"""
+    success = crud_areas.hard_delete_area(db, area_id, current_user.tenant_id)
+    if not success:
+        raise ErrorCodeException(status_code=404, error_code=ErrorCode.AREA_NOT_FOUND)
+    return {"detail": "Area permanently deleted"}
+
+
+@router.delete("/trash/empty")
+@audit_log_action("empty_trash", "Area")
+def empty_areas_trash(
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db),
+):
+    """Empty areas trash (permanently delete all areas in trash)"""
+    areas = crud_areas.get_areas_trash(db, current_user.tenant_id, skip=0, limit=1000)
+    count = 0
+    for area in areas:
+        crud_areas.hard_delete_area(db, area.id, current_user.tenant_id)
+        count += 1
+    return {"detail": f"Trash emptied: {count} areas deleted"}
 
 
 @router.get("/site/{site_id}", response_model=List[AreaList])

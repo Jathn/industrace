@@ -11,21 +11,21 @@
         <!-- Azioni principali -->
         <Button 
           v-if="!trashMode && canWrite('manufacturers')"
-          :label="t('common.new')" 
+          :label="t('common.actions.create')" 
           icon="pi pi-plus" 
           severity="success"
           @click="openCreateDialog" 
         />
         <Button 
           v-if="!trashMode && canWrite('manufacturers')"
-          :label="t('common.import')" 
+          :label="t('common.actions.import')" 
           icon="pi pi-upload" 
           severity="info"
           @click="showImportDialog = true" 
         />
         <Button 
           v-if="!trashMode"
-          :label="t('common.exportCsv')" 
+          :label="t('common.actions.exportCsv')" 
           icon="pi pi-file-excel" 
           severity="secondary"
           @click="exportCsv" 
@@ -37,7 +37,7 @@
         <!-- Gestione cestino -->
         <Button 
           icon="pi pi-trash" 
-          :label="trashMode ? t('common.showActive') : t('common.showTrash')" 
+          :label="trashMode ? t('common.actions.showActive') : t('common.actions.showTrash')" 
           severity="secondary"
           @click="toggleTrashMode"
         />
@@ -60,7 +60,7 @@
       <template #actions>
         <Button 
           v-if="!trashMode && canWrite('manufacturers')"
-          :label="t('common.bulkEdit')" 
+          :label="t('common.actions.bulkEdit')" 
           icon="pi pi-pencil" 
           severity="warning"
           :disabled="!selectedManufacturers.length" 
@@ -118,7 +118,7 @@
 
     <BaseDialog
       v-model:visible="showDialog"
-      :title="editingManufacturer ? t('common.edit') : t('common.new')"
+      :title="editingManufacturer ? t('common.actions.edit') : t('common.actions.create')"
       :showFooter="false"
       @close="close"
     >
@@ -131,20 +131,20 @@
 
     <BaseDialog
       v-model:visible="showBulkDialog"
-      :title="t('common.bulkEdit')"
+      :title="t('common.actions.bulkEdit')"
       :showFooter="false"
       @close="closeBulkDialog"
     >
       <div class="bulk-edit-form">
         <div class="mb-4">
           <p class="text-sm text-gray-600">
-            {{ t('common.bulkEditInfo', { count: selectedManufacturers.length }) }}
+            {{ t('common.actions.bulkEditInfo', { count: selectedManufacturers.length }) }}
           </p>
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div class="field">
-            <label class="block text-sm font-medium mb-2">{{ t('common.website') }}</label>
+            <label class="block text-sm font-medium mb-2">{{ t('common.fields.website') }}</label>
             <InputText
               v-model="bulkData.website"
               :placeholder="t('common.enter')"
@@ -153,7 +153,7 @@
           </div>
           
           <div class="field">
-            <label class="block text-sm font-medium mb-2">{{ t('common.email') }}</label>
+            <label class="block text-sm font-medium mb-2">{{ t('common.fields.email') }}</label>
             <InputText
               v-model="bulkData.email"
               :placeholder="t('common.enter')"
@@ -162,7 +162,7 @@
           </div>
           
           <div class="field">
-            <label class="block text-sm font-medium mb-2">{{ t('common.phone') }}</label>
+            <label class="block text-sm font-medium mb-2">{{ t('common.fields.phone') }}</label>
             <InputText
               v-model="bulkData.phone"
               :placeholder="t('common.enter')"
@@ -171,10 +171,10 @@
           </div>
           
           <div class="field">
-            <label class="block text-sm font-medium mb-2">{{ t('common.description') }}</label>
+            <label class="block text-sm font-medium mb-2">{{ t('common.fields.description') }}</label>
             <Textarea
               v-model="bulkData.description"
-              :placeholder="t('common.enter')"
+              :placeholder="t('common.fields.description')"
               class="w-full"
               rows="3"
             />
@@ -183,12 +183,12 @@
         
         <div class="flex justify-end gap-2 mt-6">
           <Button 
-            :label="t('common.cancel')" 
+            :label="t('common.actionscancel')" 
             severity="secondary"
             @click="closeBulkDialog" 
           />
           <Button 
-            :label="t('common.save')" 
+            :label="t('common.actions.save')" 
             @click="saveBulkEdit" 
           />
         </div>
@@ -274,15 +274,15 @@ const bulkData = ref({
 
 const columnOptions = computed(() => {
   const columns = [
-    { field: 'name', header: t('common.name'), sortable: true },
-    { field: 'description', header: t('common.description'), sortable: false },
-    { field: 'website', header: t('common.website'), sortable: false },
-    { field: 'email', header: t('common.email'), sortable: false },
-    { field: 'phone', header: t('common.phone'), sortable: false }
+    { field: 'name', header: t('common.fields.name'), sortable: true },
+    { field: 'description', header: t('common.fields.description'), sortable: false },
+    { field: 'website', header: t('common.fields.website'), sortable: false },
+    { field: 'email', header: t('common.fields.email'), sortable: false },
+    { field: 'phone', header: t('common.fields.phone'), sortable: false }
   ]
   
   // Aggiungi colonna azioni sempre, perché il pulsante "Visualizza" è sempre disponibile
-  columns.push({ field: 'actions', header: t('common.actions'), sortable: false })
+  columns.push({ field: 'actions', header: t('common.strings.actions'), sortable: false })
   
   return columns
 })
@@ -379,8 +379,8 @@ async function saveManufacturer(data) {
       close()
       await fetchManufacturers()
     }, {
-      successMessage: t('common.updated'),
-      errorContext: t('common.updateError')
+      successMessage: t('common.messages.updated'),
+      errorContext: t('common.messages.updateError')
     })
   } else {
     // Modalità creazione
@@ -389,26 +389,26 @@ async function saveManufacturer(data) {
       close()
       await fetchManufacturers()
     }, {
-      successMessage: t('common.created'),
-      errorContext: t('common.createError')
+      successMessage: t('common.messages.created'),
+      errorContext: t('common.messages.createError')
     })
   }
 }
 
 async function deleteManufacturer(id) {
   await confirmDelete(
-    t('common.deleteConfirm'),
-    t('common.deleteWarning'),
+    t('common.messages.deleteConfirm'),
+    t('common.messages.deleteWarning'),
     async () => {
       await execute(async () => {
         await api.deleteManufacturer(id)
         await fetchManufacturers()
       }, {
-        errorContext: t('common.deleteError')
+        errorContext: t('common.messages.deleteError')
       })
     },
     {
-      successMessage: t('common.deleted')
+      successMessage: t('common.messages.deleted')
     }
   )
 }
@@ -441,8 +441,8 @@ async function restoreManufacturer(id) {
     await api.restoreManufacturer(id)
     await fetchManufacturers()
   }, {
-    successMessage: t('common.restored'),
-    errorContext: t('common.restoreError')
+    successMessage: t('common.messages.restored'),
+    errorContext: t('common.messages.restoreError')
   })
 }
 
@@ -451,8 +451,8 @@ async function hardDeleteManufacturer(id) {
     await api.hardDeleteManufacturer(id)
     await fetchManufacturers()
   }, {
-    successMessage: t('common.hardDeleted'),
-    errorContext: t('common.hardDeleteError')
+    successMessage: t('common.messages.hardDeleted'),
+    errorContext: t('common.messages.hardDeleteError')
   })
 }
 
@@ -463,15 +463,15 @@ async function emptyTrash() {
     }
     await fetchManufacturers()
   }, {
-    successMessage: t('common.trashEmptied'),
-    errorContext: t('common.emptyTrashError')
+    successMessage: t('common.messages.trashEmptied'),
+    errorContext: t('common.messages.emptyTrashError')
   })
 }
 
 async function handleEmptyTrash() {
   await confirmEmptyTrash(
-    t('common.emptyTrashConfirm'),
-    t('common.emptyTrashWarning'),
+    t('common.messages.emptyTrashConfirm'),
+    t('common.messages.emptyTrashWarning'),
     emptyTrash
   )
 }
